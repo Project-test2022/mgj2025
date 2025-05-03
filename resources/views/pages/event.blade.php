@@ -32,7 +32,11 @@
             width: 100%;
             max-width: 1280px;
             aspect-ratio: 16/9;
-            background: url('生成したイベント画像を配置する箇所') no-repeat center center;
+            @if($result->success)
+                background: url('{{ asset('images/choice_success.jpg?v='.config('app.version')) }}') no-repeat center center;
+            @else
+                background: url('{{ asset('images/choice_lose.jpg?v='.config('app.version')) }}') no-repeat center center;
+            @endif
             background-size: cover;
             position: relative;
             display: flex;
