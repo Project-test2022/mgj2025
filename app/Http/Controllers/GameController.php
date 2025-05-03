@@ -5,11 +5,14 @@ namespace App\Http\Controllers;
 use App\Dify\DifyApi;
 use App\Entities\Event;
 use App\Entities\EventResult;
+use App\Factories\PlayerFaceFactory;
 use App\Factories\PlayerFactory;
+use App\Repositories\PlayerFaceRepository;
 use App\Repositories\PlayerRepository;
 use App\ValueObjects\BirthYear;
 use App\ValueObjects\Choice;
 use App\ValueObjects\EventSituation;
+use App\ValueObjects\PlayerFaceId;
 use App\ValueObjects\PlayerId;
 use App\ValueObjects\PlayerName;
 use App\ValueObjects\SexName;
@@ -26,6 +29,8 @@ final class GameController extends Controller
         private readonly PlayerRepository $playerRepository,
         private readonly PlayerFactory $playerFactory,
         private readonly DifyApi $dify,
+        private readonly PlayerFaceRepository $playerFaceRepository,
+        private readonly PlayerFaceFactory $playerFaceFactory,
     ) {
     }
 
@@ -34,20 +39,38 @@ final class GameController extends Controller
         return view('pages.title');
     }
 
+    /**
+     * @throws Throwable
+     */
     public function start(): RedirectResponse
     {
         $id = $this->playerFactory->generateId();
         [$name, $sex, $birthYear] = $this->dify->createPlayer($id);
+        $imgUrl = $this->dify->createPlayerImage($id);
 
-        // TODO: Dify でキャラ画像を生成する
+        DB::beginTransaction();
+        try {
+            $player = $this->playerFactory->create(
+                $id,
+                PlayerName::from($name),
+                SexName::from($sex),
+                BirthYear::from($birthYear),
+            );
+            $this->playerRepository->save($player);
 
-        $player = $this->playerFactory->create(
-            $id,
-            PlayerName::from($name),
-            SexName::from($sex),
-            BirthYear::from($birthYear),
-        );
-        $this->playerRepository->save($player);
+            $img = file_get_contents($imgUrl);
+            $playerFace = $this->playerFaceFactory->create($id, $img);
+            $this->playerFaceRepository->save($playerFace);
+
+            $player = $player->setFace($playerFace->id);
+            $this->playerRepository->save($player);
+
+            DB::commit();
+        } catch (Exception $e) {
+            DB::rollBack();
+            throw $e;
+            return redirect()->route('title');
+        }
 
         return redirect()->route('home', ['id' => $player->id]);
     }
@@ -195,6 +218,21 @@ final class GameController extends Controller
             'player' => $player,
             'result' => $result,
         ]);
+    }
+
+    public function face(Request $request)
+    {
+        $playerFaceId = $request->route('id') ?? null;
+        $default = asset('images/dummy-user.svg');
+        if ($playerFaceId === null) {
+            return response(file_get_contents($default))->header('Content-Type', 'image/svg+xml');
+        } else {
+            $image = $this->playerFaceRepository->find(PlayerFaceId::from($playerFaceId));
+            if ($image === null) {
+                return response(file_get_contents($default))->header('Content-Type', 'image/svg+xml');
+            }
+            return response($image->image)->header('Content-Type', 'image/png');
+        }
     }
 
     private function choice(Choice $choice): bool

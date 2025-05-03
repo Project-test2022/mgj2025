@@ -20,12 +20,16 @@ final readonly class DifyApi
     private string $apiKey;
     private string $endpoint;
     private bool $enabled;
+    private bool $imageEnabled;
+    private string $imageUrl;
 
     public function __construct()
     {
         $this->apiKey = config('app.dify.api_key');
         $this->endpoint = config('app.dify.endpoint');
         $this->enabled = config('app.dify.enabled');
+        $this->imageEnabled = config('app.dify.image_enabled');
+        $this->imageUrl = config('app.dify.image_url');
     }
 
     public function createPlayer(PlayerId $id): array
@@ -41,6 +45,7 @@ final readonly class DifyApi
         $state = State::PLAYER_GENERATION;
         $input = $this->input($state);
         $data = $this->handle($id, $input);
+        $data = $data['structured_output'];
         $sex = SexModel::query()->where('sex_cd', $data['sex'])->first();
 
         return [
@@ -48,6 +53,21 @@ final readonly class DifyApi
             SexName::from($sex->sex_nm),
             BirthYear::from($data['birth']),
         ];
+    }
+
+
+    public function createPlayerImage(PlayerId $id): string
+    {
+        if (!$this->enabled || !$this->imageEnabled) {
+            return asset('images/dummy-user.svg');
+        }
+
+        $state = State::PLAYER_IMAGE_GENERATION;
+        $input = $this->input($state);
+        $data = $this->handle($id, $input);
+
+        $relativeUrl = $data['files'][0]['url'];
+        return $this->imageUrl . $relativeUrl;
     }
 
     public function event(Player $player, EventSituation $situation): Event
@@ -61,6 +81,7 @@ final readonly class DifyApi
         $input = $this->input($state, $playerInfo, $situation);
 
         $data = $this->handle($player->id, $input);
+        $data = $data['structured_output'];
         return Event::fromArray($data);
     }
 
@@ -76,6 +97,7 @@ final readonly class DifyApi
         $input = $this->input($state, $playerInfo, $situation, $eventInfo);
 
         $data = $this->handle($player->id, $input);
+        $data = $data['structured_output'];
         return EventResult::from($data, $player, $result);
     }
 
@@ -116,7 +138,7 @@ final readonly class DifyApi
         // セッション終了
         curl_close($ch);
 
-        return $decoded['data']['outputs']['structured_output'];
+        return $decoded['data']['outputs'];
     }
 
     private function formatPlayer(Player $player): string

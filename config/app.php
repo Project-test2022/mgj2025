@@ -128,5 +128,7 @@ return [
         'api_key' => env('DIFY_API_KEY'),
         'endpoint' => env('DIFY_ENDPOINT'),
         'enabled' => env('DIFY_ENABLED', false),
+        'image_enabled' => env('DIFY_IMAGE_ENABLED', false),
+        'image_url' => env('DIFY_IMAGE_URL'),
     ],
 ];

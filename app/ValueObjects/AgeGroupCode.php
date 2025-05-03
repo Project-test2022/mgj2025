@@ -2,7 +2,7 @@
 
 namespace App\ValueObjects;
 
-final readonly class BackgroundImageId
+final readonly class AgeGroupCode
 {
     private function __construct(public string $value)
     {
@@ -10,14 +10,6 @@ final readonly class BackgroundImageId
 
     public static function from(string $value): self
     {
-        return new self($value);
-    }
-
-    public static function tryFrom(?string $value): ?self
-    {
-        if (empty($value)) {
-            return null;
-        }
         return new self($value);
     }
 

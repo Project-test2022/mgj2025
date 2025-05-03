@@ -49,7 +49,7 @@
         .character-image {
             width: 240px;
             height: 300px;
-            background: url('ai生成によって作成された人物画像配置箇所') no-repeat center center;
+            background: url('{{ route('face', ['id' => $player->playerFaceId ?? 0]) }}') no-repeat center center;
             background-size: cover;
             border: 1px solid #ccc;
             margin-left: 155px;

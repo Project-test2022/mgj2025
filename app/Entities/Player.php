@@ -3,10 +3,12 @@
 namespace App\Entities;
 
 use App\ValueObjects\Ability;
+use App\ValueObjects\BackgroundImageId;
 use App\ValueObjects\BirthYear;
 use App\ValueObjects\Evaluation;
 use App\ValueObjects\Health;
 use App\ValueObjects\Money;
+use App\ValueObjects\PlayerFaceId;
 use App\ValueObjects\PlayerName;
 use App\ValueObjects\PlayerId;
 use App\ValueObjects\SexName;
@@ -24,6 +26,8 @@ final readonly class Player
         public Health $health,
         public Ability $ability,
         public Evaluation $evaluation,
+        public ?BackgroundImageId $backgroundImageId,
+        public ?PlayerFaceId $playerFaceId,
     ) {
     }
 
@@ -39,6 +43,8 @@ final readonly class Player
             $this->health->add($health),
             $this->ability->add($ability),
             $this->evaluation->add($evaluation),
+            $this->backgroundImageId,
+            $this->playerFaceId,
         );
     }
 
@@ -54,6 +60,25 @@ final readonly class Player
             $this->health,
             $this->ability,
             $this->evaluation,
+            $this->backgroundImageId,
+            $this->playerFaceId,
+        );
+    }
+
+    public function setFace(PlayerFaceId $playerFaceId): self
+    {
+        return new self(
+            $this->id,
+            $this->name,
+            $this->sexName,
+            $this->birthYear,
+            $this->turn,
+            $this->totalMoney,
+            $this->health,
+            $this->ability,
+            $this->evaluation,
+            $this->backgroundImageId,
+            $playerFaceId,
         );
     }
 }

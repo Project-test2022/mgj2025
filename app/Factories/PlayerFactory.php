@@ -46,7 +46,9 @@ final readonly class PlayerFactory
             Evaluation::from(
                 Business::from(0),
                 Love::from(0),
-            )
+            ),
+            null,
+            null,
         );
     }
 }

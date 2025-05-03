@@ -2,7 +2,7 @@
 
 namespace App\ValueObjects;
 
-final readonly class BackgroundImageId
+final readonly class PlayerFaceId
 {
     private function __construct(public string $value)
     {

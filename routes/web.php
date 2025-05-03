@@ -17,3 +17,4 @@ Route::get('/event/{id}', [GameController::class, 'event'])->name('event');
 Route::post('/event/{id}', [GameController::class, 'selectEvent'])->name('event.select');
 Route::get('/event/{id}/result', [GameController::class, 'eventResult'])->name('event.result');
 
+Route::get('/face/{id}', [GameController::class, 'face'])->name('face');
