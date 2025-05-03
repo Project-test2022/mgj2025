@@ -7,6 +7,7 @@ use App\Models\PlayerModel;
 use App\Models\PlayerView;
 use App\Models\SexModel;
 use App\ValueObjects\Ability;
+use App\ValueObjects\AgeGroupCode;
 use App\ValueObjects\BackgroundId;
 use App\ValueObjects\BirthYear;
 use App\ValueObjects\Business;
@@ -47,6 +48,7 @@ final readonly class PlayerMapper
         $model->e_love = $player->evaluation->love->value;
         $model->bg_id = $player->backgroundId?->value;
         $model->player_face_id = $player->playerFaceId?->value;
+        $model->age_grp_cd = $player->ageGroupCode?->value;
 
         return $model;
     }
@@ -72,6 +74,7 @@ final readonly class PlayerMapper
             ),
             BackgroundId::tryFrom($view->bg_id),
             PlayerFaceId::tryFrom($view->player_face_id),
+            AgeGroupCode::from($view->age_grp_cd),
         );
     }
 }

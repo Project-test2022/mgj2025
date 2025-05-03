@@ -8,6 +8,7 @@ use App\Entities\EventResult;
 use App\Entities\Player;
 use App\Factories\PlayerFaceFactory;
 use App\Factories\PlayerFactory;
+use App\Repositories\AgeGroupRepository;
 use App\Repositories\BackgroundRepository;
 use App\Repositories\PlayerFaceRepository;
 use App\Repositories\PlayerRepository;
@@ -36,6 +37,7 @@ final class GameController extends Controller
         private readonly PlayerFaceRepository $playerFaceRepository,
         private readonly PlayerFaceFactory $playerFaceFactory,
         private readonly BackgroundRepository $backgroundRepository,
+        private readonly AgeGroupRepository $ageGroupRepository,
     ) {
     }
 
@@ -69,7 +71,8 @@ final class GameController extends Controller
             $playerFace = $this->playerFaceFactory->create($id, $img);
             $this->playerFaceRepository->save($playerFace);
 
-            $player = $player->setFace($playerFace->id);
+            $ageGroup = $this->ageGroupRepository->first();
+            $player = $player->setFace($playerFace->id, $ageGroup->code);
             $this->playerRepository->save($player);
 
             DB::commit();
@@ -180,6 +183,7 @@ final class GameController extends Controller
         try {
             if ($eventResult->dead) {
                 // TODO: 死んだときは終了
+                throw new Exception('Player is dead');
             }
 
             // 結果に応じてステータスを更新する
@@ -237,11 +241,11 @@ final class GameController extends Controller
         $playerFaceId = $request->route('id') ?? null;
         $default = asset('images/player-default.png');
         if ($playerFaceId === null) {
-            return response(file_get_contents($default))->header('Content-Type', 'image/svg+xml');
+            return response(file_get_contents($default))->header('Content-Type', 'image/png');
         } else {
             $image = $this->playerFaceRepository->find(PlayerFaceId::from($playerFaceId));
             if ($image === null) {
-                return response(file_get_contents($default))->header('Content-Type', 'image/svg+xml');
+                return response(file_get_contents($default))->header('Content-Type', 'image/png');
             }
             $mime = (new finfo(FILEINFO_MIME_TYPE))->buffer($image->image);
             return response($image->image)->header('Content-Type', $mime);
@@ -272,7 +276,21 @@ final class GameController extends Controller
 
     private function updatePlayerFace(Player $player): void
     {
-        // TODO: 年代に応じてキャラ画像を変更する
+        // 年代に応じてキャラ画像を変更する
+        $newAgeGroup = $this->ageGroupRepository->findByAge($player->turn);
+        if ($newAgeGroup === null) {
+            return;
+        }
+        if ($newAgeGroup->code->equals($player->ageGroupCode)) {
+            return;
+        }
+        $imgUrl = $this->dify->createPlayerNextImage($player);
+        $img = file_get_contents($imgUrl);
+        $playerFace = $this->playerFaceFactory->create($player->id, $img);
+        $this->playerFaceRepository->save($playerFace);
+
+        $player = $player->setFace($playerFace->id, $newAgeGroup->code);
+        $this->playerRepository->save($player);
     }
 
     private function updateBackground(Player $player): void

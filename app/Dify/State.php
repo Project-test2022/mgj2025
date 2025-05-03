@@ -12,4 +12,6 @@ enum State: int
     case EVENT_OCCURRENCE = 10;
     // イベント選択
     case EVENT_SELECTION = 20;
+    // キャラの次の画像生成
+    case PLAYER_NEXT_IMAGE_GENERATION = 30;
 }

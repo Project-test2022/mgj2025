@@ -57,6 +57,7 @@ final readonly class PlayerFactory
             ),
             BackgroundId::from($bg_id),
             null,
+            null,
         );
     }
 }

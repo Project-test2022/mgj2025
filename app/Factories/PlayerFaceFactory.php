@@ -3,7 +3,7 @@
 namespace App\Factories;
 
 use App\Entities\PlayerFace;
-use App\Models\AgeGroup;
+use App\Models\AgeGroupModel;
 use App\ValueObjects\AgeGroupCode;
 use App\ValueObjects\PlayerFaceId;
 use App\ValueObjects\PlayerId;
@@ -13,7 +13,7 @@ final readonly class PlayerFaceFactory
 {
     public function create(PlayerId $id,  string $image): PlayerFace
     {
-        $age_grp_cd = AgeGroup::query()->first()->age_grp_cd;
+        $age_grp_cd = AgeGroupModel::query()->first()->age_grp_cd;
         return new PlayerFace(
             $this->generateId(),
             $id,
