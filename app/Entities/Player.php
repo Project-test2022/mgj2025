@@ -3,7 +3,7 @@
 namespace App\Entities;
 
 use App\ValueObjects\Ability;
-use App\ValueObjects\BackgroundImageId;
+use App\ValueObjects\BackgroundId;
 use App\ValueObjects\BirthYear;
 use App\ValueObjects\Evaluation;
 use App\ValueObjects\Health;
@@ -26,7 +26,7 @@ final readonly class Player
         public Health $health,
         public Ability $ability,
         public Evaluation $evaluation,
-        public ?BackgroundImageId $backgroundImageId,
+        public ?BackgroundId $backgroundId,
         public ?PlayerFaceId $playerFaceId,
     ) {
     }
@@ -43,7 +43,7 @@ final readonly class Player
             $this->health->add($health),
             $this->ability->add($ability),
             $this->evaluation->add($evaluation),
-            $this->backgroundImageId,
+            $this->backgroundId,
             $this->playerFaceId,
         );
     }
@@ -60,7 +60,7 @@ final readonly class Player
             $this->health,
             $this->ability,
             $this->evaluation,
-            $this->backgroundImageId,
+            $this->backgroundId,
             $this->playerFaceId,
         );
     }
@@ -77,7 +77,7 @@ final readonly class Player
             $this->health,
             $this->ability,
             $this->evaluation,
-            $this->backgroundImageId,
+            $this->backgroundId,
             $playerFaceId,
         );
     }

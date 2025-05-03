@@ -14,7 +14,8 @@
         "laravel/tinker": "^2.10.1",
         "ext-pdo": "*",
         "ext-curl": "*",
-        "ext-pgsql": "*"
+        "ext-pgsql": "*",
+        "ext-fileinfo": "*"
     },
     "require-dev": {
         "fakerphp/faker": "^1.23",

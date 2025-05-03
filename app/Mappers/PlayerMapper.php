@@ -7,7 +7,7 @@ use App\Models\PlayerModel;
 use App\Models\PlayerView;
 use App\Models\SexModel;
 use App\ValueObjects\Ability;
-use App\ValueObjects\BackgroundImageId;
+use App\ValueObjects\BackgroundId;
 use App\ValueObjects\BirthYear;
 use App\ValueObjects\Business;
 use App\ValueObjects\Evaluation;
@@ -45,7 +45,7 @@ final readonly class PlayerMapper
         $model->a_visual = $player->ability->visual->value;
         $model->e_business = $player->evaluation->business->value;
         $model->e_love = $player->evaluation->love->value;
-        $model->bg_id = $player->backgroundImageId?->value;
+        $model->bg_id = $player->backgroundId?->value;
         $model->player_face_id = $player->playerFaceId?->value;
 
         return $model;
@@ -70,7 +70,7 @@ final readonly class PlayerMapper
                 Business::from($view->e_business),
                 Love::from($view->e_love),
             ),
-            BackgroundImageId::tryFrom($view->bg_id),
+            BackgroundId::tryFrom($view->bg_id),
             PlayerFaceId::tryFrom($view->player_face_id),
         );
     }

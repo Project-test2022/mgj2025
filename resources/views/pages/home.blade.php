@@ -35,7 +35,7 @@
             position: relative;
             width: 1124px;
             height: 505px;
-            background: url('資産に応じて生成された画像配置箇所') no-repeat center center;
+            background: url('{{ route('background', ['id' => $player->backgroundId ?? 0]) }}') no-repeat center center;
             background-size: cover;
             border: 1px solid rgba(255, 255, 255, 0.3);
             margin-bottom: 40px;
@@ -79,7 +79,7 @@
             text-align: left;
             min-width: 600px;
             padding-left: 10px;
-            mix-blend-mode: multiply;       /* 乗算モード */
+            mix-blend-mode: multiply; /* 乗算モード */
         }
 
         .buttons {

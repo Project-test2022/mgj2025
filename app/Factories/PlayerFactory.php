@@ -5,6 +5,7 @@ namespace App\Factories;
 use App\Entities\Player;
 use App\Models\PlayerModel;
 use App\ValueObjects\Ability;
+use App\ValueObjects\BackgroundId;
 use App\ValueObjects\BirthYear;
 use App\ValueObjects\Business;
 use App\ValueObjects\Evaluation;
@@ -18,6 +19,7 @@ use App\ValueObjects\SexName;
 use App\ValueObjects\Sport;
 use App\ValueObjects\Turn;
 use App\ValueObjects\Visual;
+use Illuminate\Support\Facades\DB;
 
 final readonly class PlayerFactory
 {
@@ -30,6 +32,12 @@ final readonly class PlayerFactory
     }
 
     public function create(PlayerId $id, PlayerName $name, SexName $sex, BirthYear $birthYear): Player {
+        $bg_id = DB::table('background')
+            ->whereNull('border_money_s')
+            ->select('bg_id')
+            ->first()
+            ->bg_id;
+
         return new Player(
             $id,
             $name,
@@ -47,7 +55,7 @@ final readonly class PlayerFactory
                 Business::from(0),
                 Love::from(0),
             ),
-            null,
+            BackgroundId::from($bg_id),
             null,
         );
     }

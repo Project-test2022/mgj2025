@@ -59,7 +59,7 @@ final readonly class DifyApi
     public function createPlayerImage(PlayerId $id): string
     {
         if (!$this->enabled || !$this->imageEnabled) {
-            return asset('images/dummy-user.svg');
+            return asset('images/player-default.png');
         }
 
         $state = State::PLAYER_IMAGE_GENERATION;

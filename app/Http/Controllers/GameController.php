@@ -7,8 +7,10 @@ use App\Entities\Event;
 use App\Entities\EventResult;
 use App\Factories\PlayerFaceFactory;
 use App\Factories\PlayerFactory;
+use App\Repositories\BackgroundRepository;
 use App\Repositories\PlayerFaceRepository;
 use App\Repositories\PlayerRepository;
+use App\ValueObjects\BackgroundId;
 use App\ValueObjects\BirthYear;
 use App\ValueObjects\Choice;
 use App\ValueObjects\EventSituation;
@@ -17,6 +19,7 @@ use App\ValueObjects\PlayerId;
 use App\ValueObjects\PlayerName;
 use App\ValueObjects\SexName;
 use Exception;
+use finfo;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -31,6 +34,7 @@ final class GameController extends Controller
         private readonly DifyApi $dify,
         private readonly PlayerFaceRepository $playerFaceRepository,
         private readonly PlayerFaceFactory $playerFaceFactory,
+        private readonly BackgroundRepository $backgroundRepository,
     ) {
     }
 
@@ -50,6 +54,7 @@ final class GameController extends Controller
 
         DB::beginTransaction();
         try {
+            // プレイヤーの作成
             $player = $this->playerFactory->create(
                 $id,
                 PlayerName::from($name),
@@ -58,6 +63,7 @@ final class GameController extends Controller
             );
             $this->playerRepository->save($player);
 
+            // プレイヤーの画像の設定
             $img = file_get_contents($imgUrl);
             $playerFace = $this->playerFaceFactory->create($id, $img);
             $this->playerFaceRepository->save($playerFace);
@@ -186,6 +192,10 @@ final class GameController extends Controller
             // ターンを進める
             $player = $player->nextTurn();
 
+            // TODO: 年代に応じてキャラ画像を変更する
+
+            // TODO: 総資産に応じて背景画像を変更する
+
             $this->playerRepository->save($player);
 
             DB::commit();
@@ -222,7 +232,7 @@ final class GameController extends Controller
     public function face(Request $request)
     {
         $playerFaceId = $request->route('id') ?? null;
-        $default = asset('images/dummy-user.svg');
+        $default = asset('images/player-default.png');
         if ($playerFaceId === null) {
             return response(file_get_contents($default))->header('Content-Type', 'image/svg+xml');
         } else {
@@ -230,7 +240,24 @@ final class GameController extends Controller
             if ($image === null) {
                 return response(file_get_contents($default))->header('Content-Type', 'image/svg+xml');
             }
-            return response($image->image)->header('Content-Type', 'image/png');
+            $mime = (new finfo(FILEINFO_MIME_TYPE))->buffer($image->image);
+            return response($image->image)->header('Content-Type', $mime);
+        }
+    }
+
+    public function background(Request $request)
+    {
+        $bgId = $request->route('id') ?? null;
+        $default = asset('images/background.png');
+        if ($bgId === null) {
+            return response(file_get_contents($default))->header('Content-Type', 'image/png');
+        } else {
+            $image = $this->backgroundRepository->find(BackgroundId::from($bgId));
+            if ($image === null) {
+                return response(file_get_contents($default))->header('Content-Type', 'image/png');
+            }
+            $mime = (new finfo(FILEINFO_MIME_TYPE))->buffer($image->image);
+            return response($image->image)->header('Content-Type', $mime);
         }
     }
 
