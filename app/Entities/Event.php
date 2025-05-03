@@ -44,4 +44,13 @@ final readonly class Event
             ),
         );
     }
+
+    public static function dummy(): self
+    {
+        return new self(
+            Content::from('ダミーイベント'),
+            Choice::from('成功', 100),
+            Choice::from('失敗', 0),
+        );
+    }
 }

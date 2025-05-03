@@ -127,5 +127,6 @@ return [
     'dify' => [
         'api_key' => env('DIFY_API_KEY'),
         'endpoint' => env('DIFY_ENDPOINT'),
+        'enabled' => env('DIFY_ENABLED', false),
     ],
 ];

@@ -55,6 +55,27 @@ final readonly class EventResult
         );
     }
 
+    public static function dummy(bool $result): self
+    {
+        $value = $result ? 10 : -10;
+        return new self(
+            ResultMessage::from('ダミー結果'),
+            $result,
+            false,
+            Money::from($value),
+            Health::from($value),
+            Ability::from(
+                Intelligence::from($value),
+                Sport::from($value),
+                Visual::from($value),
+            ),
+            Evaluation::from(
+                Business::from($value),
+                Love::from($value),
+            ),
+        );
+    }
+
     public function result(): string
     {
         if ($this->success) {

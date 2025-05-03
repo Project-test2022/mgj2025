@@ -19,15 +19,25 @@ final readonly class DifyApi
 {
     private string $apiKey;
     private string $endpoint;
+    private bool $enabled;
 
     public function __construct()
     {
         $this->apiKey = config('app.dify.api_key');
         $this->endpoint = config('app.dify.endpoint');
+        $this->enabled = config('app.dify.enabled');
     }
 
     public function createPlayer(PlayerId $id): array
     {
+        if (!$this->enabled) {
+            return [
+                PlayerName::from('山田 太郎'),
+                SexName::from('男'),
+                BirthYear::from('2025'),
+            ];
+        }
+
         $state = State::PLAYER_GENERATION;
         $input = $this->input($state);
         $data = $this->handle($id, $input);
@@ -42,6 +52,10 @@ final readonly class DifyApi
 
     public function event(Player $player, EventSituation $situation): Event
     {
+        if (!$this->enabled) {
+            return Event::dummy();
+        }
+
         $state = State::EVENT_OCCURRENCE;
         $playerInfo = $this->formatPlayer($player);
         $input = $this->input($state, $playerInfo, $situation);
@@ -52,6 +66,10 @@ final readonly class DifyApi
 
     public function eventResult(Player $player, EventSituation $situation, Event $event, Choice $select, bool $result): EventResult
     {
+        if (!$this->enabled) {
+            return EventResult::dummy($result);
+        }
+
         $state = State::EVENT_SELECTION;
         $playerInfo = $this->formatPlayer($player);
         $eventInfo = $this->formatEvent($event->content, $select->content, $result);
