@@ -2,7 +2,12 @@
 
 namespace App\Entities;
 
-class Player
-{
+use App\ValueObjects\PlayerId;
 
+final readonly class Player
+{
+    public function __construct(
+        public PlayerId $id,
+    ) {
+    }
 }

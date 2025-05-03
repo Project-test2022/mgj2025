@@ -2,7 +2,16 @@
 
 namespace App\Factories;
 
-class PlayerFactory
-{
+use App\Entities\Player;
+use App\ValueObjects\PlayerId;
 
+final readonly class PlayerFactory
+{
+    public function create(): Player
+    {
+        $id = new PlayerId(uniqid()); // TODO: Generate a unique ID
+        return new Player(
+            $id,
+        );
+    }
 }
