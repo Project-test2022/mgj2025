@@ -1,0 +1,54 @@
+@extends('layouts.parent')
+
+@push('styles')
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-family: 'Arial', sans-serif;
+            background: url('{{ asset('images/background.png?v='.config('app.version')) }}') no-repeat center center;
+            background-size: cover;
+        }
+
+        .container {
+            text-align: center;
+            padding: 40px 60px;
+            border: 1px solid rgba(255, 255, 255, 0.4);
+            background-color: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(2px);
+        }
+
+        .title {
+            font-size: 32px;
+            letter-spacing: 12px;
+            color: #333;
+            margin-bottom: 30px;
+        }
+
+        .start-button {
+            display: inline-block;
+            padding: 10px 80px;
+            font-size: 18px;
+            color: #333;
+            background-color: rgba(255, 255, 255, 0.2);
+            border: none;
+            letter-spacing: 5px;
+            cursor: pointer;
+        }
+
+        .start-button:hover {
+            background-color: rgba(255, 255, 255, 0.4);
+        }
+    </style>
+@endpush
+
+@section('content')
+    <div class="container">
+        <div class="title" style="color: red">エラーが発生しました</div>
+        <button class="start-button" onclick="location.href='{{ route('home', ['id' => $id]) }}'">ホーム</button>
+    </div>
+@endsection
