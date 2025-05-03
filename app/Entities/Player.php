@@ -26,4 +26,11 @@ final readonly class Player
         public Evaluation $evaluation,
     ) {
     }
+
+    public function age(): int
+    {
+        // 誕生年からの年数 + ターン数
+        $thisYear = date('Y');
+        return (int)$thisYear - (int)$this->birthYear->value + (int)$this->turn->value;
+    }
 }
