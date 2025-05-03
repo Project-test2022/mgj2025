@@ -6,6 +6,7 @@ use App\Entities\Event;
 use App\Entities\EventResult;
 use App\Entities\Player;
 use App\Models\SexModel;
+use App\Repositories\PlayerFaceRepository;
 use App\ValueObjects\BirthYear;
 use App\ValueObjects\Content;
 use App\ValueObjects\EventSituation;
@@ -14,6 +15,7 @@ use App\ValueObjects\Choice;
 use App\ValueObjects\PlayerName;
 use App\ValueObjects\SelectContent;
 use App\ValueObjects\SexName;
+use CURLFile;
 use Exception;
 use TypeError;
 
@@ -25,8 +27,9 @@ final readonly class DifyApi
     private bool $imageEnabled;
     private string $imageUrl;
 
-    public function __construct()
-    {
+    public function __construct(
+        private PlayerFaceRepository $playerFaceRepository,
+    ) {
         $this->apiKey = config('app.dify.api_key');
         $this->endpoint = config('app.dify.endpoint');
         $this->enabled = config('app.dify.enabled');
@@ -69,6 +72,21 @@ final readonly class DifyApi
         $data = $this->handle($id, $input);
 
         $relativeUrl = $data['files'][0]['url'];
+        return $this->imageUrl . $relativeUrl;
+    }
+
+    public function createPlayerNextImage(Player $player): string
+    {
+        if (!$this->enabled || !$this->imageEnabled) {
+            return asset('images/player-default.png');
+        }
+
+        // 今の画像をDifyにアップロードする
+        $imageId = $this->uploadPlayerImage($player);
+
+        // 画像を生成する
+        $relativeUrl = $this->handleNextImage($player, $imageId);
+
         return $this->imageUrl . $relativeUrl;
     }
 
@@ -205,5 +223,73 @@ final readonly class DifyApi
     {
         $result_text = $result ? '成功' : '失敗';
         return "$event\n[プレイヤーの選択]{$select}（{$result_text}）";
+    }
+
+    private function uploadPlayerImage(Player $player): string
+    {
+        // 今の画像を取得してローカルに保存する
+        $player_face = $this->playerFaceRepository->find($player->playerFaceId);
+        $fileName = 'player_' . $player->id->value . '.png';
+        $path = storage_path('app/private/player/' . $fileName);
+        file_put_contents($path, $player_face->image);
+
+        // Dify APIにリクエストを送信
+        $uploadUrl = $this->imageUrl . '/v1/files/upload';
+        $mimeType = mime_content_type($path);
+        $ch = curl_init();
+        $postFields = [
+            'file' => new CURLFile($path, $mimeType, $fileName),
+            'user' => $player->id->value,
+        ];
+        curl_setopt_array($ch, [
+            CURLOPT_URL => $uploadUrl,
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_POST => true,
+            CURLOPT_POSTFIELDS => $postFields,
+            CURLOPT_HTTPHEADER => [
+                'Authorization: Bearer ' . $this->apiKey,
+            ],
+        ]);
+        $uploadResponse = curl_exec($ch);
+        curl_close($ch);
+        $uploadResult = json_decode($uploadResponse, true);
+        $imageId = $uploadResult['id'];
+        // ローカルの画像を削除する
+        unlink($path);
+
+        return $imageId;
+    }
+
+    private function handleNextImage(Player $player, string $imageId): string
+    {
+        $endpoint = $this->imageUrl . '/v1/workflows/run';
+        $state = State::PLAYER_NEXT_IMAGE_GENERATION;
+        $playerInfo = $this->formatPlayer($player);
+        $input = $this->input($state, $playerInfo);
+        $input['sys_image'] = [
+            'transfer_method' => 'local_file',
+            'upload_file_id' => $imageId,
+            'type' => 'image',
+        ];
+        $data = [
+            'inputs' => $input,
+            'response_mode' => 'blocking',
+            'user' => $player->id->value,
+        ];
+        $jsonData = json_encode($data, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT);
+        $ch = curl_init($endpoint);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_POST, true);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, $jsonData);
+        curl_setopt($ch, CURLOPT_HTTPHEADER, [
+            'Content-Type: application/json',
+            'Authorization: Bearer ' . $this->apiKey,
+        ]);
+
+        $response = curl_exec($ch);
+        curl_close($ch);
+        $result = json_decode($response, true);
+
+        return $result['data']['outputs']['files'][0]['url'];
     }
 }

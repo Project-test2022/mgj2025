@@ -19,6 +19,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property int         $e_love
  * @property string|null $bg_id
  * @property string|null $player_face_id
+ * @property string|null $age_grp_cd
  */
 class PlayerView extends Model
 {

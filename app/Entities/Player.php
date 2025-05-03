@@ -3,6 +3,7 @@
 namespace App\Entities;
 
 use App\ValueObjects\Ability;
+use App\ValueObjects\AgeGroupCode;
 use App\ValueObjects\BackgroundId;
 use App\ValueObjects\BirthYear;
 use App\ValueObjects\Evaluation;
@@ -28,6 +29,7 @@ final readonly class Player
         public Evaluation $evaluation,
         public ?BackgroundId $backgroundId,
         public ?PlayerFaceId $playerFaceId,
+        public ?AgeGroupCode $ageGroupCode,
     ) {
     }
 
@@ -45,6 +47,7 @@ final readonly class Player
             $this->evaluation->add($evaluation),
             $this->backgroundId,
             $this->playerFaceId,
+            $this->ageGroupCode,
         );
     }
 
@@ -62,10 +65,11 @@ final readonly class Player
             $this->evaluation,
             $this->backgroundId,
             $this->playerFaceId,
+            $this->ageGroupCode,
         );
     }
 
-    public function setFace(PlayerFaceId $playerFaceId): self
+    public function setFace(PlayerFaceId $playerFaceId, AgeGroupCode $ageGroupCode): self
     {
         return new self(
             $this->id,
@@ -79,6 +83,7 @@ final readonly class Player
             $this->evaluation,
             $this->backgroundId,
             $playerFaceId,
+            $ageGroupCode,
         );
     }
 
@@ -96,6 +101,7 @@ final readonly class Player
             $this->evaluation,
             $backgroundId,
             $this->playerFaceId,
+            $this->ageGroupCode,
         );
     }
 }
