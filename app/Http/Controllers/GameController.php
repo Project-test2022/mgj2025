@@ -51,6 +51,4 @@ final class GameController extends Controller
             'player' => $player,
         ]);
     }
-
-    
 }
