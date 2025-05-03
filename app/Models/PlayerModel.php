@@ -17,11 +17,12 @@ use Illuminate\Database\Eloquent\Model;
  * @property int    $a_visual
  * @property int    $e_business
  * @property int    $e_love
- * @property string $bg_image_id
+ * @property string $bg_id
  */
 class PlayerModel extends Model
 {
     protected $table = 'player';
     public $timestamps = false;
     protected $primaryKey = 'player_id';
+    protected $keyType = 'string';
 }

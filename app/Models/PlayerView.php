@@ -23,4 +23,5 @@ class PlayerView extends Model
     protected $table = 'v_player';
     public $timestamps = false;
     protected $primaryKey = 'player_id';
+    protected $keyType = 'string';
 }

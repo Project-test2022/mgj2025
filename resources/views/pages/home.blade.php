@@ -100,9 +100,12 @@
             </div>
         </div>
 
-        <div class="buttons">
-            <button class="button">仕事</button>
-            <button class="button">恋愛</button>
-        </div>
+        <form action="{{ route('select', ['id' => $player->id->value]) }}" method="POST">
+            @csrf
+            <div class="buttons">
+                <button type="submit" name="business" class="button">仕事</button>
+                <button type="submit" name="love" class="button">恋愛</button>
+            </div>
+        </form>
     </div>
 @endsection

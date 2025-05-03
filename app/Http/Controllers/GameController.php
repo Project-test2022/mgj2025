@@ -30,6 +30,8 @@ final class GameController extends Controller
         $name = '山田 太郎';
         $sex = '男';
 
+        // TODO: Dify でキャラ画像を生成する
+
         $player = $this->playerFactory->create(
             PlayerName::from($name),
             SexName::from($sex),
@@ -49,6 +51,48 @@ final class GameController extends Controller
 
         return view('pages.home', [
             'player' => $player,
+        ]);
+    }
+
+    public function select(Request $request): RedirectResponse
+    {
+        $playerId = $request->route('id');
+        $player = $this->playerRepository->find(PlayerId::from($playerId));
+        if ($player === null) {
+            return redirect()->route('title');
+        }
+
+        if ($request->has('business')) {
+            // TODO: Dify でイベントを生成する
+            $message = '仕事イベント';
+        } elseif ($request->has('love')) {
+            // TODO: Dify でイベントを生成する
+            $message = '恋愛イベント';
+        } else {
+            return redirect()->route('home', ['id' => $playerId]);
+        }
+
+        return redirect()->route('event', ['id' => $playerId])->with([
+            'message' => $message,
+        ]);
+    }
+
+    public function event(Request $request): View|RedirectResponse
+    {
+        $playerId = $request->route('id');
+        $player = $this->playerRepository->find(PlayerId::from($playerId));
+        if ($player === null) {
+            return redirect()->route('title');
+        }
+
+        $message = $request->session()->get('message');
+        if (empty($message)) {
+            return redirect()->route('home', ['id' => $playerId]);
+        }
+
+        return view('pages.select', [
+            'player' => $player,
+            'message' => $message,
         ]);
     }
 }

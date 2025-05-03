@@ -4,7 +4,6 @@ namespace App\Repositories;
 
 use App\Entities\Player;
 use App\Mappers\PlayerMapper;
-use App\Models\PlayerModel;
 use App\Models\PlayerView;
 use App\ValueObjects\PlayerId;
 
