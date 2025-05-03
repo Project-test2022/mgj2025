@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Factories\PlayerFactory;
 use App\Repositories\PlayerRepository;
+use App\ValueObjects\PlayerId;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
@@ -26,11 +27,19 @@ final class GameController extends Controller
         $player = $this->playerFactory->create();
         $this->playerRepository->save($player);
 
-        return redirect()->route('home');
+        return redirect()->route('home', ['id' => $player->id]);
     }
 
-    public function home(): View
+    public function home(Request $request): View|RedirectResponse
     {
-        return view('pages.home');
+        $playerId = $request->route('id');
+        $player = $this->playerRepository->find(PlayerId::from($playerId));
+        if ($player === null) {
+            return redirect()->route('title');
+        }
+
+        return view('pages.home', [
+            'player' => $player,
+        ]);
     }
 }

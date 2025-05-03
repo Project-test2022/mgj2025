@@ -2,7 +2,7 @@
 
 namespace App\ValueObjects;
 
-final readonly class Health
+final readonly class BackgroundImageId
 {
     private function __construct(public string $value)
     {

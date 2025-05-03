@@ -7,8 +7,8 @@ use Illuminate\Database\Eloquent\Model;
 /**
  * @property string $player_id
  * @property string $player_name
- * @property string $sex_cd
- * @property string $birth_date
+ * @property string $sex_nm
+ * @property string $birth_year
  * @property int    $turn
  * @property int    $total_money
  * @property int    $health
@@ -17,11 +17,9 @@ use Illuminate\Database\Eloquent\Model;
  * @property int    $a_visual
  * @property int    $e_business
  * @property int    $e_love
- * @property string $bg_image_id
  */
-class PlayerModel extends Model
+class PlayerView extends Model
 {
-    protected $table = 'player';
+    protected $table = 'v_player';
     public $timestamps = false;
-    protected $primaryKey = 'player_id';
 }
