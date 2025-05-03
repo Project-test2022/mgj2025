@@ -181,11 +181,6 @@ final class GameController extends Controller
 
         DB::beginTransaction();
         try {
-            if ($eventResult->dead) {
-                // TODO: 死んだときは終了
-                throw new Exception('Player is dead');
-            }
-
             // 結果に応じてステータスを更新する
             $player = $player->update(
                 $eventResult->totalMoney,
@@ -233,6 +228,19 @@ final class GameController extends Controller
         return view('pages.event', [
             'player' => $player,
             'result' => $result,
+        ]);
+    }
+
+    public function result(Request $request): View|RedirectResponse
+    {
+        $playerId = $request->route('id');
+        $player = $this->playerRepository->find(PlayerId::from($playerId));
+        if ($player === null) {
+            return redirect()->route('title');
+        }
+
+        return view('pages.end', [
+            'player' => $player,
         ]);
     }
 
