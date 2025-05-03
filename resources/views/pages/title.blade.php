@@ -51,7 +51,27 @@
     <div class="title">人生やり直しゲーム</div>
     <form action="{{ route('start') }}" method="POST">
         @csrf
-        <button type="submit" class="start-button">START</button>
+        <button id="btn" type="submit" class="start-button">START</button>
     </form>
 </div>
 @endsection
+
+@push('scripts')
+<script> document.addEventListener('DOMContentLoaded', function () { // 効果音（ボタン用） 
+  const btn = document.getElementById('btn'); 
+  const se = new Audio('{{ asset('sounds/Choice/The Decision.mp3') }}');
+   se.volume = 1.0; 
+   btn.addEventListener('click', function () { 
+   se.currentTime = 0; se.play();
+  }); 
+   // BGM の設定 
+    const bgm = new Audio('{{ asset('sounds/Op/High Stakes Shadow.mp3') }}'); 
+    bgm.loop = true; 
+    bgm.volume = 0.3; // 最初のクリックでBGM再生（自動再生対策） 
+    document.body.addEventListener('click', function playBgmOnce() { 
+      bgm.play().catch(err => console.log('BGM再生エラー:', err));
+      document.body.removeEventListener('click', playBgmOnce); 
+    }); 
+  }); 
+</script>
+@endpush
