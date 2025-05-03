@@ -60,8 +60,7 @@
             color: white;
             padding: 20px;
             font-size: 18px;
-            line-height: 2;
-            border-radius: 8px;
+            line-height: 4;
             text-align: left;
             min-width: 300px;
         }
@@ -78,7 +77,6 @@
             padding: 15px 50px;
             font-size: 20px;
             border: none;
-            border-radius: 5px;
             cursor: pointer;
             letter-spacing: 5px;
             transition: background 0.3s;
