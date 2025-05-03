@@ -9,7 +9,7 @@ final readonly class PlayerFactory
 {
     public function create(): Player
     {
-        $id = new PlayerId(uniqid()); // TODO: Generate a unique ID
+        $id = PlayerId::from(uniqid()); // TODO: Generate a unique ID
         return new Player(
             $id,
         );
