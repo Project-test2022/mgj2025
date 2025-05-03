@@ -33,8 +33,8 @@
 
         .profile-area {
             position: relative;
-            width: 100%;
-            aspect-ratio: 16 / 9;
+            width: 1124px;
+            height: 505px;
             background: url('資産に応じて生成された画像配置箇所') no-repeat center center;
             background-size: cover;
             border: 1px solid rgba(255, 255, 255, 0.3);
@@ -47,22 +47,39 @@
         }
 
         .character-image {
-            width: 200px;
-            height: 260px;
+            width: 240px;
+            height: 300px;
             background: url('ai生成によって作成された人物画像配置箇所') no-repeat center center;
             background-size: cover;
             border: 1px solid #ccc;
+            margin-left: 155px;
+        }
+
+        .panel {
+            background: rgba(255, 255, 255, 0.4);
+            width: 100%;
+            height: 415px;
+            padding: 10px;
+            position: absolute;
+            top: 214px;
+            left: 0;
+            z-index: 1;
+            display: flex;
+            align-items: center;
+            gap: 36px;
         }
 
         .profile-info {
-            background: rgba(0, 0, 0, 0.7);
-            mix-blend-mode: multiply; /* 乗算モード */
+            background: rgba(0, 0, 0, 0.70);
+            width: 700px;
+            height: 300px;
             color: white;
-            padding: 20px;
-            font-size: 18px;
+            font-size: 22px;
             line-height: 4;
             text-align: left;
-            min-width: 300px;
+            min-width: 600px;
+            padding-left: 10px;
+            mix-blend-mode: multiply;       /* 乗算モード */
         }
 
         .buttons {
@@ -73,7 +90,10 @@
 
         .button {
             background: rgba(0, 0, 0, 0.7);
+            mix-blend-mode: normal;
             color: white;
+            width: 360px;
+            height: 80px;
             padding: 15px 50px;
             font-size: 20px;
             border: none;
@@ -91,7 +111,8 @@
 @section('content')
     <div class="main-wrapper">
         <div class="header">人生やり直しゲーム</div>
-        <div class="profile-area">
+        <div class="profile-area"></div>
+        <div class='panel'>
             <div class="character-image"></div>
             <div class="profile-info">
                 {{ $player->name }} {{ $player->sexName }}性　{{ $player->turn->value }}歳<br>
