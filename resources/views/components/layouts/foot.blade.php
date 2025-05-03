@@ -1,0 +1,3 @@
+<footer>
+    @stack('scripts')
+</footer>

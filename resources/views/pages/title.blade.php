@@ -58,7 +58,8 @@
 
 @push('scripts')
     <script>
-        document.addEventListener('DOMContentLoaded', function () { // 効果音（ボタン用）
+        document.addEventListener('DOMContentLoaded', function () {
+            // 効果音（ボタン用）
             const btn = document.getElementById('btn');
             const se = new Audio('{{ asset('sounds/choice/the-decision.mp3') }}');
             se.volume = 1.0;

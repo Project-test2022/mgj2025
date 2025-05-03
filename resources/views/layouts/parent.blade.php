@@ -5,8 +5,7 @@
 <body>
     <x-layouts.load/>
     @yield('content')
-    @stack('scripts')
 </body>
 
-<x-layouts.footer/>
+<x-layouts.foot/>
 </html>
