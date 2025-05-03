@@ -64,6 +64,21 @@
             font-weight: bold;
             padding: 20px 0;
         }
+
+        .button {
+            background: rgba(0, 0, 0, 0.7);
+            color: white;
+            padding: 15px 60px;
+            font-size: 22px;
+            border: none;
+            cursor: pointer;
+            letter-spacing: 5px;
+            transition: background 0.3s;
+        }
+
+        .button:hover {
+            background: rgba(0, 0, 0, 0.9);
+        }
     </style>
 @endpush
 
@@ -82,5 +97,5 @@
         {{ $result->message }}
     </div>
 
-    <button onclick="location.href='{{ route('home', ['id' => $player->id]) }}'"></button>
+    <button style="margin-top:20px;" class="button" onclick="location.href='{{ route('home', ['id' => $player->id]) }}'">ホーム</button>
 @endsection
