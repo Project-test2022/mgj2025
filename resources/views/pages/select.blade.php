@@ -17,7 +17,7 @@
         }
 
         .event-area {
-            width: 90%;
+            width: 100%;
             max-width: 1000px;
             aspect-ratio: 16/9;
             background: url('{{ asset('images/crossroadsinlife.png?v='.config('app.version')) }}') no-repeat center center;
@@ -31,16 +31,28 @@
             backdrop-filter: blur(2px);
         }
 
+        .panel {
+            background: rgba(255, 255, 255, 0.4);
+            width: 100%;
+            height: auto;
+            padding: 10px;
+            position: absolute;
+            top: 400px;
+            left: 0;
+            z-index: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 36px;
+        }
+
         .event-text {
-            background: rgba(248, 246, 246, 0.4);
-            display: inline-block;
             padding: 15px 25px;
             color: #070606;
             font-size: 20px;
             font-weight: bold;
             text-align: center;
             max-width: 80%;
-            line-height: 1.8;
         }
 
         .buttons {
@@ -49,10 +61,12 @@
         }
 
         .button {
+            width: 360px;
+            height: 80px;
             background: rgba(0, 0, 0, 0.7);
             color: white;
-            padding: 15px 60px;
             font-size: 22px;
+            font-weight: bold;
             border: none;
             cursor: pointer;
             letter-spacing: 5px;
@@ -66,7 +80,8 @@
 @endpush
 
 @section('content')
-    <div class="event-area">
+    <div class="event-area"></div>
+    <div class="panel">
         <div class="event-text">
             {{ $event->content }}
         </div>
