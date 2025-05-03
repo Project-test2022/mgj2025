@@ -36,7 +36,7 @@
       position: relative;
       width: 1124px;
       height: 505px;
-      background: url('home.png') no-repeat center center;
+      background: url('選択画面の背景家画像配置箇所') no-repeat center center;
       background-size: cover;
       display: flex;
       align-items: center;
