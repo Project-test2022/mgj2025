@@ -56,17 +56,19 @@
         }
 
         .panel {
-            background: rgba(255, 255, 255, 0.4);
-            width: 100%;
+            position: absolute;
+            top: calc(50% - 285px);
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100%; /* ←ブラウザ幅いっぱいにする */
             height: 415px;
             padding: 10px;
-            position: absolute;
-            top: 214px;
-            left: 0;
-            z-index: 1;
+            background: rgba(255, 255, 255, 0.4);
             display: flex;
             align-items: center;
+            justify-content: center;
             gap: 36px;
+            z-index: 1;
         }
 
         .profile-info {

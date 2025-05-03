@@ -19,11 +19,8 @@
         .panel {
             background: rgba(255, 255, 255, 0.4);
             width: 100%;
-            height: auto;
             padding: 10px;
             position: absolute;
-            top: 400px;
-            left: 0;
             z-index: 1;
             display: flex;
             align-items: center;
@@ -35,7 +32,11 @@
             width: 100%;
             max-width: 1280px;
             aspect-ratio: 16/9;
-            background: url('生成したイベント画像を配置する箇所') no-repeat center center;
+            @if($result->success)
+                background: url('{{ asset('images/choice_success.jpg?v='.config('app.version')) }}') no-repeat center center;
+            @else
+                background: url('{{ asset('images/choice_lose.jpg?v='.config('app.version')) }}') no-repeat center center;
+            @endif
             background-size: cover;
             position: relative;
             display: flex;
@@ -117,5 +118,9 @@
         {{ $result->message }}
     </div>
 
-    <button style="margin-top:20px;" class="button" onclick="location.href='{{ route('home', ['id' => $player->id]) }}'">ホーム</button>
+    @if($result->dead)
+        <button style="margin-top:20px;" class="button" onclick="location.href='{{ route('result', ['id' => $player->id]) }}'">おわり</button>
+    @else
+        <button style="margin-top:20px;" class="button" onclick="location.href='{{ route('home', ['id' => $player->id]) }}'">ホーム</button>
+    @endif
 @endsection
