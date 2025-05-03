@@ -5,6 +5,7 @@ namespace App\Repositories;
 use App\Entities\Player;
 use App\Mappers\PlayerMapper;
 use App\Models\PlayerModel;
+use App\Models\PlayerView;
 use App\ValueObjects\PlayerId;
 
 final readonly class PlayerRepository
@@ -16,7 +17,7 @@ final readonly class PlayerRepository
 
     public function find(PlayerId $id): ?Player
     {
-        $model = PlayerModel::query()->find($id->value);
+        $model = PlayerView::query()->find($id->value);
         if ($model === null) {
             return null;
         }

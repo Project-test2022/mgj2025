@@ -28,6 +28,7 @@ final readonly class PlayerMapper
         $model = PlayerModel::query()->find($player->id);
         if (!$model) {
             $model = new PlayerModel();
+            $model->player_id = $player->id->value;
         }
         $sex = SexModel::query()->where('sex_nm', $player->sexName->value)->first();
 
