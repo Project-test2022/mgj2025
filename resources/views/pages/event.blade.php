@@ -19,11 +19,8 @@
         .panel {
             background: rgba(255, 255, 255, 0.4);
             width: 100%;
-            height: auto;
             padding: 10px;
             position: absolute;
-            top: 400px;
-            left: 0;
             z-index: 1;
             display: flex;
             align-items: center;
