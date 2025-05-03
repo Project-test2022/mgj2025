@@ -96,8 +96,8 @@
         <input type="hidden" name="choice2" value="{{ $event->choice2->content }}">
         <input type="hidden" name="rate2" value="{{ $event->choice2->rate }}">
         <div class="buttons">
-            <button type="submit" name="ok" class="button">{{ $event->choice1->content }} ({{ $event->choice1->rate }}%)</button>
-            <button type="submit" name="ng" class="button">{{ $event->choice2->content }} ({{ $event->choice2->rate }}%)</button>
+            <button type="submit" name="ok" class="button">{{ $event->choice1->content }} (成功率 {{ $event->choice1->rate }}%)</button>
+            <button type="submit" name="ng" class="button">{{ $event->choice2->content }} (成功率 {{ $event->choice2->rate }}%)</button>
         </div>
     </form>
 @endsection
