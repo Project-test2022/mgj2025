@@ -3,6 +3,7 @@
 namespace App\Factories;
 
 use App\Entities\Player;
+use App\Models\PlayerModel;
 use App\ValueObjects\Ability;
 use App\ValueObjects\BirthYear;
 use App\ValueObjects\Business;
@@ -20,12 +21,15 @@ use App\ValueObjects\Visual;
 
 final readonly class PlayerFactory
 {
-    public function create(): Player
-    {
+    public function create(PlayerName $name, SexName $sex): Player {
+        do {
+            $playerId = uniqid();
+        } while (PlayerModel::query()->where('player_id', $playerId)->exists());
+
         return new Player(
-            PlayerId::from(uniqid()), // TODO: 一意なIDを生成する
-            PlayerName::from(''), // TODO: ランダムに生成する
-            SexName::from('男'),// TODO: ランダムに生成する
+            PlayerId::from($playerId),
+            $name,
+            $sex,
             BirthYear::from(2025),
             Turn::from(0),
             Money::from(0),

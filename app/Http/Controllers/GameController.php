@@ -3,12 +3,12 @@
 namespace App\Http\Controllers;
 
 use App\Factories\PlayerFactory;
-use App\Models\PlayerModel;
 use App\Repositories\PlayerRepository;
 use App\ValueObjects\PlayerId;
+use App\ValueObjects\PlayerName;
+use App\ValueObjects\SexName;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 use Illuminate\View\View;
 
 final class GameController extends Controller
@@ -26,7 +26,14 @@ final class GameController extends Controller
 
     public function start(): RedirectResponse
     {
-        $player = $this->playerFactory->create();
+        // TODO: Dify でランダムに生成する
+        $name = '山田 太郎';
+        $sex = '男';
+
+        $player = $this->playerFactory->create(
+            PlayerName::from($name),
+            SexName::from($sex),
+        );
         $this->playerRepository->save($player);
 
         return redirect()->route('home', ['id' => $player->id]);
