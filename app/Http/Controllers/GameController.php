@@ -11,8 +11,8 @@ use Illuminate\View\View;
 final class GameController extends Controller
 {
     public function __construct(
-        private readonly PlayerRepository $player_repository,
-        private readonly PlayerFactory $player_factory,
+        private readonly PlayerRepository $playerRepository,
+        private readonly PlayerFactory $playerFactory,
     ) {
     }
 
@@ -23,8 +23,8 @@ final class GameController extends Controller
 
     public function start(): RedirectResponse
     {
-        $player = $this->player_factory->create();
-        $this->player_repository->save($player);
+        $player = $this->playerFactory->create();
+        $this->playerRepository->save($player);
 
         return redirect()->route('home');
     }

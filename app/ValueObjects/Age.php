@@ -2,7 +2,7 @@
 
 namespace App\ValueObjects;
 
-final readonly class PlayerId
+final readonly class Age
 {
     private function __construct(public string $value)
     {

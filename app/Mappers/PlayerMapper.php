@@ -14,7 +14,16 @@ final readonly class PlayerMapper
             $model = new PlayerModel();
         }
 
-        // TODO: Map properties from Player to PlayerModel
+        $model->turn = $player->turn()->value;
+        $model->birth = $player->birthYear->value;
+        $model->sex = $player->sex->value;
+        $model->money = $player->money->value;
+        $model->name = $player->name->value;
+        $model->health = $player->health->value;
+        $model->a_intelligence = $player->ability->intelligence->value;
+        $model->a_sport = $player->ability->sport->value;
+        $model->e_business = $player->evaluation->business->value;
+        $model->e_love = $player->evaluation->love->value;
 
         return $model;
     }
