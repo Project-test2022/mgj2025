@@ -7,6 +7,7 @@ use App\Entities\Event;
 use App\Entities\EventResult;
 use App\Factories\PlayerFactory;
 use App\Repositories\PlayerRepository;
+use App\ValueObjects\BirthYear;
 use App\ValueObjects\Choice;
 use App\ValueObjects\EventSituation;
 use App\ValueObjects\PlayerId;
@@ -32,15 +33,16 @@ final class GameController extends Controller
 
     public function start(): RedirectResponse
     {
-        // TODO: Dify でランダムに生成する
-        $name = '山田 太郎';
-        $sex = '男';
+        $id = $this->playerFactory->generateId();
+        [$name, $sex, $birthYear] = $this->dify->createPlayer($id);
 
         // TODO: Dify でキャラ画像を生成する
 
         $player = $this->playerFactory->create(
+            $id,
             PlayerName::from($name),
             SexName::from($sex),
+            BirthYear::from($birthYear),
         );
         $this->playerRepository->save($player);
 
@@ -172,7 +174,7 @@ final class GameController extends Controller
 
     private function choice(Choice $choice): bool
     {
-        // TODO: イベント成否判定
-        return false;
+        $rate = (float)$choice->rate->value;
+        return mt_rand(0, 10000) < ($rate * 100);
     }
 }

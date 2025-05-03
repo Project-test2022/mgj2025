@@ -21,16 +21,20 @@ use App\ValueObjects\Visual;
 
 final readonly class PlayerFactory
 {
-    public function create(PlayerName $name, SexName $sex): Player {
+    public function generateId(): PlayerId {
         do {
             $playerId = uniqid();
         } while (PlayerModel::query()->where('player_id', $playerId)->exists());
 
+        return PlayerId::from($playerId);
+    }
+
+    public function create(PlayerId $id, PlayerName $name, SexName $sex, BirthYear $birthYear): Player {
         return new Player(
-            PlayerId::from($playerId),
+            $id,
             $name,
             $sex,
-            BirthYear::from(2025),
+            $birthYear,
             Turn::from(0),
             Money::from(0),
             Health::from(100),

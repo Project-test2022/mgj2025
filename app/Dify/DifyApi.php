@@ -5,11 +5,15 @@ namespace App\Dify;
 use App\Entities\Event;
 use App\Entities\EventResult;
 use App\Entities\Player;
+use App\Models\SexModel;
+use App\ValueObjects\BirthYear;
 use App\ValueObjects\Content;
 use App\ValueObjects\EventSituation;
 use App\ValueObjects\PlayerId;
 use App\ValueObjects\Choice;
+use App\ValueObjects\PlayerName;
 use App\ValueObjects\SelectContent;
+use App\ValueObjects\SexName;
 
 final readonly class DifyApi
 {
@@ -20,6 +24,20 @@ final readonly class DifyApi
     {
         $this->apiKey = config('app.dify.api_key');
         $this->endpoint = config('app.dify.endpoint');
+    }
+
+    public function createPlayer(PlayerId $id): array
+    {
+        $state = State::PLAYER_GENERATION;
+        $input = $this->input($state);
+        $data = $this->handle($id, $input);
+        $sex = SexModel::query()->where('sex_cd', $data['sex'])->first();
+
+        return [
+            PlayerName::from($data['name']),
+            SexName::from($sex->sex_nm),
+            BirthYear::from($data['birth']),
+        ];
     }
 
     public function event(Player $player, EventSituation $situation): Event
@@ -80,7 +98,7 @@ final readonly class DifyApi
         // セッション終了
         curl_close($ch);
 
-        return $decoded;
+        return $decoded['data']['outputs']['structured_output'];
     }
 
     private function formatPlayer(Player $player): string

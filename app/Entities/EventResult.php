@@ -35,20 +35,19 @@ final readonly class EventResult
 
     public static function from(array $data, Player $before, bool $success): self
     {
-        $output = $data['data']['outputs']['structured_output'];
         return new self(
-            ResultMessage::from($output['e_result']),
+            ResultMessage::from($data['e_result']),
             $success,
-            $before->totalMoney->sub(Money::from($output['total_money'])),
-            $before->health->sub(Health::from($output['health'])),
+            $before->totalMoney->sub(Money::from($data['total_money'])),
+            $before->health->sub(Health::from($data['health'])),
             Ability::from(
-                $before->ability->intelligence->sub(Intelligence::from($output['a_intelligence'])),
-                $before->ability->sport->sub(Sport::from($output['a_sport'])),
-                $before->ability->visual->sub(Visual::from($output['a_visual'])),
+                $before->ability->intelligence->sub(Intelligence::from($data['a_intelligence'])),
+                $before->ability->sport->sub(Sport::from($data['a_sport'])),
+                $before->ability->visual->sub(Visual::from($data['a_visual'])),
             ),
             Evaluation::from(
-                $before->evaluation->business->sub(Business::from($output['e_business'])),
-                $before->evaluation->love->sub(Love::from($output['e_love'])),
+                $before->evaluation->business->sub(Business::from($data['e_business'])),
+                $before->evaluation->love->sub(Love::from($data['e_love'])),
             ),
         );
     }
