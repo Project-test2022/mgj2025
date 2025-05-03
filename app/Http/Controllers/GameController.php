@@ -66,9 +66,8 @@ final class GameController extends Controller
             $this->playerRepository->save($player);
 
             DB::commit();
-        } catch (Exception $e) {
+        } catch (Exception) {
             DB::rollBack();
-            throw $e;
             return redirect()->route('title');
         }
 
