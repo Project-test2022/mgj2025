@@ -121,9 +121,8 @@
 @endpush
 
 @section('content')
-<div class="header">人生やり直しゲーム</div>
-
 <div class="main-wrapper">
+  <div class="header">人生やり直しゲーム</div>
   <div class="main-area"></div>
   <div class="panel">
       <div class="character-frame">
