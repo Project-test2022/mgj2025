@@ -89,7 +89,7 @@ final readonly class DifyApi
             'プレイヤー名' => $player->name->value,
             '性別' => $player->sexName->value,
             '生年' => $player->birthYear->value,
-            '年齢' => $player->age(),
+            '年齢' => $player->turn->value,
             '総資産(円)' => $player->totalMoney->value,
             '健康度(0-100)' => $player->health->value,
             '知能(0-100)' => $player->ability->intelligence->value,

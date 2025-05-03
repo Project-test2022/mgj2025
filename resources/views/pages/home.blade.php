@@ -94,7 +94,7 @@
         <div class="profile-area">
             <div class="character-image"></div>
             <div class="profile-info">
-                {{ $player->name }} {{ $player->sexName }}性　{{ $player->age() }}歳<br>
+                {{ $player->name }} {{ $player->sexName }}性　{{ $player->turn->value }}歳<br>
                 資産：¥{{ number_format($player->totalMoney->value) }}<br>
                 知能：{{ $player->ability->intelligence }} 運動：{{ $player->ability->sport }}
                 容姿：{{ $player->ability->visual }} 健康：{{ $player->health }}
