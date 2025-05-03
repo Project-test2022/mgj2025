@@ -68,13 +68,15 @@
 @section('content')
     <div class="event-area">
         <div class="event-text">
-            {{ $message }}<br>
-            引き受けますか？
+            {{ $message }}
         </div>
     </div>
 
-    <div class="buttons">
-        <button class="button">OK</button>
-        <button class="button">NG</button>
-    </div>
+    <form action="{{ route('event.select', ['id' => $player->id]) }}" method="POST">
+        @csrf
+        <div class="buttons">
+            <button type="submit" name="ok" class="button">OK</button>
+            <button type="submit" name="ng" class="button">NG</button>
+        </div>
+    </form>
 @endsection

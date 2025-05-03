@@ -95,4 +95,48 @@ final class GameController extends Controller
             'message' => $message,
         ]);
     }
+
+    public function selectEvent(Request $request): RedirectResponse
+    {
+        $playerId = $request->route('id');
+        $player = $this->playerRepository->find(PlayerId::from($playerId));
+        if ($player === null) {
+            return redirect()->route('title');
+        }
+
+        if ($request->has('ok')) {
+            // TODO: Dify でイベント結果を生成する
+            $message = 'OKイベント';
+        } elseif ($request->has('ng')) {
+            // TODO: Dify でイベント結果を生成する
+            $message = 'NGイベント';
+        } else {
+            return redirect()->route('home', ['id' => $playerId]);
+        }
+
+        // TODO: 結果に応じてステータスを更新する
+
+        return redirect()->route('event.result', ['id' => $playerId])->with([
+            'message' => $message,
+        ]);
+    }
+
+    public function eventResult(Request $request): View|RedirectResponse
+    {
+        $playerId = $request->route('id');
+        $player = $this->playerRepository->find(PlayerId::from($playerId));
+        if ($player === null) {
+            return redirect()->route('title');
+        }
+
+        $message = $request->session()->get('message');
+        if (empty($message)) {
+            return redirect()->route('home', ['id' => $playerId]);
+        }
+
+        return view('pages.event', [
+            'player' => $player,
+            'message' => $message,
+        ]);
+    }
 }
