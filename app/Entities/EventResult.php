@@ -38,16 +38,16 @@ final readonly class EventResult
         return new self(
             ResultMessage::from($data['e_result']),
             $success,
-            $before->totalMoney->sub(Money::from($data['total_money'])),
-            $before->health->sub(Health::from($data['health'])),
+            Money::from($data['total_money'])->sub($before->totalMoney),
+            Health::from($data['health'])->sub($before->health),
             Ability::from(
-                $before->ability->intelligence->sub(Intelligence::from($data['a_intelligence'])),
-                $before->ability->sport->sub(Sport::from($data['a_sport'])),
-                $before->ability->visual->sub(Visual::from($data['a_visual'])),
+                Intelligence::from($data['a_intelligence'])->sub($before->ability->intelligence),
+                Sport::from($data['a_sport'])->sub($before->ability->sport),
+                Visual::from($data['a_visual'])->sub($before->ability->visual),
             ),
             Evaluation::from(
-                $before->evaluation->business->sub(Business::from($data['e_business'])),
-                $before->evaluation->love->sub(Love::from($data['e_love'])),
+                Business::from($data['e_business'])->sub($before->evaluation->business),
+                Love::from($data['e_love'])->sub($before->evaluation->love),
             ),
         );
     }

@@ -72,4 +72,6 @@
     <div class="bottom-panel">
         {{ $result->message }}
     </div>
+
+    <button onclick="location.href='{{ route('home', ['id' => $player->id]) }}'"></button>
 @endsection
