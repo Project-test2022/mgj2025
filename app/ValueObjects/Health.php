@@ -22,4 +22,15 @@ final readonly class Health
     {
         return new self($this->value - $other->value);
     }
+
+    public function add(Health $health): self
+    {
+        $value = $this->value + $health->value;
+        if ($value < 0) {
+            $value = 0;
+        } elseif ($value > 100) {
+            $value = 100;
+        }
+        return new self($value);
+    }
 }

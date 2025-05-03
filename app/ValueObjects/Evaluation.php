@@ -19,4 +19,12 @@ final readonly class Evaluation
             $love,
         );
     }
+
+    public function add(Evaluation $other): self
+    {
+        return new self(
+            $this->business->add($other->business),
+            $this->love->add($other->love),
+        );
+    }
 }

@@ -18,6 +18,7 @@ final readonly class EventResult
     /**
      * @param ResultMessage $message
      * @param bool          $success
+     * @param bool          $dead
      * @param Money         $totalMoney 総資産の変化量
      * @param Health        $health     健康の変化量
      * @param Ability       $ability    能力の変化量
@@ -26,6 +27,7 @@ final readonly class EventResult
     public function __construct(
         public ResultMessage $message,
         public bool $success,
+        public bool $dead,
         public Money $totalMoney,
         public Health $health,
         public Ability $ability,
@@ -38,6 +40,7 @@ final readonly class EventResult
         return new self(
             ResultMessage::from($data['e_result']),
             $success,
+            $data['e_dead'],
             Money::from($data['total_money'])->sub($before->totalMoney),
             Health::from($data['health'])->sub($before->health),
             Ability::from(

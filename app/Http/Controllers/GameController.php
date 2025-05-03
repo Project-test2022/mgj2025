@@ -13,9 +13,12 @@ use App\ValueObjects\EventSituation;
 use App\ValueObjects\PlayerId;
 use App\ValueObjects\PlayerName;
 use App\ValueObjects\SexName;
+use Exception;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\View\View;
+use Throwable;
 
 final class GameController extends Controller
 {
@@ -112,6 +115,9 @@ final class GameController extends Controller
         ]);
     }
 
+    /**
+     * @throws Throwable
+     */
     public function selectEvent(Request $request): RedirectResponse
     {
         $playerId = $request->route('id');
@@ -141,11 +147,30 @@ final class GameController extends Controller
             $result,
         );
 
-        // TODO: 結果に応じてステータスを更新する
+        DB::beginTransaction();
+        try {
+            if ($eventResult->dead) {
+                // TODO: 死んだときは終了
+            }
 
-        // TODO: 死んだときは殺す(終了判定)
+            // 結果に応じてステータスを更新する
+            $player = $player->update(
+                $eventResult->totalMoney,
+                $eventResult->health,
+                $eventResult->ability,
+                $eventResult->evaluation,
+            );
 
-        // TODO: ターンを進める
+            // ターンを進める
+            $player = $player->nextTurn();
+
+            $this->playerRepository->save($player);
+
+            DB::commit();
+        } catch (Exception) {
+            DB::rollBack();
+            return redirect()->route('home', ['id' => $playerId]);
+        }
 
         return redirect()->route('event.result', ['id' => $playerId])->with([
             'result' => $eventResult,

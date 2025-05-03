@@ -22,4 +22,15 @@ final readonly class Intelligence
     {
         return new self($this->value - $from->value);
     }
+
+    public function add(Intelligence $other): self
+    {
+        $value = $this->value + $other->value;
+        if ($value < 0) {
+            $value = 0;
+        } elseif ($value > 100) {
+            $value = 100;
+        }
+        return new self($value);
+    }
 }

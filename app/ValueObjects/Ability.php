@@ -22,4 +22,13 @@ final readonly class Ability
             $visual,
         );
     }
+
+    public function add(Ability $other): self
+    {
+        return new self(
+            $this->intelligence->add($other->intelligence),
+            $this->sport->add($other->sport),
+            $this->visual->add($other->visual),
+        );
+    }
 }

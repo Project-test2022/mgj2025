@@ -22,4 +22,13 @@ final readonly class Money
     {
         return new self($this->value - $other->value);
     }
+
+    public function add(Money $other): self
+    {
+        $value = $this->value + $other->value;
+        if ($value < 0) {
+            $value = 0;
+        }
+        return new self($value);
+    }
 }

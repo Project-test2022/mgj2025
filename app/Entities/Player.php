@@ -26,4 +26,34 @@ final readonly class Player
         public Evaluation $evaluation,
     ) {
     }
+
+    public function update(Money $totalMoney, Health $health, Ability $ability, Evaluation $evaluation): self
+    {
+        return new self(
+            $this->id,
+            $this->name,
+            $this->sexName,
+            $this->birthYear,
+            $this->turn,
+            $this->totalMoney->add($totalMoney),
+            $this->health->add($health),
+            $this->ability->add($ability),
+            $this->evaluation->add($evaluation),
+        );
+    }
+
+    public function nextTurn(): self
+    {
+        return new self(
+            $this->id,
+            $this->name,
+            $this->sexName,
+            $this->birthYear,
+            $this->turn->next(),
+            $this->totalMoney,
+            $this->health,
+            $this->ability,
+            $this->evaluation,
+        );
+    }
 }
