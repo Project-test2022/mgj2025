@@ -3,6 +3,7 @@
 namespace App\Dify;
 
 use App\Entities\Event;
+use App\Entities\EventResult;
 use App\Entities\Player;
 use App\ValueObjects\Content;
 use App\ValueObjects\EventSituation;
@@ -31,15 +32,15 @@ final readonly class DifyApi
         return Event::fromArray($data);
     }
 
-    public function eventResult(Player $player, EventSituation $situation, Event $event, Choice $select, bool $result): array
+    public function eventResult(Player $player, EventSituation $situation, Event $event, Choice $select, bool $result): EventResult
     {
         $state = State::EVENT_SELECTION;
         $playerInfo = $this->formatPlayer($player);
-        $eventInfo = $this->
-        formatEvent($event->content, $select->content, $result);
+        $eventInfo = $this->formatEvent($event->content, $select->content, $result);
         $input = $this->input($state, $playerInfo, $situation, $eventInfo);
 
-        return $this->handle($player->id, $input);
+        $data = $this->handle($player->id, $input);
+        return EventResult::from($data, $player, $result);
     }
 
     private function handle(PlayerId $player_id, array $input): array

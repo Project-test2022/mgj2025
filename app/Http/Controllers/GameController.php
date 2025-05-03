@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Dify\DifyApi;
 use App\Entities\Event;
+use App\Entities\EventResult;
 use App\Factories\PlayerFactory;
 use App\Repositories\PlayerRepository;
 use App\ValueObjects\Choice;
@@ -130,8 +131,7 @@ final class GameController extends Controller
 
         $result = $this->choice($choice);
 
-        // TODO: Dify でイベント結果を生成する
-        $response = $this->dify->eventResult(
+        $eventResult = $this->dify->eventResult(
             $player,
             $situation,
             $event,
@@ -141,8 +141,12 @@ final class GameController extends Controller
 
         // TODO: 結果に応じてステータスを更新する
 
-        return redirect()->route('event.result', ['id' => $playerId])->with([
+        // TODO: 死んだときは殺す(終了判定)
 
+        // TODO: ターンを進める
+
+        return redirect()->route('event.result', ['id' => $playerId])->with([
+            'result' => $eventResult,
         ]);
     }
 
@@ -154,14 +158,15 @@ final class GameController extends Controller
             return redirect()->route('title');
         }
 
-        $message = $request->session()->get('message');
-        if (empty($message)) {
+        /** @var EventResult|null $result */
+        $result = $request->session()->get('result');
+        if ($result === null) {
             return redirect()->route('home', ['id' => $playerId]);
         }
 
         return view('pages.event', [
             'player' => $player,
-            'message' => $message,
+            'result' => $result,
         ]);
     }
 
