@@ -16,9 +16,24 @@
             align-items: center;
         }
 
+        .panel {
+            background: rgba(255, 255, 255, 0.4);
+            width: 100%;
+            height: auto;
+            padding: 10px;
+            position: absolute;
+            top: 400px;
+            left: 0;
+            z-index: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 36px;
+        }
+
         .event-area {
-            width: 90%;
-            max-width: 1000px;
+            width: 100%;
+            max-width: 1280px;
             aspect-ratio: 16/9;
             background: url('生成したイベント画像を配置する箇所') no-repeat center center;
             background-size: cover;
@@ -31,24 +46,17 @@
         }
 
         .event-text {
-            background: hsla(0, 100%, 100%, 0.3);
-            max-width: 1000px;
-            width: 95%;
-            padding: 20px;
-            color: rgb(7, 7, 7);
-            font-size: 22px;
+            padding: 15px 25px;
+            color: #070606;
+            font-size: 20px;
             font-weight: bold;
             text-align: center;
-            position: absolute;
-            top: 40%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            letter-spacing: 2px;
+            max-width: 80%;
         }
 
         .bottom-panel {
-            width: 90%;
-            max-width: 1000px;
+            width: 100%;
+            max-width: 1280px;
             background: rgba(0, 0, 0, 0.5);
             color: white;
             text-align: center;
@@ -60,7 +68,8 @@
 @endpush
 
 @section('content')
-    <div class="event-area">
+    <div class="event-area"></div>
+    <div class="panel">
         <div class="event-text">
             - {{ $result->result() }} -<br>
             資産：¥{{ number_format($result->totalMoney->value) }}<br>
