@@ -26,9 +26,7 @@ final readonly class PlayerFaceRepository
 
     public function find(PlayerFaceId $playerFaceId): ?PlayerFace
     {
-        $model = DB::table('player_face')
-            ->where('player_face_id', $playerFaceId->value)
-            ->first();
+        $model = DB::selectOne('SELECT * FROM player_face WHERE player_face_id = ?', [$playerFaceId->value]);
         if ($model === null) {
             return null;
         }
