@@ -81,4 +81,21 @@ final readonly class Player
             $playerFaceId,
         );
     }
+
+    public function setBackgroundId(BackgroundId $backgroundId): self
+    {
+        return new self(
+            $this->id,
+            $this->name,
+            $this->sexName,
+            $this->birthYear,
+            $this->turn,
+            $this->totalMoney,
+            $this->health,
+            $this->ability,
+            $this->evaluation,
+            $backgroundId,
+            $this->playerFaceId,
+        );
+    }
 }

@@ -25,4 +25,12 @@ final readonly class BackgroundId
     {
         return $this->value;
     }
+
+    public function equals(?BackgroundId $other): bool
+    {
+        if ($other === null) {
+            return false;
+        }
+        return $this->value === $other->value;
+    }
 }

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Dify\DifyApi;
 use App\Entities\Event;
 use App\Entities\EventResult;
+use App\Entities\Player;
 use App\Factories\PlayerFaceFactory;
 use App\Factories\PlayerFactory;
 use App\Repositories\BackgroundRepository;
@@ -192,11 +193,13 @@ final class GameController extends Controller
             // ターンを進める
             $player = $player->nextTurn();
 
-            // TODO: 年代に応じてキャラ画像を変更する
-
-            // TODO: 総資産に応じて背景画像を変更する
-
             $this->playerRepository->save($player);
+
+            // キャラ画像を更新する
+            $this->updatePlayerFace($player);
+
+            // 背景画像を更新する
+            $this->updateBackground($player);
 
             DB::commit();
         } catch (Exception) {
@@ -265,5 +268,24 @@ final class GameController extends Controller
     {
         $rate = (float)$choice->rate->value;
         return mt_rand(0, 10000) < ($rate * 100);
+    }
+
+    private function updatePlayerFace(Player $player): void
+    {
+        // TODO: 年代に応じてキャラ画像を変更する
+    }
+
+    private function updateBackground(Player $player): void
+    {
+        // 総資産に応じて背景画像を変更する
+        $newBackground = $this->backgroundRepository->findByMoney($player->totalMoney);
+        if ($newBackground === null) {
+            return;
+        }
+        if ($newBackground->id->equals($player->backgroundId)) {
+            return;
+        }
+        $player = $player->setBackgroundId($newBackground->id);
+        $this->playerRepository->save($player);
     }
 }
