@@ -127,7 +127,7 @@
   <div class="main-area"></div>
   <div class="panel">
       <div class="character-frame">
-          <img src="crossroadsinlife_.png" alt="人物写真">
+          <img src="選択画面の人物画像を配置する箇所" alt="人物写真">
       </div>
       <div class="profile-info">
           <div class="question">「この人生は幸せでしたか？」</div>
