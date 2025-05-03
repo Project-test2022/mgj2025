@@ -114,5 +114,9 @@
         {{ $result->message }}
     </div>
 
-    <button style="margin-top:20px;" class="button" onclick="location.href='{{ route('home', ['id' => $player->id]) }}'">ホーム</button>
+    @if($result->dead)
+        <button style="margin-top:20px;" class="button" onclick="location.href='{{ route('result', ['id' => $player->id]) }}'">おわり</button>
+    @else
+        <button style="margin-top:20px;" class="button" onclick="location.href='{{ route('home', ['id' => $player->id]) }}'">ホーム</button>
+    @endif
 @endsection

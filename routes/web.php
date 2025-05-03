@@ -19,3 +19,5 @@ Route::get('/event/{id}/result', [GameController::class, 'eventResult'])->name('
 
 Route::get('/face/{id}', [GameController::class, 'face'])->name('face');
 Route::get('/background/{id}', [GameController::class, 'background'])->name('background');
+
+Route::get('/result/{id}', [GameController::class, 'result'])->name('result');
