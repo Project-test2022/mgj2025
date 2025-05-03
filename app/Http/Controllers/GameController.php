@@ -3,10 +3,12 @@
 namespace App\Http\Controllers;
 
 use App\Factories\PlayerFactory;
+use App\Models\PlayerModel;
 use App\Repositories\PlayerRepository;
 use App\ValueObjects\PlayerId;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\View\View;
 
 final class GameController extends Controller

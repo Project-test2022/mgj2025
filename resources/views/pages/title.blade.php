@@ -10,7 +10,7 @@
       justify-content: center;
       align-items: center;
       font-family: 'Arial', sans-serif;
-      background: url('backimage.png') no-repeat center center;
+      background: url('{{ asset('images/background.png?v='.config('app.version')) }}') no-repeat center center;
       background-size: cover;
     }
 
@@ -49,6 +49,9 @@
 @section('content')
 <div class="container">
     <div class="title">人生やり直しゲーム</div>
-    <button class="start-button">START</button>
+    <form action="{{ route('start') }}" method="POST">
+        @csrf
+        <button type="submit" class="start-button">START</button>
+    </form>
 </div>
 @endsection
