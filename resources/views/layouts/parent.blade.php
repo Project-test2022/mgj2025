@@ -3,6 +3,7 @@
 <x-layouts.head/>
 
 <body>
+    <x-layouts.load/>
     @yield('content')
 </body>
 
