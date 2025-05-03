@@ -36,7 +36,7 @@ final readonly class PlayerMapper
         $model->player_name = $player->name->value;
         $model->sex_cd = $sex->sex_cd;
         $model->birth_date = $player->birthYear->toDate()->format('Y-m-d');
-        $model->total_money = $player->total_money->value;
+        $model->total_money = $player->totalMoney->value;
         $model->health = $player->health->value;
         $model->a_intelligence = $player->ability->intelligence->value;
         $model->a_sport = $player->ability->sport->value;

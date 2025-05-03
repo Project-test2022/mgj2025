@@ -20,7 +20,7 @@ final readonly class Player
         public SexName $sexName,
         public BirthYear $birthYear,
         public Turn $turn,
-        public Money $total_money,
+        public Money $totalMoney,
         public Health $health,
         public Ability $ability,
         public Evaluation $evaluation,

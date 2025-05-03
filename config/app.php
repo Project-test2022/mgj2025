@@ -124,4 +124,8 @@ return [
         'store' => env('APP_MAINTENANCE_STORE', 'database'),
     ],
 
+    'dify' => [
+        'api_key' => env('DIFY_API_KEY'),
+        'endpoint' => env('DIFY_ENDPOINT'),
+    ],
 ];

@@ -68,15 +68,21 @@
 @section('content')
     <div class="event-area">
         <div class="event-text">
-            {{ $message }}
+            {{ $event->content }}
         </div>
     </div>
 
     <form action="{{ route('event.select', ['id' => $player->id]) }}" method="POST">
         @csrf
+        <input type="hidden" name="situation" value="{{ $situation->value }}">
+        <input type="hidden" name="event" value="{{ $event->content }}">
+        <input type="hidden" name="choice1" value="{{ $event->choice1->content }}">
+        <input type="hidden" name="rate1" value="{{ $event->choice1->rate }}">
+        <input type="hidden" name="choice2" value="{{ $event->choice2->content }}">
+        <input type="hidden" name="rate2" value="{{ $event->choice2->rate }}">
         <div class="buttons">
-            <button type="submit" name="ok" class="button">OK</button>
-            <button type="submit" name="ng" class="button">NG</button>
+            <button type="submit" name="ok" class="button">{{ $event->choice1->content }}</button>
+            <button type="submit" name="ng" class="button">{{ $event->choice2->content }}</button>
         </div>
     </form>
 @endsection

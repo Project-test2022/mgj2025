@@ -2,8 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Dify\DifyApi;
+use App\Entities\Event;
 use App\Factories\PlayerFactory;
 use App\Repositories\PlayerRepository;
+use App\ValueObjects\Choice;
+use App\ValueObjects\EventSituation;
 use App\ValueObjects\PlayerId;
 use App\ValueObjects\PlayerName;
 use App\ValueObjects\SexName;
@@ -16,6 +20,7 @@ final class GameController extends Controller
     public function __construct(
         private readonly PlayerRepository $playerRepository,
         private readonly PlayerFactory $playerFactory,
+        private readonly DifyApi $dify,
     ) {
     }
 
@@ -63,17 +68,21 @@ final class GameController extends Controller
         }
 
         if ($request->has('business')) {
-            // TODO: Dify でイベントを生成する
-            $message = '仕事イベント';
+            $situation = EventSituation::BUSINESS;
         } elseif ($request->has('love')) {
-            // TODO: Dify でイベントを生成する
-            $message = '恋愛イベント';
+            $situation = EventSituation::LOVE;
         } else {
             return redirect()->route('home', ['id' => $playerId]);
         }
 
+        $event = $this->dify->event(
+            $player,
+            $situation,
+        );
+
         return redirect()->route('event', ['id' => $playerId])->with([
-            'message' => $message,
+            'event' => $event,
+            'situation' => $situation,
         ]);
     }
 
@@ -85,14 +94,18 @@ final class GameController extends Controller
             return redirect()->route('title');
         }
 
-        $message = $request->session()->get('message');
-        if (empty($message)) {
+        /** @var Event|null $event */
+        $event = $request->session()->get('event');
+        /** @var EventSituation|null $situation */
+        $situation = $request->session()->get('situation');
+        if ($event === null || $situation === null) {
             return redirect()->route('home', ['id' => $playerId]);
         }
 
         return view('pages.select', [
             'player' => $player,
-            'message' => $message,
+            'event' => $event,
+            'situation' => $situation,
         ]);
     }
 
@@ -104,20 +117,32 @@ final class GameController extends Controller
             return redirect()->route('title');
         }
 
+        $situation = EventSituation::from($request->input('situation'));
+        $event = Event::fromRequest($request);
+
         if ($request->has('ok')) {
-            // TODO: Dify でイベント結果を生成する
-            $message = 'OKイベント';
+            $choice = $event->choice1;
         } elseif ($request->has('ng')) {
-            // TODO: Dify でイベント結果を生成する
-            $message = 'NGイベント';
+            $choice = $event->choice2;
         } else {
             return redirect()->route('home', ['id' => $playerId]);
         }
 
+        $result = $this->choice($choice);
+
+        // TODO: Dify でイベント結果を生成する
+        $response = $this->dify->eventResult(
+            $player,
+            $situation,
+            $event,
+            $choice,
+            $result,
+        );
+
         // TODO: 結果に応じてステータスを更新する
 
         return redirect()->route('event.result', ['id' => $playerId])->with([
-            'message' => $message,
+
         ]);
     }
 
@@ -138,5 +163,11 @@ final class GameController extends Controller
             'player' => $player,
             'message' => $message,
         ]);
+    }
+
+    private function choice(Choice $choice): bool
+    {
+        // TODO: イベント成否判定
+        return false;
     }
 }
