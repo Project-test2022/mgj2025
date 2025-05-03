@@ -14,6 +14,8 @@ use App\ValueObjects\Choice;
 use App\ValueObjects\PlayerName;
 use App\ValueObjects\SelectContent;
 use App\ValueObjects\SexName;
+use Exception;
+use TypeError;
 
 final readonly class DifyApi
 {
@@ -101,44 +103,61 @@ final readonly class DifyApi
         return EventResult::from($data, $player, $result);
     }
 
+    /**
+     * @throws Exception
+     */
     private function handle(PlayerId $player_id, array $input): array
     {
-        $data = [
-            'inputs' => $input,
-            'user' => $player_id->value,
-        ];
+        $attempt = 0;
+        while ($attempt < 5) {
+            try {
+                $data = [
+                    'inputs' => $input,
+                    'user' => $player_id->value,
+                ];
 
-        // JSONにエンコード
-        $jsonData = json_encode($data);
+                // JSONにエンコード
+                $jsonData = json_encode($data);
 
-        // cURLセッション初期化
-        $ch = curl_init($this->endpoint);
+                // cURLセッション初期化
+                $ch = curl_init($this->endpoint);
 
-        // オプション設定
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($ch, CURLOPT_POST, true);
-        curl_setopt($ch, CURLOPT_POSTFIELDS, $jsonData);
-        curl_setopt($ch, CURLOPT_HTTPHEADER, [
-            'Content-Type: application/json',
-            'Authorization: Bearer ' . $this->apiKey,
-        ]);
+                // オプション設定
+                curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+                curl_setopt($ch, CURLOPT_POST, true);
+                curl_setopt($ch, CURLOPT_POSTFIELDS, $jsonData);
+                curl_setopt($ch, CURLOPT_HTTPHEADER, [
+                    'Content-Type: application/json',
+                    'Authorization: Bearer ' . $this->apiKey,
+                ]);
 
-        // 実行とレスポンス取得
-        $response = curl_exec($ch);
+                // 実行とレスポンス取得
+                $response = curl_exec($ch);
 
-        // エラーハンドリング
-        if (curl_errno($ch)) {
-            echo 'Error: ' . curl_error($ch);
-            return [];
-        } else {
-            $decoded = json_decode($response, true);
-            print_r($decoded);
+                // エラーハンドリング
+                if (curl_errno($ch)) {
+                    throw new Exception('cURL error: ' . curl_error($ch));
+                } else {
+                    $decoded = json_decode($response, true);
+                }
+
+                // セッション終了
+                curl_close($ch);
+
+                // レスポンスの検証
+                if (empty($decoded['data']['outputs'])) {
+                    throw new Exception('Invalid response from Dify API.');
+                }
+
+                return $decoded['data']['outputs'];
+            } catch (TypeError|Exception $e) {
+                $attempt++;
+                if ($attempt > 5) {
+                    throw $e;
+                }
+            }
         }
-
-        // セッション終了
-        curl_close($ch);
-
-        return $decoded['data']['outputs'];
+        throw new Exception('Dify API request failed after 5 attempts.');
     }
 
     private function formatPlayer(Player $player): string
