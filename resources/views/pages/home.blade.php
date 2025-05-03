@@ -119,6 +119,7 @@
                 資産：¥{{ number_format($player->totalMoney->value) }}<br>
                 知能：{{ $player->ability->intelligence }} 運動：{{ $player->ability->sport }}
                 容姿：{{ $player->ability->visual }} 健康：{{ $player->health }}
+                仕事: {{ $player->evaluation->business }} 恋愛: {{ $player->evaluation->love }}
             </div>
         </div>
 

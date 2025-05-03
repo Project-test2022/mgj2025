@@ -63,4 +63,81 @@ final readonly class EventResult
             return 'FAILURE';
         }
     }
+
+    public function money(): string
+    {
+        if ($this->totalMoney->value > 0) {
+            return '+¥' . number_format($this->totalMoney->value);
+        } elseif ($this->totalMoney->value < 0) {
+            return '-¥' . number_format(abs($this->totalMoney->value));
+        } else {
+            return '0';
+        }
+    }
+
+    public function health(): string
+    {
+        if ($this->health->value > 0) {
+            return '+' . $this->health->value;
+        } elseif ($this->health->value < 0) {
+            return (string)$this->health->value;
+        } else {
+            return '0';
+        }
+    }
+
+    public function intelligence(): string
+    {
+        if ($this->ability->intelligence->value > 0) {
+            return '+' . $this->ability->intelligence->value;
+        } elseif ($this->ability->intelligence->value < 0) {
+            return (string)$this->ability->intelligence->value;
+        } else {
+            return '0';
+        }
+    }
+
+    public function sport(): string
+    {
+        if ($this->ability->sport->value > 0) {
+            return '+' . $this->ability->sport->value;
+        } elseif ($this->ability->sport->value < 0) {
+            return (string)$this->ability->sport->value;
+        } else {
+            return '0';
+        }
+    }
+
+    public function visual(): string
+    {
+        if ($this->ability->visual->value > 0) {
+            return '+' . $this->ability->visual->value;
+        } elseif ($this->ability->visual->value < 0) {
+            return (string)$this->ability->visual->value;
+        } else {
+            return '0';
+        }
+    }
+
+    public function business(): string
+    {
+        if ($this->evaluation->business->value > 0) {
+            return '+' . $this->evaluation->business->value;
+        } elseif ($this->evaluation->business->value < 0) {
+            return $this->evaluation->business->value;
+        } else {
+            return '0';
+        }
+    }
+
+    public function love(): string
+    {
+        if ($this->evaluation->love->value > 0) {
+            return '+' . $this->evaluation->love->value;
+        } elseif ($this->evaluation->love->value < 0) {
+            return (string)$this->evaluation->love->value;
+        } else {
+            return '0';
+        }
+    }
 }

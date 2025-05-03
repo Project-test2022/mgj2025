@@ -87,9 +87,29 @@
     <div class="panel">
         <div class="event-text">
             - {{ $result->result() }} -<br>
-            資産：¥{{ number_format($result->totalMoney->value) }}<br>
-            知能：{{ $result->ability->intelligence }} 運動：{{ $result->ability->sport }}
-            容姿：{{ $result->ability->visual }} 健康：{{ $result->health }}
+            @if($result->totalMoney->value !== 0)
+                資産：{{ $result->money() }}<br>
+            @endif
+            @if($result->ability->intelligence->value !== 0)
+                知能：{{ $result->intelligence() }}
+            @endif
+            @if($result->ability->sport->value !== 0)
+                運動：{{ $result->sport() }}
+            @endif
+            <br/>
+            @if($result->ability->visual->value !== 0)
+                容姿：{{ $result->visual() }}
+            @endif
+            @if($result->health->value !== 0)
+                健康：{{ $result->health() }}
+            @endif
+            <br/>
+            @if($result->evaluation->business->value !== 0)
+                仕事: {{ $result->business() }}
+            @endif
+            @if($result->evaluation->love->value !== 0)
+                恋愛: {{ $result->love() }}
+            @endif
         </div>
     </div>
 
