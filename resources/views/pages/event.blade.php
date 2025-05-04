@@ -100,6 +100,9 @@
             @if($result->totalMoney->value !== 0)
                 資産：{{ $result->money() }}<br>
             @endif
+            @if($newJob)
+                職業：{{ $newJob }} New!
+            @endif
             @if($incomeDiff)
                 年収：{{ $incomeDiff->format(true) }}<br>
             @endif
