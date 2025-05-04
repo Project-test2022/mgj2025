@@ -100,7 +100,7 @@
             bgm.loop = true;
             bgm.volume = 0.3;
             document.body.addEventListener('click', function playBgmOnce() {
-            bgm.play().catch(err => console.log('BGM蜀咲函繧ｨ繝ｩ繝ｼ:', err));
+            bgm.play().catch(err => console.log('BGM再生失敗:', err));
             document.body.removeEventListener('click', playBgmOnce);
         });
     });
