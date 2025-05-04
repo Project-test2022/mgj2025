@@ -44,7 +44,7 @@ final readonly class PlayerFactory
             null,
             null,
             null,
-            Job::from('赤ちゃん'),
+            $parameters->job,
             Income::from(0),
             null,
         );
