@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Entities\Event;
+use App\Entities\EventResult;
 use App\Entities\Player;
 use App\Models\SexModel;
 use App\ValueObjects\Ability;
@@ -79,7 +80,14 @@ class DebugController extends Controller
 
     public function event(): View
     {
-        return view('pages.event');
+        $result = EventResult::dummy(true);
+
+        return view('pages.event', [
+            'result' => $result,
+            'player' => $this->player(),
+            'newJob' => null,
+            'incomeDiff' => null,
+        ]);
     }
 
     public function end(): View
