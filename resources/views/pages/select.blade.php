@@ -103,12 +103,14 @@
     <script>
         document.addEventListener('DOMContentLoaded', function () {
             // 効果音（ボタン用）
-            const btn = document.querySelectorAll('.buttons');
+            const btns = document.querySelectorAll('.buttons');
             const se = new Audio('{{ asset('sounds/se/decide-button-a.mp3') }}');
             se.volume = 0.3;
-            btn.addEventListener('click', function () {
-                se.currentTime = 0;
-                se.play(); 
+            btns.forEach(btn => {
+                btn.addEventListener('click', function () {
+                    se.currentTime = 0;
+                    se.play();
+                });
             });
             // BGM の設定
             const bgm = new Audio('{{ asset('sounds/choice/the-decision.mp3') }}');
