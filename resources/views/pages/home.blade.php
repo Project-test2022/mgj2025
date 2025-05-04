@@ -112,17 +112,17 @@
 
 @section('content')
     <div class="main-wrapper">
-        <div class="header">人生やり直しゲーム</div>
-        <div class="profile-area"></div>
+        <div class="header">人生やり直しゲーム
+            <div class="profile-area"></div>
+        </div>
         <div class='panel'>
             <div class="character-image"></div>
             <div class="profile-info">
-                {{ $player->name }} {{ $player->sexName }}性　{{ $player->turn->value }}歳<br>
-                資産：{{ $player->totalMoney->format() }}<br>
-                知能：{{ $player->ability->intelligence }} 運動：{{ $player->ability->sport }}
-                容姿：{{ $player->ability->visual }} 健康：{{ $player->health }}
-                感性: {{ $player->ability->sense }}
-                仕事: {{ $player->evaluation->business }} 幸福: {{ $player->evaluation->happiness }}
+                {{ $player->name }}({{ $player->turn->value }})　　{{ $player->sexName }}性　　職業<br>
+                資産：{{ $player->totalMoney->format() }}　　年収：<br>
+                仕事：{{ $player->evaluation->business }}　　幸福：{{ $player->evaluation->happiness }}　　健康：{{ $player->health }}<br>
+                知能：{{ $player->ability->intelligence }}　　運動：{{ $player->ability->sport }}
+                　　容姿：{{ $player->ability->visual }}　　感性：{{ $player->ability->sense }}
             </div>
         </div>
 
