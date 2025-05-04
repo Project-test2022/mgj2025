@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Entities\Event;
 use App\Entities\Player;
 use App\Models\SexModel;
 use App\ValueObjects\Ability;
@@ -53,7 +54,42 @@ class DebugController extends Controller
 
     public function home(): View
     {
-        $player = new Player(
+        $actions = [
+            Action::from('遊び'),
+            Action::from('仕事'),
+            Action::from('勉強'),
+            Action::from('運動'),
+            Action::from('食事'),
+        ];
+
+        return view('pages.home', [
+            'player' => $this->player(),
+            'actions' => $actions,
+        ]);
+    }
+
+    public function select(): View
+    {
+        return view('pages.select', [
+            'player' => $this->player(),
+            'event' => Event::dummy(),
+            'action' => Action::from('遊び'),
+        ]);
+    }
+
+    public function event(): View
+    {
+        return view('pages.event');
+    }
+
+    public function end(): View
+    {
+        return view('pages.end');
+    }
+
+    private function player(): Player
+    {
+        return new Player(
             PlayerId::from(1),
             PlayerName::from('山田 太郎'),
             SexName::from('男性'),
@@ -78,33 +114,5 @@ class DebugController extends Controller
             Income::from(300000),
             null,
         );
-
-        $actions = [
-            Action::from('遊び'),
-            Action::from('仕事'),
-            Action::from('勉強'),
-            Action::from('運動'),
-            Action::from('食事'),
-        ];
-
-        return view('pages.home', [
-            'player' => $player,
-            'actions' => $actions,
-        ]);
-    }
-
-    public function select(): View
-    {
-        return view('pages.select');
-    }
-
-    public function event(): View
-    {
-        return view('pages.event');
-    }
-
-    public function end(): View
-    {
-        return view('pages.end');
     }
 }
