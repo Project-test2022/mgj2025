@@ -88,7 +88,6 @@
             margin-right: 135px;
             flex-direction: column;
             justify-content: center;
-            mix-blend-mode: multiply;
         }
 
         .buttons {
@@ -113,7 +112,7 @@
             align-items: center;
         }
 
-        .button.long-text {
+        .button {
             font-size: 16px;
             line-height: 1.2;
             flex-direction: column;
@@ -129,7 +128,7 @@
     <div class="main-wrapper">
         <div class="header">
             <div class="title">人生やり直しゲーム</div>
-            <div class="turn">西暦：{{ $player->birthYear->value + $player->turn->value }}年</div>
+            <div class="turn">西暦：{{ $player->currentYear() }}年</div>
         </div>
         <div class="profile-area"></div>
         <div class='panel'>
