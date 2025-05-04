@@ -129,7 +129,7 @@
     <div class="main-wrapper">
         <div class="header">
             <div class="title">人生やり直しゲーム</div>
-            <div class="turn">ターン：2025年</div>
+            <div class="turn">西暦：{{ $player->birthYear->value + $player->turn->value }}年</div>
         </div>
         <div class="profile-area"></div>
         <div class='panel'>
@@ -146,11 +146,9 @@
         <form action="{{ route('select', ['id' => $player->id->value]) }}" method="POST">
             @csrf
             <div class="buttons">
-                <button type="submit" name="business" class="button">仕事</button>
-                <button type="submit" name="happiness" class="button">幸福</button>
-                <button class="button">酒</button>
-                <button class="button">遊ぶ</button>
-                <button class="button">家庭</button>
+                @foreach($actions as $action)
+                    <button type="submit" name="action" value="{{ $action }}" class="button">{{ $action }}</button>
+                @endforeach
             </div>
         </form>
     </div>

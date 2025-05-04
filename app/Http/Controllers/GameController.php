@@ -11,9 +11,9 @@ use App\Repositories\PlayerFaceRepository;
 use App\Services\EventAppService;
 use App\Services\PlayerAppService;
 use App\Services\Utility;
+use App\ValueObjects\Action;
 use App\ValueObjects\BackgroundId;
 use App\ValueObjects\BirthYear;
-use App\ValueObjects\EventSituation;
 use App\ValueObjects\PlayerFaceId;
 use App\ValueObjects\PlayerId;
 use App\ValueObjects\PlayerName;
@@ -71,6 +71,9 @@ final class GameController extends Controller
         return redirect()->route('home', ['id' => $playerId]);
     }
 
+    /**
+     * @throws Exception
+     */
     public function home(Request $request): View|RedirectResponse
     {
         $playerId = $request->route('id');
@@ -82,8 +85,18 @@ final class GameController extends Controller
             return redirect()->route('result', ['id' => $playerId]);
         }
 
+        try{
+            // イベントの選択肢を取得
+            $actions = $this->eventAppService->generateActions($player);
+        } catch (Throwable $e) {
+            Log::error($e);
+            return redirect()->route('error', ['id' => $playerId]);
+        }
+
+
         return view('pages.home', [
             'player' => $player,
+            'actions' => $actions,
         ]);
     }
 
@@ -95,20 +108,17 @@ final class GameController extends Controller
             return redirect()->route('title');
         }
 
-        if ($request->has('business')) {
-            $situation = EventSituation::BUSINESS;
-        } elseif ($request->has('happiness')) {
-            $situation = EventSituation::HAPPINESS;
-        } else {
+        $action = $request->input('action');
+        if ($action === null) {
             return redirect()->route('home', ['id' => $playerId]);
         }
 
         try {
-            $event = $this->eventAppService->generate($player, $situation);
+            $event = $this->eventAppService->generate($player, Action::from($action));
 
             return redirect()->route('event', ['id' => $playerId])->with([
                 'event' => $event,
-                'situation' => $situation,
+                'action' => $action,
             ]);
         } catch (Throwable $e) {
             Log::error($e);
@@ -125,16 +135,16 @@ final class GameController extends Controller
         }
         /** @var Event|null $event */
         $event = $request->session()->get('event');
-        /** @var EventSituation|null $situation */
-        $situation = $request->session()->get('situation');
-        if ($event === null || $situation === null) {
+        /** @var Action|null $action */
+        $action = $request->session()->get('action');
+        if ($event === null || $action === null) {
             return redirect()->route('home', ['id' => $playerId]);
         }
 
         return view('pages.select', [
             'player' => $player,
             'event' => $event,
-            'situation' => $situation,
+            'action' => $action,
         ]);
     }
 
@@ -149,7 +159,7 @@ final class GameController extends Controller
             return redirect()->route('title');
         }
 
-        $situation = EventSituation::from($request->input('situation'));
+        $action = Action::from($request->input('action'));
         $event = Event::fromRequest($request);
 
         if ($request->has('ok')) {
@@ -164,7 +174,7 @@ final class GameController extends Controller
             // イベント結果を取得
             $eventResult = $this->eventAppService->result(
                 $player,
-                $situation,
+                $action,
                 $event,
                 $choice,
             );

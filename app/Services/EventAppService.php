@@ -6,8 +6,9 @@ use App\Dify\DifyApi;
 use App\Entities\Event;
 use App\Entities\EventResult;
 use App\Entities\Player;
+use App\ValueObjects\Action;
 use App\ValueObjects\Choice;
-use App\ValueObjects\EventSituation;
+use Exception;
 
 final readonly class EventAppService
 {
@@ -16,12 +17,18 @@ final readonly class EventAppService
     ) {
     }
 
-    public function generate(Player $player, EventSituation $situation): Event
+    /**
+     * @throws Exception
+     */
+    public function generate(Player $player, Action $action): Event
     {
-        return $this->dify->event($player, $situation);
+        return $this->dify->event($player, $action);
     }
 
-    public function result(Player $player, EventSituation $situation, Event $event, Choice $choice): EventResult
+    /**
+     * @throws Exception
+     */
+    public function result(Player $player, Action $action, Event $event, Choice $choice): EventResult
     {
         // イベントの成否を抽選
         $result = $choice->result();
@@ -29,10 +36,20 @@ final readonly class EventAppService
         // イベントの結果を取得
         return $this->dify->eventResult(
             $player,
-            $situation,
+            $action,
             $event,
             $choice,
             $result,
         );
+    }
+
+    /**
+     * @param Player $player
+     * @return array<Action>
+     * @throws Exception
+     */
+    public function generateActions(Player $player): array
+    {
+        return $this->dify->actions($player);
     }
 }

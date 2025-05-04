@@ -8,9 +8,9 @@ use App\Entities\Player;
 use App\Parameters\CreatePlayerParameters;
 use App\Repositories\PlayerFaceRepository;
 use App\ValueObjects\Ability;
+use App\ValueObjects\Action;
 use App\ValueObjects\BirthYear;
 use App\ValueObjects\Content;
-use App\ValueObjects\EventSituation;
 use App\ValueObjects\Health;
 use App\ValueObjects\Intelligence;
 use App\ValueObjects\Money;
@@ -147,7 +147,37 @@ final readonly class DifyApi
     /**
      * @throws Exception
      */
-    public function event(Player $player, EventSituation $situation): Event
+    public function actions(Player $player): array
+    {
+        if (!$this->enabled) {
+            return [
+                Action::from('仕事'),
+                Action::from('遊び'),
+                Action::from('勉強'),
+                Action::from('運動'),
+                Action::from('恋愛'),
+            ];
+        }
+
+        $state = State::ACTION;
+        $playerInfo = $this->formatPlayer($player);
+        $input = $this->input($state, $playerInfo);
+
+        $data = $this->handle($player->id, $input);
+        $data = $data['structured_output'];
+        return [
+            Action::from($data['command_1'] ?? '仕事'),
+            Action::from($data['command_2'] ?? '遊び'),
+            Action::from($data['command_3'] ?? '勉強'),
+            Action::from($data['command_4'] ?? '運動'),
+            Action::from($data['command_5'] ?? '恋愛'),
+        ];
+    }
+
+    /**
+     * @throws Exception
+     */
+    public function event(Player $player, Action $action): Event
     {
         if (!$this->enabled) {
             return Event::dummy();
@@ -155,7 +185,7 @@ final readonly class DifyApi
 
         $state = State::EVENT_OCCURRENCE;
         $playerInfo = $this->formatPlayer($player);
-        $input = $this->input($state, $playerInfo, $situation);
+        $input = $this->input($state, $playerInfo, $action);
 
         $data = $this->handle($player->id, $input);
         $data = $data['structured_output'];
@@ -165,7 +195,7 @@ final readonly class DifyApi
     /**
      * @throws Exception
      */
-    public function eventResult(Player $player, EventSituation $situation, Event $event, Choice $select, bool $result): EventResult
+    public function eventResult(Player $player, Action $action, Event $event, Choice $select, bool $result): EventResult
     {
         if (!$this->enabled) {
             return EventResult::dummy($result);
@@ -174,7 +204,7 @@ final readonly class DifyApi
         $state = State::EVENT_SELECTION;
         $playerInfo = $this->formatPlayer($player);
         $eventInfo = $this->formatEvent($event->content, $select->content, $result);
-        $input = $this->input($state, $playerInfo, $situation, $eventInfo);
+        $input = $this->input($state, $playerInfo, $action, $eventInfo);
 
         $data = $this->handle($player->id, $input);
         $data = $data['structured_output'];
@@ -261,7 +291,7 @@ final readonly class DifyApi
         return $formatted;
     }
 
-    private function input(State $state, ?string $playerInfo = null, ?EventSituation $situation = null, ?string $event = null): array
+    private function input(State $state, ?string $playerInfo = null, ?Action $action = null, ?string $event = null): array
     {
         $result = [
             'sys_state' => $state->value,
@@ -269,8 +299,8 @@ final readonly class DifyApi
         if ($playerInfo !== null) {
             $result['sys_player'] = $playerInfo;
         }
-        if ($situation !== null) {
-            $result['sys_situation'] = $situation->label();
+        if ($action !== null) {
+            $result['sys_situation'] = $action->value;
         }
         if ($event !== null) {
             $result['sys_event'] = $event;
