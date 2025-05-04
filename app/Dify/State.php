@@ -10,6 +10,8 @@ enum State: int
     case PLAYER_IMAGE_GENERATION = 1;
     // アクション
     case ACTION = 5;
+    // 年収
+    case INCOME = 6;
     // イベント発生
     case EVENT_OCCURRENCE = 10;
     // イベント選択

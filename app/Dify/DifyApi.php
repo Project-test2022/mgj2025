@@ -12,6 +12,7 @@ use App\ValueObjects\Action;
 use App\ValueObjects\BirthYear;
 use App\ValueObjects\Content;
 use App\ValueObjects\Health;
+use App\ValueObjects\Income;
 use App\ValueObjects\Intelligence;
 use App\ValueObjects\Job;
 use App\ValueObjects\Money;
@@ -225,6 +226,24 @@ final readonly class DifyApi
     /**
      * @throws Exception
      */
+    public function income(Player $player, Job $job): Income
+    {
+        if (!$this->enabled) {
+            return Income::from('555555');
+        }
+
+        $state = State::INCOME;
+        $playerInfo = $this->formatPlayer($player, $job);
+        $input = $this->input($state, $playerInfo);
+
+        $data = $this->handle($player->id, $input);
+
+        return Income::from($data['income']);
+    }
+
+    /**
+     * @throws Exception
+     */
     private function handle(PlayerId $player_id, array $input): array
     {
         $attempt = 0;
@@ -279,7 +298,7 @@ final readonly class DifyApi
         throw new Exception('Dify API request failed after 5 attempts.');
     }
 
-    private function formatPlayer(Player $player): array
+    private function formatPlayer(Player $player, ?Job $job = null): array
     {
         $playerInfo = [
             'プレイヤー名' => $player->name->value,
@@ -293,6 +312,12 @@ final readonly class DifyApi
             '仕事(0-100)' => $player->evaluation->business->value,
             '幸福(0-100)' => $player->evaluation->happiness->value,
         ];
+        if (!$job) {
+            $playerInfo['年収(円)'] = $player->income->value;
+            $playerInfo['職業'] = $player->job->value;
+        } else {
+            $playerInfo['職業'] = $job->value;
+        }
 
         $formatted = '';
         foreach ($playerInfo as $key => $value) {

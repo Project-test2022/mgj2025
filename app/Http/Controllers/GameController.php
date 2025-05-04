@@ -179,8 +179,16 @@ final class GameController extends Controller
                 $choice,
             );
 
+            // 仕事が変更になったら
+            if (!$player->job->equals($eventResult->job)) {
+                // 年収を更新
+                $income = $this->eventAppService->income($player, $eventResult->job);
+            } else {
+                $income = null;
+            }
+
             // プレイヤーの情報を更新
-            $player = $this->playerAppService->update($player, $eventResult);
+            $player = $this->playerAppService->update($player, $eventResult, $income);
 
             if ($eventResult->dead) {
                 $this->playerAppService->dead($player);

@@ -8,6 +8,8 @@ use App\Entities\EventResult;
 use App\Entities\Player;
 use App\ValueObjects\Action;
 use App\ValueObjects\Choice;
+use App\ValueObjects\Income;
+use App\ValueObjects\Job;
 use Exception;
 
 final readonly class EventAppService
@@ -51,5 +53,14 @@ final readonly class EventAppService
     public function generateActions(Player $player): array
     {
         return $this->dify->actions($player);
+    }
+
+    /**
+     * @throws Exception
+     */
+    public function income(Player $player, Job $job): Income
+    {
+        // 職業の収入を取得
+        return $this->dify->income($player, $job);
     }
 }
