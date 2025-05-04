@@ -2,7 +2,7 @@
 
 namespace App\ValueObjects;
 
-final readonly class Love
+final readonly class Sense
 {
     private function __construct(public int $value)
     {
@@ -18,12 +18,12 @@ final readonly class Love
         return $this->value;
     }
 
-    public function sub(Love $other): self
+    public function sub(Sense $from): self
     {
-        return new self($this->value - $other->value);
+        return new self($this->value - $from->value);
     }
 
-    public function add(Love $other): self
+    public function add(Sense $other): self
     {
         $value = $this->value + $other->value;
         if ($value < 0) {

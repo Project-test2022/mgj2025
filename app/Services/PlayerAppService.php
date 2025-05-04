@@ -14,7 +14,7 @@ use App\Repositories\PlayerRepository;
 use App\ValueObjects\BirthYear;
 use App\ValueObjects\PlayerId;
 use App\ValueObjects\PlayerName;
-use App\ValueObjects\SexName;
+use App\ValueObjects\SexCode;
 use Exception;
 
 final readonly class PlayerAppService
@@ -36,25 +36,18 @@ final readonly class PlayerAppService
     public function create(
         ?PlayerName $name,
         ?BirthYear $birthYear,
-        ?SexName $sexName,
+        ?SexCode $sexCode,
     ): PlayerId {
         // Difyからプレイヤーの情報を生成
         $id = $this->playerFactory->generateId();
-        if ($name === null || $birthYear === null || $sexName === null) {
-            [$name, $sexName, $birthYear] = $this->dify->createPlayer($id, $name, $birthYear, $sexName);
-        }
+        $parameters = $this->dify->createPlayer($id, $name, $birthYear, $sexCode);
 
         // プレイヤー作成
-        $player = $this->playerFactory->create(
-            $id,
-            $name,
-            $sexName,
-            $birthYear,
-        );
+        $player = $this->playerFactory->create($id, $parameters);
         $this->playerRepository->save($player);
 
         // プレイヤーの画像を生成
-        $imgUrl = $this->dify->createPlayerImage($id);
+        $imgUrl = $this->dify->createPlayerImage($player);
         $img = Utility::getPngCompressedImage($imgUrl);
         $playerFace = $this->playerFaceFactory->create($id, $img);
         $this->playerFaceRepository->save($playerFace);
@@ -62,6 +55,11 @@ final readonly class PlayerAppService
         // プレイヤーに画像を設定
         $ageGroup = $this->ageGroupRepository->first();
         $player = $player->setFace($playerFace->id, $ageGroup->code);
+        $this->playerRepository->save($player);
+
+        // 背景画像を設定
+        $background = $this->backgroundRepository->findByMoney($player->totalMoney);
+        $player = $player->setBackgroundId($background->id);
         $this->playerRepository->save($player);
 
         return $player->id;
@@ -95,6 +93,13 @@ final readonly class PlayerAppService
 
         // 背景画像を更新する
         $this->updateBackground($player);
+    }
+
+    public function dead(Player $player): void
+    {
+        // プレイヤーを死亡状態にする
+        $player = $player->dead();
+        $this->playerRepository->save($player);
     }
 
     /**

@@ -7,9 +7,10 @@ use App\ValueObjects\Business;
 use App\ValueObjects\Evaluation;
 use App\ValueObjects\Health;
 use App\ValueObjects\Intelligence;
-use App\ValueObjects\Love;
+use App\ValueObjects\Happiness;
 use App\ValueObjects\Money;
 use App\ValueObjects\ResultMessage;
+use App\ValueObjects\Sense;
 use App\ValueObjects\Sport;
 use App\ValueObjects\Visual;
 
@@ -47,10 +48,11 @@ final readonly class EventResult
                 Intelligence::from($data['a_intelligence'])->sub($before->ability->intelligence),
                 Sport::from($data['a_sport'])->sub($before->ability->sport),
                 Visual::from($data['a_visual'])->sub($before->ability->visual),
+                Sense::from($data['a_sense'])->sub($before->ability->sense),
             ),
             Evaluation::from(
                 Business::from($data['e_business'])->sub($before->evaluation->business),
-                Love::from($data['e_love'])->sub($before->evaluation->love),
+                Happiness::from($data['e_happiness'])->sub($before->evaluation->happiness),
             ),
         );
     }
@@ -68,10 +70,11 @@ final readonly class EventResult
                 Intelligence::from($value),
                 Sport::from($value),
                 Visual::from($value),
+                Sense::from($value),
             ),
             Evaluation::from(
                 Business::from($value),
-                Love::from($value),
+                Happiness::from($value),
             ),
         );
     }
@@ -134,6 +137,17 @@ final readonly class EventResult
         }
     }
 
+    public function sense(): string
+    {
+        if ($this->ability->sense->value > 0) {
+            return '+' . $this->ability->sense->value;
+        } elseif ($this->ability->sense->value < 0) {
+            return (string)$this->ability->sense->value;
+        } else {
+            return '0';
+        }
+    }
+
     public function business(): string
     {
         if ($this->evaluation->business->value > 0) {
@@ -145,12 +159,12 @@ final readonly class EventResult
         }
     }
 
-    public function love(): string
+    public function happiness(): string
     {
-        if ($this->evaluation->love->value > 0) {
-            return '+' . $this->evaluation->love->value;
-        } elseif ($this->evaluation->love->value < 0) {
-            return (string)$this->evaluation->love->value;
+        if ($this->evaluation->happiness->value > 0) {
+            return '+' . $this->evaluation->happiness->value;
+        } elseif ($this->evaluation->happiness->value < 0) {
+            return (string)$this->evaluation->happiness->value;
         } else {
             return '0';
         }

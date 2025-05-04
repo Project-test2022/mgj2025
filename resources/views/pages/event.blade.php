@@ -103,12 +103,15 @@
             @if($result->health->value !== 0)
                 健康：{{ $result->health() }}
             @endif
+            @if($result->ability->sense->value !== 0)
+                感性：{{ $result->sense() }}
+            @endif
             <br/>
             @if($result->evaluation->business->value !== 0)
                 仕事: {{ $result->business() }}
             @endif
-            @if($result->evaluation->love->value !== 0)
-                恋愛: {{ $result->love() }}
+            @if($result->evaluation->happiness->value !== 0)
+                幸福: {{ $result->happiness() }}
             @endif
         </div>
     </div>
@@ -141,9 +144,9 @@
             // BGM の設定
             let bgm;
             @if($result->success)
-                bgm = new Audio('{{ asset('sounds/choice/breakthrough-moment_v2.mp3') }}');
+                bgm = new Audio('{{ asset('sounds/positive/breakthrough-moment_v2.mp3') }}');
             @else
-                bgm = new Audio('{{ asset('sounds/choice/bleeding-my-heart_v2.mp3') }}');
+                bgm = new Audio('{{ asset('sounds/positive/bleeding-my-heart_v2.mp3') }}');
             @endif
             bgm.loop = true;
             bgm.volume = 0.3; 

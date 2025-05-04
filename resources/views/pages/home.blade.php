@@ -121,7 +121,8 @@
                 資産：{{ $player->totalMoney->format() }}<br>
                 知能：{{ $player->ability->intelligence }} 運動：{{ $player->ability->sport }}
                 容姿：{{ $player->ability->visual }} 健康：{{ $player->health }}
-                仕事: {{ $player->evaluation->business }} 恋愛: {{ $player->evaluation->love }}
+                感性: {{ $player->ability->sense }}
+                仕事: {{ $player->evaluation->business }} 幸福: {{ $player->evaluation->happiness }}
             </div>
         </div>
 
@@ -129,7 +130,7 @@
             @csrf
             <div class="buttons">
                 <button type="submit" name="business" class="button">仕事</button>
-                <button type="submit" name="love" class="button">恋愛</button>
+                <button type="submit" name="happiness" class="button">幸福</button>
             </div>
         </form>
     </div>
@@ -147,7 +148,7 @@
                 se.play(); 
             });
             // BGM の設定
-            const bgm = new Audio('{{ asset('sounds/choice/high-stakes-shadow.mp3') }}');
+            const bgm = new Audio('{{ asset('sounds/op/high-stakes-shadow.mp3') }}');
             bgm.loop = true;
             bgm.volume = 0.3; 
             bgm.play().then(() => {

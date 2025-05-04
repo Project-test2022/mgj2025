@@ -17,7 +17,7 @@ use App\ValueObjects\EventSituation;
 use App\ValueObjects\PlayerFaceId;
 use App\ValueObjects\PlayerId;
 use App\ValueObjects\PlayerName;
-use App\ValueObjects\SexName;
+use App\ValueObjects\SexCode;
 use Exception;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -52,7 +52,7 @@ final class GameController extends Controller
     {
         $name = $request->has('name_random') ? null : $request->input('name');
         $birthYear = $request->has('birth_year_random') ? null : $request->input('birth_year');
-        $sexName = $request->input('gender_random') ? null : $request->input('gender');
+        $sexCode = $request->input('gender_random') ? null : $request->input('gender');
 
         DB::beginTransaction();
         try {
@@ -60,13 +60,12 @@ final class GameController extends Controller
             $playerId = $this->playerAppService->create(
                 PlayerName::tryFrom($name),
                 BirthYear::tryFrom($birthYear),
-                SexName::tryFrom($sexName),
+                SexCode::tryFrom($sexCode),
             );
             DB::commit();
         } catch (Exception $e) {
             DB::rollBack();
-            Log::error($e);
-            abort(500);
+            throw $e;
         }
 
         return redirect()->route('home', ['id' => $playerId]);
@@ -78,6 +77,9 @@ final class GameController extends Controller
         $player = $this->playerAppService->find(PlayerId::from($playerId));
         if ($player === null) {
             return redirect()->route('title');
+        }
+        if ($player->isDeleted) {
+            return redirect()->route('result', ['id' => $playerId]);
         }
 
         return view('pages.home', [
@@ -95,8 +97,8 @@ final class GameController extends Controller
 
         if ($request->has('business')) {
             $situation = EventSituation::BUSINESS;
-        } elseif ($request->has('love')) {
-            $situation = EventSituation::LOVE;
+        } elseif ($request->has('happiness')) {
+            $situation = EventSituation::HAPPINESS;
         } else {
             return redirect()->route('home', ['id' => $playerId]);
         }
@@ -169,6 +171,10 @@ final class GameController extends Controller
 
             // プレイヤーの情報を更新
             $this->playerAppService->update($player, $eventResult);
+
+            if ($eventResult->dead) {
+                $this->playerAppService->dead($player);
+            }
 
             DB::commit();
 

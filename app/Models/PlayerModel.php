@@ -15,11 +15,13 @@ use Illuminate\Database\Eloquent\Model;
  * @property int         $a_intelligence
  * @property int         $a_sport
  * @property int         $a_visual
+ * @property int         $a_sense
  * @property int         $e_business
- * @property int         $e_love
+ * @property int         $e_happiness
  * @property string|null $bg_id
  * @property string|null $player_face_id
  * @property string|null $age_grp_cd
+ * @property bool        $dead_flg
  */
 class PlayerModel extends Model
 {
@@ -27,4 +29,7 @@ class PlayerModel extends Model
     public $timestamps = false;
     protected $primaryKey = 'player_id';
     protected $keyType = 'string';
+    protected $casts = [
+        'dead_flg' => 'boolean',
+    ];
 }
