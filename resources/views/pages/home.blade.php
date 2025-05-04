@@ -24,11 +24,18 @@
         }
 
         .header {
-            font-size: 24px;
-            color: #333;
-            letter-spacing: 5px;
+            width: 100%;
+            max-width: 1280px;
+            display: flex;
+            justify-content: space-between;
+            margin-top: 30px;
             margin-bottom: 20px;
-            align-self: flex-start;
+            font-size: 24px;
+        }
+
+        .turn {
+            font-size: 20px;
+            padding: 5px;
         }
 
         .profile-area {
@@ -57,11 +64,8 @@
 
         .panel {
             position: absolute;
-            top: calc(50% - 285px);
-            left: 50%;
-            transform: translateX(-50%);
-            width: 100%; /* ←ブラウザ幅いっぱいにする */
-            height: 415px;
+            top: calc(50% - 214px);
+            width: 100%;
             padding: 10px;
             background: rgba(255, 255, 255, 0.4);
             display: flex;
@@ -73,35 +77,46 @@
 
         .profile-info {
             background: rgba(0, 0, 0, 0.70);
+            mix-blend-mode: multiply;       /* 乗算モード */
             width: 700px;
             height: 300px;
             color: white;
             font-size: 22px;
-            line-height: 4;
-            text-align: left;
-            min-width: 600px;
-            padding-left: 10px;
-            mix-blend-mode: multiply; /* 乗算モード */
+            padding-left: 55px;
+            line-height: 2;
+            display: flex;
+            margin-right: 135px;
+            flex-direction: column;
+            justify-content: center;
+            mix-blend-mode: multiply;
         }
 
         .buttons {
             display: flex;
-            gap: 80px;
-            margin-top: 20px;
+            gap: 31px;
+            margin-top: 30px;
         }
 
         .button {
             background: rgba(0, 0, 0, 0.7);
-            mix-blend-mode: normal;
             color: white;
-            width: 360px;
+            width: 210px;
             height: 80px;
-            padding: 15px 50px;
-            font-size: 20px;
+            font-size: 22px;
+            text-align: center;
             border: none;
             cursor: pointer;
-            letter-spacing: 5px;
+            letter-spacing: 3px;
             transition: background 0.3s;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .button.long-text {
+            font-size: 16px;
+            line-height: 1.2;
+            flex-direction: column;
         }
 
         .button:hover {
@@ -112,9 +127,11 @@
 
 @section('content')
     <div class="main-wrapper">
-        <div class="header">人生やり直しゲーム
-            <div class="profile-area"></div>
+        <div class="header">
+            <div class="title">人生やり直しゲーム</div>
+            <div class="turn">ターン：2025年</div>
         </div>
+        <div class="profile-area"></div>
         <div class='panel'>
             <div class="character-image"></div>
             <div class="profile-info">
@@ -131,6 +148,9 @@
             <div class="buttons">
                 <button type="submit" name="business" class="button">仕事</button>
                 <button type="submit" name="happiness" class="button">幸福</button>
+                <button class="button">酒</button>
+                <button class="button">遊ぶ</button>
+                <button class="button">家庭</button>
             </div>
         </form>
     </div>
@@ -161,5 +181,13 @@
                 console.log('自動再生失敗:', err);
             });
         });
+
+        window.addEventListener('DOMContentLoaded', () => {
+        document.querySelectorAll('.button').forEach(button => {
+            if (button.textContent.length >= 6) {
+            button.classList.add('long-text');
+            }
+        });
+    });
     </script>
 @endpush
