@@ -108,7 +108,7 @@
 <div class="main-wrapper">
     <div class="header">
       <div class="title">人生やり直しゲーム</div>
-      <div class="turn">ターン：2025年</div>
+      <div class="turn">西暦：{{ $player->currentYear() }}</div>
     </div>
     <div class="event-area"></div>
     <div class="panel">

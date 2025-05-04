@@ -152,4 +152,9 @@ final readonly class Player
             true,
         );
     }
+
+    public function currentYear(): int
+    {
+        return (int)$this->birthYear->value + $this->turn->value;
+    }
 }
