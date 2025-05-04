@@ -16,6 +16,21 @@
             align-items: center;
         }
 
+        .header {
+            width: 100%;
+            max-width: 1280px;
+            display: flex;
+            justify-content: space-between;
+            margin-top: 30px;
+            margin-bottom: 20px;
+            font-size: 24px;
+        }
+
+        .turn {
+            font-size: 20px;
+            padding: 5px;
+        }
+
         .panel {
             background: rgba(255, 255, 255, 0.4);
             width: 100%;
