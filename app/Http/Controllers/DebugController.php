@@ -92,7 +92,10 @@ class DebugController extends Controller
 
     public function end(): View
     {
-        return view('pages.end');
+        return view('pages.end', [
+            'player' => $this->player(),
+            'sexCode' => '1',
+        ]);
     }
 
     private function player(): Player
@@ -100,7 +103,7 @@ class DebugController extends Controller
         return new Player(
             PlayerId::from(1),
             PlayerName::from('山田 太郎'),
-            SexName::from('男性'),
+            SexName::from('男'),
             BirthYear::from(2000),
             Turn::from('20'),
             Money::from(1000000),
