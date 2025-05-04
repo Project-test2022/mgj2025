@@ -93,6 +93,15 @@
 @endpush
 
 @section('content')
+    <div class="header">
+      <div class="title">
+        人生やり直しゲーム
+        <button id="bgm-toggle" style="background: none; border: none; margin-left: 10px; cursor: pointer;">
+            <img id="bgm-icon" src="{{ asset('icon/gray_off.png') }}" alt="BGMアイコン" width="24" height="24">
+        </button>
+    </div>
+      <div class="turn">西暦：{{ $player->currentYear() }}</div>
+    </div>
     <div class="event-area"></div>
     <div class="panel">
         <div class="event-text">
@@ -145,7 +154,16 @@
 @endsection
 
 @push('scripts')
+    <script src="{{ asset('js/bgm.js') }}"></script>
     <script>
+        function updateBgmIcon() {
+            const icon = document.getElementById('bgm-icon');
+            const enabled = localStorage.getItem('bgm_enabled') === 'true';
+            icon.src = enabled 
+                ? '{{ asset('icon/gray_on.png') }}' 
+                : '{{ asset('icon/gray_off.png') }}';
+        };
+
         document.addEventListener('DOMContentLoaded', function () {
             // 効果音（ボタン用）
             const buttons = document.querySelectorAll('.button');
@@ -159,20 +177,15 @@
             });
 
             // BGM の設定
-            let bgm;
             @if($result->success)
-                bgm = new Audio('{{ asset('sounds/positive/breakthrough-moment_v2.mp3') }}');
+                setupBgm('{{ asset('sounds/positive/breakthrough-moment_v2.mp3') }}');
             @else
-                bgm = new Audio('{{ asset('sounds/negative/bleeding-my-heart_v2.mp3') }}');
+                setupBgm('{{ asset('sounds/negative/bleeding-my-heart_v2.mp3') }}');
             @endif
-            bgm.loop = true;
-            bgm.volume = 0.3;
-            bgm.play().then(() => {
-              setTimeout(() => {
-                  bgm.muted = false;
-              }, 500); // 0.5秒後に再生
-            }).catch(err => {
-                console.log('自動再生失敗:', err);
+
+            document.getElementById('bgm-toggle').addEventListener('click', function () {
+                toggleBgm();
+                updateBgmIcon();
             });
         });
     </script>

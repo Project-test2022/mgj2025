@@ -118,12 +118,19 @@
         .button:hover {
             background: rgba(0, 0, 0, 0.9);
         }
+
+        .sound-button{
+
+        }
     </style>
 @endpush
 
 @section('content')
     <div class="main-wrapper">
         <div class="header">人生やり直しゲーム
+        <button id="bgm-toggle" style="background: none; border: none; margin-left: 10px; cursor: pointer;">
+            <img id="bgm-icon" src="{{ asset('icon/gray_off.png') }}" alt="BGMアイコン" width="24" height="24">
+        </button>
         <div class="main-area"></div>
         </div>
         <div class="panel">
@@ -148,7 +155,16 @@
 @endsection
 
 @push('scripts')
+<script src="{{ asset('js/bgm.js') }}"></script>
     <script>
+        function updateBgmIcon() {
+            const icon = document.getElementById('bgm-icon');
+            const enabled = localStorage.getItem('bgm_enabled') === 'true';
+            icon.src = enabled 
+                ? '{{ asset('icon/gray_on.png') }}' 
+                : '{{ asset('icon/gray_off.png') }}';
+        }
+
         document.addEventListener('DOMContentLoaded', function () {
             // 効果音（ボタン用）
             const btn = document.querySelectorAll('.buttons');
@@ -158,17 +174,16 @@
                 se.currentTime = 0;
                 se.play(); 
             });
-            
-            // BGM の設定
-            const bgm = new Audio('{{ asset('sounds/negative/beautiful-ruin.mp3') }}');
-            bgm.loop = true;
-            bgm.volume = 0.3; 
-            bgm.play().then(() => {
-              setTimeout(() => {
-                  bgm.muted = false;
-              }, 500); // 0.5秒後に再生
-            }).catch(err => {
-                console.log('自動再生失敗:', err);
+
+            // 初期再生
+            setUpBgm('{{ asset('sounds/negative/beautiful-ruin.mp3') }}');
+            // 初期アイコン
+            updateBgmIcon();
+
+            // ボタンクリックで切り替え
+            document.getElementById('bgm-toggle').addEventListener('click', function () {
+                toggleBgm();
+                updateBgmIcon();
             });
         });
     </script>

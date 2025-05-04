@@ -127,7 +127,12 @@
 @section('content')
     <div class="main-wrapper">
         <div class="header">
-            <div class="title">人生やり直しゲーム</div>
+            <div class="title">
+                人生やり直しゲーム
+                <button id="bgm-toggle" style="background: none; border: none; margin-left: 10px; cursor: pointer;">
+                    <img id="bgm-icon" src="{{ asset('icon/gray_off.png') }}" alt="BGMアイコン" width="24" height="24">
+                </button>
+            </div>
             <div class="turn">西暦：{{ $player->currentYear() }}年</div>
         </div>
         <div class="profile-area"></div>
@@ -154,37 +159,44 @@
 @endsection
 
 @push('scripts')
+<script src="{{ asset('js/bgm.js') }}"></script>
     <script>
+        function updateBgmIcon() {
+            const icon = document.getElementById('bgm-icon');
+            const enabled = localStorage.getItem('bgm_enabled') === 'true';
+            icon.src = enabled 
+                ? '{{ asset('icon/gray_on.png') }}' 
+                : '{{ asset('icon/gray_off.png') }}';
+        }
+
         document.addEventListener('DOMContentLoaded', function () {
             // 効果音（ボタン用）
-            const btns = document.querySelectorAll('.buttons');
-            const se = new Audio('{{ asset('sounds/se/decide-button-a.mp3') }}');
-            se.volume = 0.3;
-            btns.forEach(btn => {
-                btn.addEventListener('click', function () {
-                    se.currentTime = 0;
-                    se.play();
+            window.addEventListener('DOMContentLoaded', () => {
+                document.querySelectorAll('.button').forEach(button => {
+                    if (button.textContent.length >= 6) {
+                        button.classList.add('long-text');
+                    }
                 });
             });
-            // BGM の設定
-            const bgm = new Audio('{{ asset('sounds/op/high-stakes-shadow.mp3') }}');
-            bgm.loop = true;
-            bgm.volume = 0.3;
-            bgm.play().then(() => {
-              setTimeout(() => {
-                  bgm.muted = false;
-              }, 500); // 0.5秒後に再生
-            }).catch(err => {
-                console.log('自動再生失敗:', err);
+
+            const btn = document.querySelectorAll('.buttons');
+            const se = new Audio('{{ asset('sounds/se/decide-button-a.mp3') }}');
+            se.volume = 0.3;
+            btn.addEventListener('click', function () {
+                se.currentTime = 0;
+                se.play(); 
+            });
+
+            // 初期再生
+            setUpBgm('{{ asset('sounds/choice/high-stakes-shadow.mp3') }}');
+            // 初期アイコン
+            updateBgmIcon();
+
+            // ボタンクリックで切り替え
+            document.getElementById('bgm-toggle').addEventListener('click', function () {
+                toggleBgm();
+                updateBgmIcon();
             });
         });
-
-        window.addEventListener('DOMContentLoaded', () => {
-        document.querySelectorAll('.button').forEach(button => {
-            if (button.textContent.length >= 6) {
-            button.classList.add('long-text');
-            }
-        });
-    });
     </script>
 @endpush
