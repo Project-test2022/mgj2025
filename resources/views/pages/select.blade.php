@@ -163,7 +163,7 @@
 
             // BGM の設定
             // 初期再生
-            setupBgm('{{ asset('sounds/choice/high-stakes-shadow.mp3') }}');
+            setupBgm('{{ asset('sounds/op/high-stakes-shadow.mp3') }}');
             // 初期アイコン
             updateBgmIcon();
 
