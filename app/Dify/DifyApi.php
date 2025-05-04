@@ -22,7 +22,6 @@ use App\ValueObjects\SelectContent;
 use App\ValueObjects\Sense;
 use App\ValueObjects\SexCode;
 use App\ValueObjects\Sport;
-use App\ValueObjects\Turn;
 use App\ValueObjects\Visual;
 use CURLFile;
 use Exception;
@@ -128,7 +127,7 @@ final readonly class DifyApi
 
         $state = State::PLAYER_IMAGE_GENERATION;
         $playerInfo = $this->formatPlayer($player);
-        $input = $this->input($state, $playerInfo, $player->turn);
+        $input = $this->input($state, $playerInfo);
         $data = $this->handle($player->id, $input);
 
         $relativeUrl = $data['files'][0]['url'];
@@ -167,7 +166,7 @@ final readonly class DifyApi
 
         $state = State::ACTION;
         $playerInfo = $this->formatPlayer($player);
-        $input = $this->input($state, $playerInfo, $player->turn);
+        $input = $this->input($state, $playerInfo);
 
         $data = $this->handle($player->id, $input);
         $data = $data['structured_output'];
@@ -191,7 +190,7 @@ final readonly class DifyApi
 
         $state = State::EVENT_OCCURRENCE;
         $playerInfo = $this->formatPlayer($player);
-        $input = $this->input($state, $playerInfo, $player->turn, $action);
+        $input = $this->input($state, $playerInfo, $action);
 
         $data = $this->handle($player->id, $input);
         $data = $data['structured_output'];
@@ -210,14 +209,16 @@ final readonly class DifyApi
         $state = State::EVENT_SELECTION;
         $playerInfo = $this->formatPlayer($player);
         $eventInfo = $this->formatEvent($event->content, $select->content, $result);
-        $input = $this->input($state, $playerInfo, $player->turn, $action, $eventInfo);
+        $input = $this->input($state, $playerInfo, $action, $eventInfo);
 
         $data = $this->handle($player->id, $input);
-        $job = Job::from($data['new_job']);
         if (!isset($data['output'])) {
-            throw new Exception('Invalid response from Dify API.' . json_encode($data));
+            $data = $data['structured_output'];
+            $job = $player->job;
+        } else {
+            $job = Job::from($data['new_job']);
+            $data = $data['output'];
         }
-        $data = $data['output'];
         return EventResult::from($data, $job, $player, $result);
     }
 
@@ -278,7 +279,7 @@ final readonly class DifyApi
         throw new Exception('Dify API request failed after 5 attempts.');
     }
 
-    private function formatPlayer(Player $player): string
+    private function formatPlayer(Player $player): array
     {
         $playerInfo = [
             'プレイヤー名' => $player->name->value,
@@ -297,19 +298,20 @@ final readonly class DifyApi
         foreach ($playerInfo as $key => $value) {
             $formatted .= "[$key]$value\n";
         }
-        return $formatted;
+        $result['sys_player'] = $formatted;
+        $result['sys_age'] = $player->turn->value;
+        $result['sys_health'] = $player->health->value;
+
+        return $result;
     }
 
-    private function input(State $state, ?string $playerInfo = null, ?Turn $age = null, ?Action $action = null, ?string $event = null): array
+    private function input(State $state, array $playerInfo = [], ?Action $action = null, ?string $event = null): array
     {
         $result = [
             'sys_state' => $state->value,
         ];
-        if ($playerInfo !== null) {
-            $result['sys_player'] = $playerInfo;
-        }
-        if ($age !== null) {
-            $result['sys_age'] = $age->value;
+        if ($playerInfo !== []) {
+            $result = array_merge($result, $playerInfo);
         }
         if ($action !== null) {
             $result['sys_situation'] = $action->value;
@@ -367,7 +369,7 @@ final readonly class DifyApi
         $endpoint = $this->imageUrl . '/v1/workflows/run';
         $state = State::PLAYER_NEXT_IMAGE_GENERATION;
         $playerInfo = $this->formatPlayer($player);
-        $input = $this->input($state, $playerInfo, $player->turn);
+        $input = $this->input($state, $playerInfo);
         $input['sys_image'] = [
             'transfer_method' => 'local_file',
             'upload_file_id' => $imageId,
