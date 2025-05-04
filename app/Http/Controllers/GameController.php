@@ -14,6 +14,8 @@ use App\Services\Utility;
 use App\ValueObjects\Action;
 use App\ValueObjects\BackgroundId;
 use App\ValueObjects\BirthYear;
+use App\ValueObjects\Income;
+use App\ValueObjects\Job;
 use App\ValueObjects\PlayerFaceId;
 use App\ValueObjects\PlayerId;
 use App\ValueObjects\PlayerName;
@@ -179,8 +181,22 @@ final class GameController extends Controller
                 $choice,
             );
 
+            // 仕事が変更になったら
+            if (!$player->job->equals($eventResult->job)) {
+                // 年収を更新
+                $income = $this->eventAppService->income($player, $eventResult->job);
+
+                // 年収の変化量を計算
+                $incomeDiff = $income->sub($player->income);
+                $newJob = $eventResult->job;
+            } else {
+                $income = null;
+                $incomeDiff = null;
+                $newJob = null;
+            }
+
             // プレイヤーの情報を更新
-            $player = $this->playerAppService->update($player, $eventResult);
+            $player = $this->playerAppService->update($player, $eventResult, $income);
 
             if ($eventResult->dead) {
                 $this->playerAppService->dead($player);
@@ -193,6 +209,8 @@ final class GameController extends Controller
 
             return redirect()->route('event.result', ['id' => $playerId])->with([
                 'result' => $eventResult,
+                'incomeDiff' => $incomeDiff,
+                'newJob' => $newJob,
             ]);
         } catch (Throwable $e) {
             DB::rollBack();
@@ -211,6 +229,10 @@ final class GameController extends Controller
 
         /** @var EventResult|null $result */
         $result = $request->session()->get('result');
+        /** @var Income|null $incomeDiff */
+        $incomeDiff = $request->session()->get('incomeDiff');
+        /** @var Job|null $newJob */
+        $newJob = $request->session()->get('newJob');
         if ($result === null) {
             return redirect()->route('home', ['id' => $playerId]);
         }
@@ -218,6 +240,8 @@ final class GameController extends Controller
         return view('pages.event', [
             'player' => $player,
             'result' => $result,
+            'incomeDiff' => $incomeDiff,
+            'newJob' => $newJob,
         ]);
     }
 

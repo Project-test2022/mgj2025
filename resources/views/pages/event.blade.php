@@ -109,8 +109,11 @@
             @if($result->totalMoney->value !== 0)
                 資産：{{ $result->money() }}<br>
             @endif
-            @if($result->income->value !== 0)
-                年収：{{ $result->income() }}<br>
+            @if($newJob)
+                職業：{{ $newJob }} New!
+            @endif
+            @if($incomeDiff)
+                年収：{{ $incomeDiff->format(true) }}<br>
             @endif
             @if($result->ability->intelligence->value !== 0)
                 知能：{{ $result->intelligence() }}

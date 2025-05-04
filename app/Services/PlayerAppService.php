@@ -12,6 +12,7 @@ use App\Repositories\BackgroundRepository;
 use App\Repositories\PlayerFaceRepository;
 use App\Repositories\PlayerRepository;
 use App\ValueObjects\BirthYear;
+use App\ValueObjects\Income;
 use App\ValueObjects\PlayerId;
 use App\ValueObjects\PlayerName;
 use App\ValueObjects\SexCode;
@@ -73,7 +74,7 @@ final readonly class PlayerAppService
     /**
      * @throws Exception
      */
-    public function update(Player $player, EventResult $eventResult): Player
+    public function update(Player $player, EventResult $eventResult, ?Income $income): Player
     {
         // 結果に応じてステータスを更新する
         $player = $player->update(
@@ -82,14 +83,11 @@ final readonly class PlayerAppService
             $eventResult->ability,
             $eventResult->evaluation,
             $eventResult->job,
-            $eventResult->income,
+            $income ?? $player->income,
             $eventResult->partner,
         );
 
         $this->playerRepository->save($player);
-
-        // 背景画像を更新する
-        $this->updateBackground($player);
 
         return $player;
     }
@@ -105,6 +103,8 @@ final readonly class PlayerAppService
         $this->playerRepository->save($player);
         // キャラ画像を更新する
         $this->updatePlayerFace($player);
+        // 背景画像を更新する
+        $this->updateBackground($player);
     }
 
     public function dead(Player $player): void

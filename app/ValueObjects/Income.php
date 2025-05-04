@@ -27,12 +27,15 @@ final readonly class Income
         return $this->value;
     }
 
-    public function format(): string
+    public function format(bool $withPlus = false): string
     {
         $value = number_format((abs($this->value)));
         if ($this->value < 0) {
             return '-¥' . $value;
         } else {
+            if ($withPlus) {
+                return '+¥' . $value;
+            }
             return '¥' . $value;
         }
     }

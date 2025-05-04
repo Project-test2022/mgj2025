@@ -43,6 +43,35 @@
         .start-button:hover {
             background-color: rgba(255, 255, 255, 0.4);
         }
+        .image-checkbox {
+            display: none;
+        }
+
+        .checkbox-label {
+            display: inline-block;
+            cursor: pointer;
+        }
+
+        .checkbox-label img {
+            width: 100px;
+            height: auto;
+        }
+
+        .checkbox-label .off {
+            display: block;
+        }
+
+        .checkbox-label .on {
+            display: none;
+        }
+
+        .image-checkbox:checked + .checkbox-label .off {
+            display: none;
+        }
+
+        .image-checkbox:checked + .checkbox-label .on {
+            display: block;
+        }
     </style>
 @endpush
 
@@ -59,13 +88,23 @@
             <div class="form-group">
                 <label for="name">名前</label>
                 <input type="text" name="name" value="{{ old('name') }}">
-                <label><input type="checkbox" name="name_random" @checked(old('name_random', false))> ランダム</label>
+
+                <input type="checkbox" name="name_random" id="toggle1" class="image-checkbox">
+                <label for="toggle1" class="checkbox-label">
+                    <img src="{{ asset('images/select.png') }}" alt="OFF" class="off">
+                    <img src="{{ asset('images/random.png') }}" alt="ON" class="on">
+                </label>
             </div>
 
             <div class="form-group">
                 <label for="birth_year">生年（西暦）</label>
                 <input type="number" name="birth_year" value="{{ old('birth_year', 2000) }}">
-                <label><input type="checkbox" name="birth_year_random" @checked(old('birth_year_random', false))> ランダム</label>
+
+                <input type="checkbox" name="birth_year_random" id="toggle2" class="image-checkbox">
+                <label for="toggle2" class="checkbox-label">
+                    <img src="{{ asset('images/select.png') }}" alt="OFF" class="off">
+                    <img src="{{ asset('images/random.png') }}" alt="ON" class="on">
+                </label>
             </div>
 
             <div class="form-group">
@@ -76,7 +115,12 @@
                         <option value="{{ $sex->sex_cd }}" @selected(old('gender') == $sex->sex_cd)>{{ $sex->sex_nm }}</option>
                     @endforeach
                 </select>
-                <label><input type="checkbox" name="gender_random" @checked(old('gender_random', false))>ランダム</label>
+
+                <input type="checkbox" name="gender_random" id="toggle3" class="image-checkbox">
+                <label for="toggle3" class="checkbox-label">
+                    <img src="{{ asset('images/select.png') }}" alt="OFF" class="off">
+                    <img src="{{ asset('images/random.png') }}" alt="ON" class="on">
+                </label>
             </div>
 
             <button id="btn" type="submit" class="start-button">START</button>

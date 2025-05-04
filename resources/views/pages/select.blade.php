@@ -107,6 +107,7 @@
 @section('content')
 <div class="main-wrapper">
     <div class="header">
+<<<<<<< HEAD
       <div class="title">
         人生やり直しゲーム
         <button id="bgm-toggle" style="background: none; border: none; margin-left: 10px; cursor: pointer;">
@@ -114,6 +115,10 @@
         </button>
     </div>
       <div class="turn">西暦：{{ $player->currentYear() }}</div>
+=======
+      <div class="title">人生やり直しゲーム</div>
+      <div class="turn">西暦：{{ $player->currentYear() }}年</div>
+>>>>>>> ed61b55dd4f2bac2a58c69fbbdee7703797bce46
     </div>
     <div class="event-area"></div>
     <div class="panel">

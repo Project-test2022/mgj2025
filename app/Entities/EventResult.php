@@ -6,7 +6,6 @@ use App\ValueObjects\Ability;
 use App\ValueObjects\Business;
 use App\ValueObjects\Evaluation;
 use App\ValueObjects\Health;
-use App\ValueObjects\Income;
 use App\ValueObjects\Intelligence;
 use App\ValueObjects\Happiness;
 use App\ValueObjects\Job;
@@ -28,7 +27,6 @@ final readonly class EventResult
      * @param Ability       $ability    能力の変化量
      * @param Evaluation    $evaluation 評価の変化量
      * @param Job|null      $job        変更後の職業
-     * @param Income        $income     年収の変化量
      * @param Partner|null  $partner    変更後のパートナー
      */
     public function __construct(
@@ -40,7 +38,6 @@ final readonly class EventResult
         public Ability $ability,
         public Evaluation $evaluation,
         public ?Job $job,
-        public Income $income,
         public ?Partner $partner,
     ) {
     }
@@ -64,7 +61,6 @@ final readonly class EventResult
                 Happiness::from($data['e_happiness'] ?? 0)->sub($before->evaluation->happiness),
             ),
             $job,
-            Income::from($data['income'] ?? 0)->sub($before->income),
             Partner::tryFrom($data['partner']),
         );
     }
@@ -88,8 +84,7 @@ final readonly class EventResult
                 Business::from($value),
                 Happiness::from($value),
             ),
-            null,
-            Income::from($value),
+            Job::from('テスト職業'),
             null,
         );
     }
@@ -105,7 +100,12 @@ final readonly class EventResult
 
     public function money(): string
     {
-        return $this->totalMoney->format();
+        $value = number_format((abs($this->totalMoney->value)));
+        if ($this->totalMoney->value < 0) {
+            return '-¥' . $value;
+        } else {
+            return '+¥' . $value;
+        }
     }
 
     public function health(): string
@@ -180,17 +180,6 @@ final readonly class EventResult
             return '+' . $this->evaluation->happiness->value;
         } elseif ($this->evaluation->happiness->value < 0) {
             return (string)$this->evaluation->happiness->value;
-        } else {
-            return '0';
-        }
-    }
-
-    public function income(): string
-    {
-        if ($this->income->value > 0) {
-            return '+' . $this->income->value;
-        } elseif ($this->income->value < 0) {
-            return (string)$this->income->value;
         } else {
             return '0';
         }
