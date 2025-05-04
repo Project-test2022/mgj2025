@@ -34,11 +34,11 @@
             width: 1124px;
             height: 505px;
             @if($result->success)
-                background: url('{{ asset('images/choice_success.jpg?v='.config('app.version')) }}') no-repeat center center;
+                 background: url('{{ asset('images/choice_success.jpg?v='.config('app.version')) }}') no-repeat center center;
             @else
-                background: url('{{ asset('images/choice_lose.jpg?v='.config('app.version')) }}') no-repeat center center;
+                 background: url('{{ asset('images/choice_lose.jpg?v='.config('app.version')) }}') no-repeat center center;
             @endif
-            background-size: cover;
+             background-size: cover;
             position: relative;
             display: flex;
             justify-content: center;
@@ -104,13 +104,14 @@
 
 @section('content')
     <div class="header">
-      <div class="title">
-        人生やり直しゲーム
-        <button id="bgm-toggle" style="background: none; border: none; margin-left: 10px; cursor: pointer;" class="dont-loading">
-            <img id="bgm-icon" src="{{ asset('icon/gray_off.png') }}" alt="BGMアイコン" width="24" height="24">
-        </button>
-    </div>
-      <div class="turn">西暦：{{ $player->currentYear() }}</div>
+        <div class="title">
+            人生やり直しゲーム
+            <button id="bgm-toggle" style="background: none; border: none; margin-left: 10px; cursor: pointer;"
+                    class="dont-loading">
+                <img id="bgm-icon" src="{{ asset('icon/gray_off.png') }}" alt="BGMアイコン" width="24" height="24">
+            </button>
+            <div class="turn">西暦：{{ $player->currentYear() }}</div>
+        </div>
     </div>
     <div class="event-area"></div>
     <div class="panel">
@@ -160,14 +161,14 @@
     </div> -->
 
     @if($result->dead)
-        <button id="button-happy" style="margin-top:20px;" class="button" onclick="location.href='{{ route('result', ['id' => $player->id]) }}'">おわり</button>
+        <button id="button-happy" style="margin-top:20px;" class="button"
+                onclick="location.href='{{ route('result', ['id' => $player->id]) }}'">おわり
+        </button>
     @else
-        <button id="button-home" style="margin-top:20px;" class="button" onclick="location.href='{{ route('home', ['id' => $player->id]) }}'"> 
-            <div class="icon-container">
-                <image src="{{ asset('let_go_home.png') }}" alt="ホーム" class="button-icon">
-                ホーム
-            </div>
-            </button>
+        <button class="button" style="margin-top:20px;"
+                onclick="location.href='{{ route('home', ['id' => $player->id]) }}'">
+            <img src="{{ asset('icon/let_go_home.png') }}" alt="ホーム" class="button-icon" style="margin: auto"/>
+        </button>
     @endif
 @endsection
 
@@ -196,9 +197,9 @@
 
             // BGM の設定
             @if($result->success)
-                setupBgm('{{ asset('sounds/positive/breakthrough-moment_v2.mp3') }}');
+            setupBgm('{{ asset('sounds/positive/breakthrough-moment_v2.mp3') }}');
             @else
-                setupBgm('{{ asset('sounds/negative/bleeding-my-heart_v2.mp3') }}');
+            setupBgm('{{ asset('sounds/negative/bleeding-my-heart_v2.mp3') }}');
             @endif
 
             document.getElementById('bgm-toggle').addEventListener('click', function () {
