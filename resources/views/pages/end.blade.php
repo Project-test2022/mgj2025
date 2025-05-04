@@ -122,8 +122,9 @@
 
 @section('content')
     <div class="main-wrapper">
-        <div class="header">人生やり直しゲーム</div>
+        <div class="header">人生やり直しゲーム
         <div class="main-area"></div>
+        </div>
         <div class="panel">
             <div class="character-frame">
                 <img src="{{ route('face', ['id' => $player->playerFaceId ?? 0]) }}" alt="人物写真">
