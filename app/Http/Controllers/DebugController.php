@@ -2,7 +2,26 @@
 
 namespace App\Http\Controllers;
 
+use App\Entities\Player;
 use App\Models\SexModel;
+use App\ValueObjects\Ability;
+use App\ValueObjects\Action;
+use App\ValueObjects\BirthYear;
+use App\ValueObjects\Business;
+use App\ValueObjects\Evaluation;
+use App\ValueObjects\Happiness;
+use App\ValueObjects\Health;
+use App\ValueObjects\Income;
+use App\ValueObjects\Intelligence;
+use App\ValueObjects\Job;
+use App\ValueObjects\Money;
+use App\ValueObjects\PlayerId;
+use App\ValueObjects\PlayerName;
+use App\ValueObjects\Sense;
+use App\ValueObjects\SexName;
+use App\ValueObjects\Sport;
+use App\ValueObjects\Turn;
+use App\ValueObjects\Visual;
 use Illuminate\View\View;
 
 class DebugController extends Controller
@@ -34,7 +53,44 @@ class DebugController extends Controller
 
     public function home(): View
     {
-        return view('pages.home');
+        $player = new Player(
+            PlayerId::from(1),
+            PlayerName::from('山田 太郎'),
+            SexName::from('男性'),
+            BirthYear::from(2000),
+            Turn::from('20'),
+            Money::from(1000000),
+            Health::from(100),
+            Ability::from(
+                Intelligence::from(10),
+                Sport::from(10),
+                Visual::from(10),
+                Sense::from(10),
+            ),
+            Evaluation::from(
+                Business::from(10),
+                Happiness::from(10),
+            ),
+            null,
+            null,
+            null,
+            Job::from('教師'),
+            Income::from(300000),
+            null,
+        );
+
+        $actions = [
+            Action::from('遊び'),
+            Action::from('仕事'),
+            Action::from('勉強'),
+            Action::from('運動'),
+            Action::from('食事'),
+        ];
+
+        return view('pages.home', [
+            'player' => $player,
+            'actions' => $actions,
+        ]);
     }
 
     public function select(): View

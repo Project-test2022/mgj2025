@@ -274,11 +274,16 @@ final class GameController extends Controller
         if ($playerFaceId === null) {
             return Utility::getImageResponse(file_get_contents($default));
         } else {
-            $image = $this->playerFaceRepository->find(PlayerFaceId::from($playerFaceId));
-            if ($image === null) {
+            try {
+                $image = $this->playerFaceRepository->find(PlayerFaceId::from($playerFaceId));
+                if ($image === null) {
+                    return Utility::getImageResponse(file_get_contents($default));
+                }
+                return Utility::getImageResponse($image->image);
+            } catch (Throwable $e) {
+                Log::error($e);
                 return Utility::getImageResponse(file_get_contents($default));
             }
-            return Utility::getImageResponse($image->image);
         }
     }
 
@@ -289,11 +294,16 @@ final class GameController extends Controller
         if ($bgId === null) {
             return Utility::getImageResponse(file_get_contents($default));
         } else {
-            $image = $this->backgroundRepository->find(BackgroundId::from($bgId));
-            if ($image === null) {
+            try {
+                $image = $this->backgroundRepository->find(BackgroundId::from($bgId));
+                if ($image === null) {
+                    return Utility::getImageResponse(file_get_contents($default));
+                }
+                return Utility::getImageResponse($image->image);
+            } catch (Throwable $e) {
+                Log::error($e);
                 return Utility::getImageResponse(file_get_contents($default));
             }
-            return Utility::getImageResponse($image->image);
         }
     }
 }
