@@ -105,7 +105,12 @@ final readonly class EventResult
 
     public function money(): string
     {
-        return $this->totalMoney->format();
+        $value = number_format((abs($this->totalMoney->value)));
+        if ($this->totalMoney->value < 0) {
+            return '-¥' . $value;
+        } else {
+            return '+¥' . $value;
+        }
     }
 
     public function health(): string
@@ -187,12 +192,11 @@ final readonly class EventResult
 
     public function income(): string
     {
-        if ($this->income->value > 0) {
-            return '+' . $this->income->value;
-        } elseif ($this->income->value < 0) {
-            return (string)$this->income->value;
+        $value = number_format((abs($this->income->value)));
+        if ($this->income->value < 0) {
+            return '-¥' . $value;
         } else {
-            return '0';
+            return '+¥' . $value;
         }
     }
 }
