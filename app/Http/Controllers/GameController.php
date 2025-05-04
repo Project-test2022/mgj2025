@@ -252,9 +252,11 @@ final class GameController extends Controller
         if ($player === null) {
             return redirect()->route('title');
         }
+        $sexCode = SexModel::query()->where('sex_nm', $player->sexName->value)->first()->sex_cd;
 
         return view('pages.end', [
             'player' => $player,
+            'sexCode' => $sexCode,
         ]);
     }
 

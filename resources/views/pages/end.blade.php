@@ -118,10 +118,6 @@
         .button:hover {
             background: rgba(0, 0, 0, 0.9);
         }
-
-        .sound-button{
-
-        }
     </style>
 @endpush
 
@@ -146,12 +142,20 @@
 
         <form action="{{ route('start') }}" method="POST">
             @csrf
+            <input type="hidden" name="name" value="{{ $player->name }}">
+            <input type="hidden" name="birth_year" value="{{ $player->birthYear }}">
+            <input type="hidden" name="gender" value="{{ $sexCode }}">
             <div class="buttons">
                 <button type="button" class="button" onclick="location.href='{{ route('title') }}'">幸せでした</button>
                 <button type="submit" class="button">もう一回</button>
             </div>
         </form>
     </div>
+    @if($errors->any())
+        @foreach($errors->all() as $error)
+            <div class="error-message">{{ $error }}</div>
+        @endforeach
+    @endif
 @endsection
 
 @push('scripts')
@@ -167,12 +171,13 @@
 
         document.addEventListener('DOMContentLoaded', function () {
             // 効果音（ボタン用）
-            const btn = document.querySelectorAll('.buttons');
+            const btns = document.querySelectorAll('.buttons');
             const se = new Audio('{{ asset('sounds/se/decide-button-a.mp3') }}');
             se.volume = 0.3;
-            btn.addEventListener('click', function () {
-                se.currentTime = 0;
-                se.play();
+            btns.forEach(btn => {
+                if (btn.textContent.length >= 6) {
+                    btn.classList.add('long-text');
+                }
             });
 
             // 初期再生
