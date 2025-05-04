@@ -89,6 +89,16 @@
         .button:hover {
             background: rgba(0, 0, 0, 0.9);
         }
+
+        .button-icon {
+            width: 182px;
+            height: 32px;
+            margin-bottom: 25px;
+            display: block;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
     </style>
 @endpush
 
@@ -152,7 +162,12 @@
     @if($result->dead)
         <button id="button-happy" style="margin-top:20px;" class="button" onclick="location.href='{{ route('result', ['id' => $player->id]) }}'">おわり</button>
     @else
-        <button id="button-home" style="margin-top:20px;" class="button" onclick="location.href='{{ route('home', ['id' => $player->id]) }}'">ホーム</button>
+        <button id="button-home" style="margin-top:20px;" class="button" onclick="location.href='{{ route('home', ['id' => $player->id]) }}'"> 
+            <div class="icon-container">
+                <image src="{{ asset('let_go_home.png') }}" alt="ホーム" class="button-icon">
+                ホーム
+            </div>
+            </button>
     @endif
 @endsection
 
