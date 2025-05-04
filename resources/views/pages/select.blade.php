@@ -32,11 +32,6 @@
             font-size: 24px;
         }
 
-        .turn {
-            font-size: 20px;
-            padding: 5px;
-        }
-
         .event-area {
             width: 1124px;
             height: 505px;
@@ -105,41 +100,46 @@
 @endpush
 
 @section('content')
-<div class="main-wrapper">
-    <div class="header">
-      <div class="title">
-        人生やり直しゲーム
-        <button id="bgm-toggle" style="background: none; border: none; margin-left: 10px; cursor: pointer;" class="dont-loading">
-            <img id="bgm-icon" src="{{ asset('icon/gray_off.png') }}" alt="BGMアイコン" width="24" height="24">
-        </button>
-    </div>
-      <div class="turn">西暦：{{ $player->currentYear() }}</div>
-    </div>
-    <div class="event-area"></div>
-    <div class="panel">
-        <div class="event-text">
-            {{ $event->content }}
+    <div class="main-wrapper">
+        <div class="header">
+            <div class="title">
+                人生やり直しゲーム
+                <button id="bgm-toggle" style="background: none; border: none; margin-left: 10px; cursor: pointer;"
+                        class="dont-loading">
+                    <img id="bgm-icon" src="{{ asset('icon/gray_off.png') }}" alt="BGMアイコン" width="24" height="24">
+                </button>
+            </div>
+            <div class="turn">西暦：{{ $player->currentYear() }}年</div>
         </div>
-    </div>
+        <div class="event-area"></div>
+        <div class="panel">
+            <div class="event-text">
+                {{ $event->content }}
+            </div>
+        </div>
 
-    <form action="{{ route('event.select', ['id' => $player->id]) }}" method="POST">
-        @csrf
-        <input type="hidden" name="action" value="{{ $action }}">
-        <input type="hidden" name="event" value="{{ $event->content }}">
-        <input type="hidden" name="choice1" value="{{ $event->choice1->content }}">
-        <input type="hidden" name="rate1" value="{{ $event->choice1->rate }}">
-        <input type="hidden" name="choice2" value="{{ $event->choice2->content }}">
-        <input type="hidden" name="rate2" value="{{ $event->choice2->rate }}">
-        <div class="buttons">
-            <button type="submit" name="ok" class="button">{{ $event->choice1->content }} (成功率 {{ $event->choice1->rate }}%)</button>
-            <button type="submit" name="ng" class="button">{{ $event->choice2->content }} (成功率 {{ $event->choice2->rate }}%)</button>
-        </div>
-    </form>
-</div>
+        <form action="{{ route('event.select', ['id' => $player->id]) }}" method="POST">
+            @csrf
+            <input type="hidden" name="action" value="{{ $action }}">
+            <input type="hidden" name="event" value="{{ $event->content }}">
+            <input type="hidden" name="choice1" value="{{ $event->choice1->content }}">
+            <input type="hidden" name="rate1" value="{{ $event->choice1->rate }}">
+            <input type="hidden" name="choice2" value="{{ $event->choice2->content }}">
+            <input type="hidden" name="rate2" value="{{ $event->choice2->rate }}">
+            <div class="buttons">
+                <button type="submit" name="ok" class="button">{{ $event->choice1->content }}
+                    (成功率 {{ $event->choice1->rate }}%)
+                </button>
+                <button type="submit" name="ng" class="button">{{ $event->choice2->content }}
+                    (成功率 {{ $event->choice2->rate }}%)
+                </button>
+            </div>
+        </form>
+    </div>
 @endsection
 
 @push('scripts')
-<script src="{{ asset('js/bgm.js') }}"></script>
+    <script src="{{ asset('js/bgm.js') }}"></script>
     <script>
         function updateBgmIcon() {
             const icon = document.getElementById('bgm-icon');

@@ -18,7 +18,7 @@
 
         .header {
             width: 100%;
-            max-width: 1280px;
+            max-width: 1124px;
             display: flex;
             justify-content: space-between;
             margin-top: 30px;
@@ -77,17 +77,6 @@
             justify-content: center;
         }
 
-        /* .bottom-panel {
-            width: 1124px;
-            height: 80px;
-            background: rgba(0, 0, 0, 0.5);
-            color: white;
-            text-align: center;
-            font-size: 22px;
-            font-weight: bold;
-            padding: 20px 0;
-        } */
-
         .button {
             width: 1124px;
             height: 80px;
@@ -125,8 +114,8 @@
                     class="dont-loading">
                 <img id="bgm-icon" src="{{ asset('icon/gray_off.png') }}" alt="BGMアイコン" width="24" height="24">
             </button>
-            <div class="turn">西暦：{{ $player->currentYear() }}</div>
         </div>
+        <div class="turn">西暦：{{ $player->currentYear() }}年</div>
     </div>
     <div class="event-area"></div>
     <div class="panel">
