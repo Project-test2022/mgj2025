@@ -213,8 +213,9 @@ final readonly class DifyApi
         $input = $this->input($state, $playerInfo, $player->turn, $action, $eventInfo);
 
         $data = $this->handle($player->id, $input);
-        $data = $data['structured_output'];
-        return EventResult::from($data, $player, $result);
+        $job = Job::from($data['new_job']);
+        $data = $data['output'];
+        return EventResult::from($data, $job, $player, $result);
     }
 
     /**

@@ -45,7 +45,7 @@ final readonly class EventResult
     ) {
     }
 
-    public static function from(array $data, Player $before, bool $success): self
+    public static function from(array $data, Job $job, Player $before, bool $success): self
     {
         return new self(
             ResultMessage::from($data['e_result']),
@@ -63,7 +63,7 @@ final readonly class EventResult
                 Business::from($data['e_business'] ?? 0)->sub($before->evaluation->business),
                 Happiness::from($data['e_happiness'] ?? 0)->sub($before->evaluation->happiness),
             ),
-            Job::tryFrom($data['job']),
+            $job,
             Income::from($data['income'] ?? 0)->sub($before->income),
             Partner::tryFrom($data['partner']),
         );
