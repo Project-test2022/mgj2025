@@ -16,6 +16,27 @@
             align-items: center;
         }
 
+        .main-wrapper {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .header {
+            width: 100%;
+            max-width: 1280px;
+            display: flex;
+            justify-content: space-between;
+            margin-top: 30px;
+            margin-bottom: 20px;
+            font-size: 24px;
+        }
+
+        .turn {
+            font-size: 20px;
+            padding: 5px;
+        }
+
         .event-area {
             width: 1124px;
             height: 505px;
@@ -33,7 +54,10 @@
         .panel {
             background: rgba(255, 255, 255, 0.4);
             width: 100%;
-            top: calc(50% - 150px);
+            height: 415px;
+            top: calc(50% - 250px);
+            left: 50%;
+            transform: translateX(-50%);
             padding: 10px;
             position: absolute;
             z-index: 1;
@@ -44,21 +68,25 @@
         }
 
         .event-text {
+            width: 700px;
+            height: 300px;
             padding: 15px 25px;
             color: #070606;
             font-size: 20px;
             font-weight: bold;
             text-align: center;
-            max-width: 80%;
+            position: absolute;
+            top: 40%;
         }
 
         .buttons {
             display: flex;
-            gap: 80px;
+            gap: 30px;
+            margin-top: 40px;
         }
 
         .button {
-            width: 360px;
+            width: 548px;
             height: 80px;
             background: rgba(0, 0, 0, 0.7);
             color: white;
@@ -77,6 +105,11 @@
 @endpush
 
 @section('content')
+<div class="main-wrapper">
+    <div class="header">
+      <div class="title">人生やり直しゲーム</div>
+      <div class="turn">ターン：2025年</div>
+    </div>
     <div class="event-area"></div>
     <div class="panel">
         <div class="event-text">
@@ -97,6 +130,7 @@
             <button type="submit" name="ng" class="button">{{ $event->choice2->content }} (成功率 {{ $event->choice2->rate }}%)</button>
         </div>
     </form>
+</div>
 @endsection
 
 @push('scripts')
