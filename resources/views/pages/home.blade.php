@@ -118,7 +118,7 @@
         <div class='panel'>
             <div class="character-image"></div>
             <div class="profile-info">
-                {{ $player->name }}({{ $player->turn->value }})　　{{ $player->sexName }}性　　職業<br>
+                {{ $player->name }}({{ $player->turn->value }})　　{{ $player->sexName }}性　　職業: {{ $player->job?->value ?? 'なし' }}<br>
                 資産：{{ $player->totalMoney->format() }}　　年収：{{ $player->income->format() }}<br>
                 仕事：{{ $player->evaluation->business }}　　幸福：{{ $player->evaluation->happiness }}　　健康：{{ $player->health }}<br>
                 知能：{{ $player->ability->intelligence }}　　運動：{{ $player->ability->sport }}
@@ -140,12 +140,14 @@
     <script>
         document.addEventListener('DOMContentLoaded', function () {
             // 効果音（ボタン用）
-            const btn = document.querySelectorAll('.buttons');
+            const btns = document.querySelectorAll('.buttons');
             const se = new Audio('{{ asset('sounds/se/decide-button-a.mp3') }}');
             se.volume = 0.3;
-            btn.addEventListener('click', function () {
-                se.currentTime = 0;
-                se.play();
+            btns.forEach(btn => {
+                btn.addEventListener('click', function () {
+                    se.currentTime = 0;
+                    se.play();
+                });
             });
             // BGM の設定
             const bgm = new Audio('{{ asset('sounds/op/high-stakes-shadow.mp3') }}');
