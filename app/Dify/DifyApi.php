@@ -214,6 +214,9 @@ final readonly class DifyApi
 
         $data = $this->handle($player->id, $input);
         $job = Job::from($data['new_job']);
+        if (!isset($data['output'])) {
+            throw new Exception('Invalid response from Dify API.' . json_encode($data));
+        }
         $data = $data['output'];
         return EventResult::from($data, $job, $player, $result);
     }
