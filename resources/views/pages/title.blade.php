@@ -20,13 +20,14 @@
             border: 1px solid rgba(255, 255, 255, 0.4);
             background-color: rgba(255, 255, 255, 0.03);
             backdrop-filter: blur(2px);
+            margin-bottom: 48px;
         }
 
         .title {
             font-size: 32px;
             letter-spacing: 12px;
             color: #333;
-            margin-bottom: 30px;
+            margin-bottom: 24px;
         }
 
         .start-button {
@@ -39,6 +40,8 @@
             letter-spacing: 5px;
             cursor: pointer;
             width: 100%;
+            width: 600px;
+		    height: 40px;
         }
 
         .start-button:hover {
@@ -73,6 +76,27 @@
         .image-checkbox:checked + .checkbox-label .on {
             display: block;
         }
+        
+        .form-label {
+		    display: inline-block;
+		    width: 105px;
+		    height: 19px;
+        }
+        
+        .form-input {
+		    display: inline-block;
+		    width: 270px;
+		    height: 30px;
+        }
+        
+		.form-group {
+		    margin-bottom: 15px;
+		}
+		
+		.form-description {
+		    margin-bottom: 24px;
+		}
+
     </style>
 @endpush
 
@@ -81,11 +105,11 @@
         @csrf
         <div class="container">
             <h1 class="title">人生やり直しゲーム</h1>
-            <span>次に生まれる人生を選択・入力してください。</span>
+            <span class="form-description">次に生まれる人生を選択・入力してください。</span>
             <div id="game-form">
                 <div class="form-group">
-                    <label for="name">名  前</label>
-                    <input type="text" name="name" value="{{ old('name') }}">
+                    <label for="name" class="form-label">名前　　　　:</label>
+                    <input type="text" name="name" value="{{ old('name') }}" class="form-input">
 
                     <input type="checkbox" name="name_random" id="toggle1" class="image-checkbox">
                     <label for="toggle1" class="checkbox-label">
@@ -95,8 +119,8 @@
                 </div>
 
                 <div class="form-group">
-                    <label for="birth_year">生まれ年</label>
-                    <input type="number" name="birth_year" value="{{ old('birth_year', 2000) }}">
+                    <label for="birth_year" class="form-label">生まれ年　　:</label>
+                    <input type="number" name="birth_year" class="form-input" value="{{ old('birth_year', 2000) }}">
 
                     <input type="checkbox" name="birth_year_random" id="toggle2" class="image-checkbox">
                     <label for="toggle2" class="checkbox-label">
@@ -106,8 +130,8 @@
                 </div>
 
                 <div class="form-group">
-                    <label for="gender">性  別</label>
-                    <select name="gender">
+                    <label for="gender" class="form-label">性別　　　　:</label>
+                    <select name="gender" class="form-input">
                         <option value disabled selected>--選択してください--</option>
                         @foreach($sexes as $sex)
                             <option value="{{ $sex->sex_cd }}" @selected(old('gender') == $sex->sex_cd)>{{ $sex->sex_nm }}</option>
