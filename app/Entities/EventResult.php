@@ -7,7 +7,7 @@ use App\ValueObjects\Business;
 use App\ValueObjects\Evaluation;
 use App\ValueObjects\Health;
 use App\ValueObjects\Intelligence;
-use App\ValueObjects\Love;
+use App\ValueObjects\Happiness;
 use App\ValueObjects\Money;
 use App\ValueObjects\ResultMessage;
 use App\ValueObjects\Sense;
@@ -52,7 +52,7 @@ final readonly class EventResult
             ),
             Evaluation::from(
                 Business::from($data['e_business'])->sub($before->evaluation->business),
-                Love::from($data['e_love'])->sub($before->evaluation->love),
+                Happiness::from($data['e_happiness'])->sub($before->evaluation->happiness),
             ),
         );
     }
@@ -74,7 +74,7 @@ final readonly class EventResult
             ),
             Evaluation::from(
                 Business::from($value),
-                Love::from($value),
+                Happiness::from($value),
             ),
         );
     }
@@ -159,12 +159,12 @@ final readonly class EventResult
         }
     }
 
-    public function love(): string
+    public function happiness(): string
     {
-        if ($this->evaluation->love->value > 0) {
-            return '+' . $this->evaluation->love->value;
-        } elseif ($this->evaluation->love->value < 0) {
-            return (string)$this->evaluation->love->value;
+        if ($this->evaluation->happiness->value > 0) {
+            return '+' . $this->evaluation->happiness->value;
+        } elseif ($this->evaluation->happiness->value < 0) {
+            return (string)$this->evaluation->happiness->value;
         } else {
             return '0';
         }

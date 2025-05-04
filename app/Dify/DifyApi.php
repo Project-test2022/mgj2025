@@ -251,7 +251,7 @@ final readonly class DifyApi
             '運動(0-100)' => $player->ability->sport->value,
             '容姿(0-100)' => $player->ability->visual->value,
             '仕事(0-100)' => $player->evaluation->business->value,
-            '恋愛(0-100)' => $player->evaluation->love->value,
+            '幸福(0-100)' => $player->evaluation->happiness->value,
         ];
 
         $formatted = '';

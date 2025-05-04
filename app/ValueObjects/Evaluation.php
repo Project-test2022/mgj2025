@@ -6,17 +6,17 @@ final readonly class Evaluation
 {
     private function __construct(
         public Business $business,
-        public Love $love,
+        public Happiness $happiness,
     ) {
     }
 
     public static function from(
         Business $business,
-        Love $love,
+        Happiness $happiness,
     ): self {
         return new self(
             $business,
-            $love,
+            $happiness,
         );
     }
 
@@ -24,7 +24,7 @@ final readonly class Evaluation
     {
         return new self(
             $this->business->add($other->business),
-            $this->love->add($other->love),
+            $this->happiness->add($other->happiness),
         );
     }
 }

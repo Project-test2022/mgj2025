@@ -8,7 +8,7 @@ use App\Models\SexModel;
 use App\Parameters\CreatePlayerParameters;
 use App\ValueObjects\Business;
 use App\ValueObjects\Evaluation;
-use App\ValueObjects\Love;
+use App\ValueObjects\Happiness;
 use App\ValueObjects\PlayerId;
 use App\ValueObjects\SexName;
 use App\ValueObjects\Turn;
@@ -37,7 +37,7 @@ final readonly class PlayerFactory
             $parameters->ability,
             Evaluation::from(
                 Business::from(0),
-                Love::from(0),
+                Happiness::from(0),
             ),
             null,
             null,

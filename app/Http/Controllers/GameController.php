@@ -94,8 +94,8 @@ final class GameController extends Controller
 
         if ($request->has('business')) {
             $situation = EventSituation::BUSINESS;
-        } elseif ($request->has('love')) {
-            $situation = EventSituation::LOVE;
+        } elseif ($request->has('happiness')) {
+            $situation = EventSituation::HAPPINESS;
         } else {
             return redirect()->route('home', ['id' => $playerId]);
         }

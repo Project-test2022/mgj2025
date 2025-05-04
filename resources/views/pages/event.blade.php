@@ -110,8 +110,8 @@
             @if($result->evaluation->business->value !== 0)
                 仕事: {{ $result->business() }}
             @endif
-            @if($result->evaluation->love->value !== 0)
-                恋愛: {{ $result->love() }}
+            @if($result->evaluation->happiness->value !== 0)
+                幸福: {{ $result->happiness() }}
             @endif
         </div>
     </div>

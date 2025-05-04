@@ -17,7 +17,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property int         $a_visual
  * @property int         $a_sense
  * @property int         $e_business
- * @property int         $e_love
+ * @property int         $e_happiness
  * @property string|null $bg_id
  * @property string|null $player_face_id
  * @property string|null $age_grp_cd
