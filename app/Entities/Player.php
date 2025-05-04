@@ -36,7 +36,7 @@ final readonly class Player
         public ?Job $job,
         public Income $income,
         public ?Partner $partner,
-        public bool $isDeleted = false,
+        public bool $isDead = false,
     ) {
     }
 

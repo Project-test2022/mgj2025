@@ -78,7 +78,7 @@ final class GameController extends Controller
         if ($player === null) {
             return redirect()->route('title');
         }
-        if ($player->isDeleted) {
+        if ($player->isDead) {
             return redirect()->route('result', ['id' => $playerId]);
         }
 

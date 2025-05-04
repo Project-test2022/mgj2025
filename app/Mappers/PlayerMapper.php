@@ -57,7 +57,7 @@ final readonly class PlayerMapper
         $model->job = $player->job?->value;
         $model->income = $player->income->value;
         $model->partner = $player->partner?->value;
-        $model->dead_flg = $player->isDeleted;
+        $model->dead_flg = $player->isDead;
 
         return $model;
     }
