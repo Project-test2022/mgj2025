@@ -50,4 +50,11 @@
             });
         });
     });
+
+    window.addEventListener('pageshow', function () {
+        const overlay = document.getElementById('loading-overlay');
+        if (overlay) {
+            overlay.style.display = 'none';
+        }
+    });
 </script>
