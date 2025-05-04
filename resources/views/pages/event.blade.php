@@ -90,14 +90,8 @@
             @if($result->totalMoney->value !== 0)
                 資産：{{ $result->money() }}<br>
             @endif
-            @if($result->job)
-                New 職業: {{ $result->job }}<br>
-            @endif
             @if($result->income->value !== 0)
                 年収：{{ $result->income() }}<br>
-            @endif
-            @if($result->partner)
-                New パートナー: {{ $result->partner }}<br>
             @endif
             @if($result->ability->intelligence->value !== 0)
                 知能：{{ $result->intelligence() }}
@@ -143,7 +137,7 @@
             const buttons = document.querySelectorAll('.button');
             const se = new Audio('{{ asset('sounds/se/decide-button-a.mp3') }}');
             se.volume = 0.3;
-            buttons.foreach(button => {
+            buttons.forEach(button => {
                 button.addEventListener('click', function () {
                     se.currentTime = 0;
                     se.play();
@@ -155,7 +149,7 @@
             @if($result->success)
                 bgm = new Audio('{{ asset('sounds/positive/breakthrough-moment_v2.mp3') }}');
             @else
-                bgm = new Audio('{{ asset('sounds/positive/bleeding-my-heart_v2.mp3') }}');
+                bgm = new Audio('{{ asset('sounds/negative/bleeding-my-heart_v2.mp3') }}');
             @endif
             bgm.loop = true;
             bgm.volume = 0.3;

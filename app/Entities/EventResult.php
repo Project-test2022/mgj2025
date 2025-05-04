@@ -71,21 +71,21 @@ final readonly class EventResult
         return new self(
             ResultMessage::from($data['e_result']),
             $success,
-            $data['e_dead'],
-            Money::from($data['total_money'])->sub($before->totalMoney),
-            Health::from($data['health'])->sub($before->health),
+            $data['e_dead'] ?? false,
+            Money::from($data['total_money'] ?? 0)->sub($before->totalMoney),
+            Health::from($data['health'] ?? 0)->sub($before->health),
             Ability::from(
-                Intelligence::from($data['a_intelligence'])->sub($before->ability->intelligence),
-                Sport::from($data['a_sport'])->sub($before->ability->sport),
-                Visual::from($data['a_visual'])->sub($before->ability->visual),
-                Sense::from($data['a_sense'])->sub($before->ability->sense),
+                Intelligence::from($data['a_intelligence'] ?? 0)->sub($before->ability->intelligence),
+                Sport::from($data['a_sport'] ?? 0)->sub($before->ability->sport),
+                Visual::from($data['a_visual'] ?? 0)->sub($before->ability->visual),
+                Sense::from($data['a_sense'] ?? 0)->sub($before->ability->sense),
             ),
             Evaluation::from(
-                Business::from($data['e_business'])->sub($before->evaluation->business),
-                Happiness::from($data['e_happiness'])->sub($before->evaluation->happiness),
+                Business::from($data['e_business'] ?? 0)->sub($before->evaluation->business),
+                Happiness::from($data['e_happiness'] ?? 0)->sub($before->evaluation->happiness),
             ),
             $job,
-            Income::from($data['income'])->sub($before->income),
+            Income::from($data['income'] ?? 0)->sub($before->income),
             $partner,
         );
     }
