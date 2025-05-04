@@ -63,7 +63,7 @@
             position: relative;
             width: 240px;
             height: 300px;
-            background: url('{{ asset('images/image.png?v='.config('app.version')) }}') no-repeat center center;
+            background: url('{{ asset('images/ieiflame.png?v='.config('app.version')) }}') no-repeat center center;
             background-size: cover;
         }
 
@@ -74,6 +74,7 @@
             width: 66%;
             height: 83%;
             object-fit: cover;
+            filter: grayscale(100%);
         }
 
         .profile-info {
