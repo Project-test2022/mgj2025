@@ -10,6 +10,7 @@ use App\ValueObjects\Business;
 use App\ValueObjects\Evaluation;
 use App\ValueObjects\Happiness;
 use App\ValueObjects\Income;
+use App\ValueObjects\Job;
 use App\ValueObjects\PlayerId;
 use App\ValueObjects\SexName;
 use App\ValueObjects\Turn;
@@ -43,7 +44,7 @@ final readonly class PlayerFactory
             null,
             null,
             null,
-            null,
+            Job::from('赤ちゃん'),
             Income::from(0),
             null,
         );

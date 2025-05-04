@@ -15,7 +15,7 @@ final readonly class Partner
 
     public static function tryFrom(?string $other): ?self
     {
-        if (is_null($other)) {
+        if (empty($other)) {
             return null;
         }
 

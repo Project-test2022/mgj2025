@@ -47,27 +47,6 @@ final readonly class EventResult
 
     public static function from(array $data, Player $before, bool $success): self
     {
-        $job = Job::tryFrom($data['job']);
-        if ($job) {
-            if ($job->equals($before->job)) {
-                $job = null;
-            }
-        } else {
-            if ($before->job) {
-                $job = Job::from('無職');
-            }
-        }
-        $partner = Partner::tryFrom($data['partner']);
-        if ($partner) {
-            if ($partner->equals($before->partner)) {
-                $partner = null;
-            }
-        } else {
-            if ($before->partner) {
-                $partner = Partner::from('なし');
-            }
-        }
-
         return new self(
             ResultMessage::from($data['e_result']),
             $success,
@@ -84,9 +63,9 @@ final readonly class EventResult
                 Business::from($data['e_business'] ?? 0)->sub($before->evaluation->business),
                 Happiness::from($data['e_happiness'] ?? 0)->sub($before->evaluation->happiness),
             ),
-            $job,
+            Job::tryFrom($data['job']),
             Income::from($data['income'] ?? 0)->sub($before->income),
-            $partner,
+            Partner::tryFrom($data['partner']),
         );
     }
 
