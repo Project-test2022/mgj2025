@@ -5,16 +5,22 @@ namespace App\Dify;
 use App\Entities\Event;
 use App\Entities\EventResult;
 use App\Entities\Player;
-use App\Models\SexModel;
+use App\Parameters\CreatePlayerParameters;
 use App\Repositories\PlayerFaceRepository;
+use App\ValueObjects\Ability;
 use App\ValueObjects\BirthYear;
 use App\ValueObjects\Content;
 use App\ValueObjects\EventSituation;
+use App\ValueObjects\Health;
+use App\ValueObjects\Intelligence;
+use App\ValueObjects\Money;
 use App\ValueObjects\PlayerId;
 use App\ValueObjects\Choice;
 use App\ValueObjects\PlayerName;
 use App\ValueObjects\SelectContent;
-use App\ValueObjects\SexName;
+use App\ValueObjects\SexCode;
+use App\ValueObjects\Sport;
+use App\ValueObjects\Visual;
 use CURLFile;
 use Exception;
 use TypeError;
@@ -40,45 +46,75 @@ final readonly class DifyApi
     /**
      * @throws Exception
      */
-    public function createPlayer(PlayerId $id, ?PlayerName $name, ?BirthYear $birthYear, ?SexName $sexName): array
+    public function createPlayer(PlayerId $id, ?PlayerName $name, ?BirthYear $birthYear, ?SexCode $sexCode): CreatePlayerParameters
     {
+        if ($name !== null && $birthYear !== null && $sexCode !== null) {
+            return new CreatePlayerParameters(
+                $name,
+                $birthYear,
+                $sexCode,
+                Money::from(1000000),
+                Health::from(100),
+                Ability::from(
+                    Intelligence::from(0),
+                    Sport::from(0),
+                    Visual::from(0),
+                ),
+            );
+        }
+
         if (!$this->enabled) {
-            return [
+            return new CreatePlayerParameters(
                 $name ?? PlayerName::from('山田 太郎'),
-                $sexName ?? SexName::from('男'),
                 $birthYear ?? BirthYear::from('2025'),
-            ];
+                $sexCode ?? SexCode::from(0),
+                Money::from(1000000),
+                Health::from(100),
+                Ability::from(
+                    Intelligence::from(0),
+                    Sport::from(0),
+                    Visual::from(0),
+                ),
+            );
         }
 
         $state = State::PLAYER_GENERATION;
-        $playerInfo = $this->formatExcludePlayer($name, $birthYear, $sexName);
-        $input = $this->input($state, $playerInfo);
+        $input = $this->input($state);
 
         $data = $this->handle($id, $input);
         $data = $data['structured_output'];
         $name = $name ?? PlayerName::from($data['name']);
         $birthYear = $birthYear ?? BirthYear::from($data['birth']);
-        $sexName = $sexName ?? SexName::from(SexModel::query()->where('sex_cd', $data['sex'])->first()->sex_nm);
+        $sexCode = $sexCode ?? SexCode::from($data['sex']);
+        $totalMoney = Money::from($data['total_money']);
+        $health = Health::from($data['health']);
+        $intelligence = Intelligence::from($data['a_intelligence']);
+        $sport = Sport::from($data['a_sport']);
+        $visual = Visual::from($data['a_visual']);
 
-        return [
+        return new CreatePlayerParameters(
             $name,
-            $sexName,
             $birthYear,
-        ];
+            $sexCode,
+            $totalMoney,
+            $health,
+            Ability::from($intelligence, $sport, $visual),
+        );
     }
 
     /**
      * @throws Exception
      */
-    public function createPlayerImage(PlayerId $id): string
+    public function createPlayerImage(Player $player): string
     {
         if (!$this->enabled || !$this->imageEnabled) {
             return asset('images/player-default.png');
         }
 
         $state = State::PLAYER_IMAGE_GENERATION;
-        $input = $this->input($state);
-        $data = $this->handle($id, $input);
+        $playerInfo = $this->formatPlayer($player);
+        $input = $this->input($state, $playerInfo);
+        $data = $this->handle($player->id, $input);
 
         $relativeUrl = $data['files'][0]['url'];
         return $this->imageUrl . $relativeUrl;
@@ -191,26 +227,6 @@ final readonly class DifyApi
             }
         }
         throw new Exception('Dify API request failed after 5 attempts.');
-    }
-
-
-    private function formatExcludePlayer(?PlayerName $name, ?BirthYear $birthYear, ?SexName $sexName): string
-    {
-        $playerInfo = [];
-        if ($name !== null) {
-            $playerInfo['プレイヤー名'] = $name->value;
-        }
-        if ($birthYear !== null) {
-            $playerInfo['生年'] = $birthYear->value;
-        }
-        if ($sexName !== null) {
-            $playerInfo['性別'] = $sexName->value;
-        }
-        $formatted = '';
-        foreach ($playerInfo as $key => $value) {
-            $formatted .= "[$key]$value\n";
-        }
-        return $formatted;
     }
 
     private function formatPlayer(Player $player): string

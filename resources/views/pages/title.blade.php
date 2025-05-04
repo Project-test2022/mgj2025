@@ -73,7 +73,7 @@
                 <select name="gender">
                     <option value disabled selected>--選択してください--</option>
                     @foreach($sexes as $sex)
-                        <option value="{{ $sex->sex_nm }}" @selected(old('gender') == $sex->sex_nm)>{{ $sex->sex_nm }}</option>
+                        <option value="{{ $sex->sex_cd }}" @selected(old('gender') == $sex->sex_cd)>{{ $sex->sex_nm }}</option>
                     @endforeach
                 </select>
                 <label><input type="checkbox" name="gender_random" @checked(old('gender_random', false))>ランダム</label>
