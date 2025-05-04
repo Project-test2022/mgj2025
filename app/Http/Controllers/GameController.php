@@ -68,7 +68,7 @@ final class GameController extends Controller
             $this->playerRepository->save($player);
 
             // プレイヤーの画像の設定
-            $img = file_get_contents($imgUrl);
+            $img = $this->getImage($imgUrl);
             $playerFace = $this->playerFaceFactory->create($id, $img);
             $this->playerFaceRepository->save($playerFace);
 
@@ -309,6 +309,9 @@ final class GameController extends Controller
         return mt_rand(0, 10000) < ($rate * 100);
     }
 
+    /**
+     * @throws Exception
+     */
     private function updatePlayerFace(Player $player): void
     {
         // 年代に応じてキャラ画像を変更する
@@ -320,7 +323,7 @@ final class GameController extends Controller
             return;
         }
         $imgUrl = $this->dify->createPlayerNextImage($player);
-        $img = file_get_contents($imgUrl);
+        $img = $this->getImage($imgUrl);
         $playerFace = $this->playerFaceFactory->create($player->id, $img);
         $this->playerFaceRepository->save($playerFace);
 
@@ -340,5 +343,36 @@ final class GameController extends Controller
         }
         $player = $player->setBackgroundId($newBackground->id);
         $this->playerRepository->save($player);
+    }
+
+    /**
+     * @throws Exception
+     */
+    private function getImage(string $imgUrl): string
+    {
+        $binary = file_get_contents($imgUrl);
+        $image = imagecreatefromstring($binary);
+        if ($image === false) {
+            throw new Exception('Failed to create image from string');
+        }
+
+        // 出力をバッファリング
+        ob_start();
+
+        // 0 (非圧縮) ～ 9 (最大圧縮)
+        // レベルが高いほどサイズが小さくなるが、時間がかかる
+        $compressionLevel = 6;
+
+        // PNG画像を圧縮してバッファに出力
+        imagepng($image, null, $compressionLevel);
+
+        // バッファの内容を取得
+        $compBinary = ob_get_clean();
+
+        // バッファを閉じる
+        imagedestroy($image);
+
+        // 画像のバイナリデータを返す
+        return $compBinary;
     }
 }

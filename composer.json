@@ -15,7 +15,8 @@
         "ext-pdo": "*",
         "ext-curl": "*",
         "ext-pgsql": "*",
-        "ext-fileinfo": "*"
+        "ext-fileinfo": "*",
+        "ext-gd": "*"
     },
     "require-dev": {
         "fakerphp/faker": "^1.23",
