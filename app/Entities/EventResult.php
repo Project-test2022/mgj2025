@@ -84,7 +84,7 @@ final readonly class EventResult
                 Business::from($value),
                 Happiness::from($value),
             ),
-            null,
+            Job::from('テスト職業'),
             null,
         );
     }

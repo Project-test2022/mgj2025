@@ -14,6 +14,7 @@ use App\Services\Utility;
 use App\ValueObjects\Action;
 use App\ValueObjects\BackgroundId;
 use App\ValueObjects\BirthYear;
+use App\ValueObjects\Income;
 use App\ValueObjects\PlayerFaceId;
 use App\ValueObjects\PlayerId;
 use App\ValueObjects\PlayerName;
@@ -183,8 +184,12 @@ final class GameController extends Controller
             if (!$player->job->equals($eventResult->job)) {
                 // 年収を更新
                 $income = $this->eventAppService->income($player, $eventResult->job);
+
+                // 年収の変化量を計算
+                $incomeDiff = $income->sub($player->income);
             } else {
                 $income = null;
+                $incomeDiff = null;
             }
 
             // プレイヤーの情報を更新
@@ -201,6 +206,7 @@ final class GameController extends Controller
 
             return redirect()->route('event.result', ['id' => $playerId])->with([
                 'result' => $eventResult,
+                'incomeDiff' => $incomeDiff,
             ]);
         } catch (Throwable $e) {
             DB::rollBack();
@@ -219,6 +225,8 @@ final class GameController extends Controller
 
         /** @var EventResult|null $result */
         $result = $request->session()->get('result');
+        /** @var Income|null $incomeDiff */
+        $incomeDiff = $request->session()->get('incomeDiff');
         if ($result === null) {
             return redirect()->route('home', ['id' => $playerId]);
         }
@@ -226,6 +234,7 @@ final class GameController extends Controller
         return view('pages.event', [
             'player' => $player,
             'result' => $result,
+            'incomeDiff' => $incomeDiff,
         ]);
     }
 
