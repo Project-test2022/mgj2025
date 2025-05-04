@@ -102,3 +102,25 @@
     </form>
 @endsection
 
+@push('scripts')
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // 効果音（ボタン用）
+            const btn = document.querySelectorAll('.buttons');
+            const se = new Audio('{{ asset('sounds/choice/the-decision.mp3') }}');// todo:素材差し替え
+            se.volume = 0.3;
+            btn.addEventListener('click', function () {
+                se.currentTime = 0;
+                //se.play(); 
+            });
+            // BGM の設定
+            const bgm = new Audio('{{ asset('sounds/choice/the-decision.mp3') }}');
+            bgm.loop = true;
+            bgm.volume = 0.3; // 最初のクリックでBGM再生（自動再生対策）
+            document.body.addEventListener('click', function playBgmOnce() {
+                bgm.play().catch(err => console.log('BGM再生エラー:', err));
+                document.body.removeEventListener('click', playBgmOnce);
+            });
+        });
+    </script>
+@endpush

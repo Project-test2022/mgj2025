@@ -134,3 +134,18 @@
         </form>
     </div>
 @endsection
+
+@push('scripts')
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // BGM の設定
+            const bgm = new Audio('{{ asset('sounds/choice/high-stakes-shadow.mp3') }}');
+            bgm.loop = true;
+            bgm.volume = 0.3; // 最初のクリックでBGM再生（自動再生対策）
+            document.body.addEventListener('click', function playBgmOnce() {
+                bgm.play().catch(err => console.log('BGM再生エラー:', err));
+                document.body.removeEventListener('click', playBgmOnce);
+            });
+        });
+    </script>
+@endpush

@@ -61,7 +61,7 @@
         document.addEventListener('DOMContentLoaded', function () {
             // 効果音（ボタン用）
             const btn = document.getElementById('btn');
-            const se = new Audio('{{ asset('sounds/choice/the-decision.mp3') }}');
+            const se = new Audio('{{ asset('sounds/choice/the-decision.mp3') }}');// todo:素材差し替え
             se.volume = 1.0;
             btn.addEventListener('click', function () {
                 se.currentTime = 0;

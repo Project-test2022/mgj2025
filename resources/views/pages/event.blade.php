@@ -124,3 +124,23 @@
         <button style="margin-top:20px;" class="button" onclick="location.href='{{ route('home', ['id' => $player->id]) }}'">ホーム</button>
     @endif
 @endsection
+
+@push('scripts')
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // BGM の設定
+            let bgm;
+            @if($result->success)
+                bgm = new Audio('{{ asset('sounds/choice/breakthrough-moment_v2.mp3') }}');
+            @else
+                bgm = new Audio('{{ asset('sounds/choice/bleeding-my-heart_v2.mp3') }}');
+            @endif
+            bgm.loop = true;
+            bgm.volume = 0.3; // 最初のクリックでBGM再生（自動再生対策）
+            document.body.addEventListener('click', function playBgmOnce() {
+                bgm.play().catch(err => console.log('BGM再生エラー:', err));
+                document.body.removeEventListener('click', playBgmOnce);
+            });
+        });
+    </script>
+@endpush
