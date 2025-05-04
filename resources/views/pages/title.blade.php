@@ -132,6 +132,7 @@
 @endsection
 
 @push('scripts')
+    <script src="{{ asset('js/title.js?v='.config('app.version')) }}"></script>
     <script>
         document.addEventListener('DOMContentLoaded', function () {
             // 効果音（ボタン用）
