@@ -87,13 +87,7 @@ final readonly class EventResult
 
     public function money(): string
     {
-        if ($this->totalMoney->value > 0) {
-            return '+¥' . number_format($this->totalMoney->value);
-        } elseif ($this->totalMoney->value < 0) {
-            return '-¥' . number_format(abs($this->totalMoney->value));
-        } else {
-            return '0';
-        }
+        return $this->totalMoney->format();
     }
 
     public function health(): string
