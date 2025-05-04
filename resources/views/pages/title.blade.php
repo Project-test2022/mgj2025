@@ -47,71 +47,41 @@
 @endpush
 
 @section('content')
-<div class="container">
-    <div class="title">人生やり直しゲーム</div>
-    <form id="game-form" action="{{ route('start') }}" method="POST">
-        @csrf
+    <div class="container">
+        <div class="title">人生やり直しゲーム</div>
+        @if($errors->any())
+            @foreach($errors->all() as $error)
+                <p>{{ $error }}</p>
+            @endforeach
+        @endif
+        <form id="game-form" action="{{ route('start') }}" method="POST">
+            @csrf
+            <div class="form-group">
+                <label for="name">名前</label>
+                <input type="text" name="name" value="{{ old('name') }}">
+                <label><input type="checkbox" name="name_random" @checked(old('name_random', false))> ランダム</label>
+            </div>
 
-        <div class="form-group">
-            <label for="name">名前</label>
-            <input type="text" name="name" id="name" maxlength="20">
-            <label><input type="checkbox" id="name_random"> ランダム</label>
-        </div>
+            <div class="form-group">
+                <label for="birth_year">生年（西暦）</label>
+                <input type="number" name="birth_year" value="{{ old('birth_year', 2000) }}">
+                <label><input type="checkbox" name="birth_year_random" @checked(old('birth_year_random', false))> ランダム</label>
+            </div>
 
-        <div class="form-group">
-            <label for="birth_year">生年（西暦）</label>
-            <input type="number" name="birth_year" id="birth_year" min="0" max="99999" value="2000">
-            <label><input type="checkbox" id="birth_random"> ランダム</label>
-        </div>
+            <div class="form-group">
+                <label for="gender">性別</label>
+                <select name="gender">
+                    <option value disabled selected>--選択してください--</option>
+                    @foreach($sexes as $sex)
+                        <option value="{{ $sex->sex_nm }}" @selected(old('gender') == $sex->sex_nm)>{{ $sex->sex_nm }}</option>
+                    @endforeach
+                </select>
+                <label><input type="checkbox" name="gender_random" @checked(old('gender_random', false))>ランダム</label>
+            </div>
 
-        <div class="form-group">
-            <label for="gender">性別</label>
-            <select name="gender" id="gender">
-                <option value="">--選択してください--</option>
-                <option value="male">男性</option>
-                <option value="female">女性</option>
-                <option value="other">その他</option>
-            </select>
-            <label><input type="checkbox" id="gender_random"> ランダム</label>
-        </div>
-
-        <button id="btn" type="submit" class="start-button">START</button>
-    </form>
-</div>
-
-<script>
-document.getElementById('game-form').addEventListener('submit', function (e) {
-    const name = document.getElementById('name').value.trim();
-    const birthYear = document.getElementById('birth_year').value.trim();
-    const gender = document.getElementById('gender').value;
-    const nameRand = document.getElementById('name_random').checked;
-    const birthRand = document.getElementById('birth_random').checked;
-    const genderRand = document.getElementById('gender_random').checked;
-
-    // バリデーション：未入力かつランダム未チェックならエラー
-    let errors = [];
-
-    if (!name && !nameRand) {
-        errors.push("名前を入力するか、ランダムにチェックしてください。");
-    }
-    if (!birthYear && !birthRand) {
-        errors.push("生年を入力するか、ランダムにチェックしてください。");
-    }
-    if (!gender && !genderRand) {
-        errors.push("性別を選択するか、ランダムにチェックしてください。");
-    }
-
-    // 生年が6桁以上ならエラー
-    if (birthYear.length > 5) {
-        errors.push("生年は5桁以内で入力してください。");
-    }
-
-    if (errors.length > 0) {
-        e.preventDefault();
-        alert(errors.join("\n"));
-    }
-});
-</script>
+            <button id="btn" type="submit" class="start-button">START</button>
+        </form>
+    </div>
 @endsection
 
 @push('scripts')

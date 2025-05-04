@@ -13,6 +13,15 @@ final readonly class SexName
         return new self($value);
     }
 
+    public static function tryFrom(?string $value): ?self
+    {
+        if (is_null($value)) {
+            return null;
+        }
+
+        return new self($value);
+    }
+
     public function __toString(): string
     {
         return $this->value;

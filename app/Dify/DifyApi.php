@@ -37,30 +37,39 @@ final readonly class DifyApi
         $this->imageUrl = config('app.dify.image_url');
     }
 
-    public function createPlayer(PlayerId $id): array
+    /**
+     * @throws Exception
+     */
+    public function createPlayer(PlayerId $id, ?PlayerName $name, ?BirthYear $birthYear, ?SexName $sexName): array
     {
         if (!$this->enabled) {
             return [
-                PlayerName::from('山田 太郎'),
-                SexName::from('男'),
-                BirthYear::from('2025'),
+                $name ?? PlayerName::from('山田 太郎'),
+                $sexName ?? SexName::from('男'),
+                $birthYear ?? BirthYear::from('2025'),
             ];
         }
 
         $state = State::PLAYER_GENERATION;
-        $input = $this->input($state);
+        $playerInfo = $this->formatExcludePlayer($name, $birthYear, $sexName);
+        $input = $this->input($state, $playerInfo);
+
         $data = $this->handle($id, $input);
         $data = $data['structured_output'];
-        $sex = SexModel::query()->where('sex_cd', $data['sex'])->first();
+        $name = $name ?? PlayerName::from($data['name']);
+        $birthYear = $birthYear ?? BirthYear::from($data['birth']);
+        $sexName = $sexName ?? SexName::from(SexModel::query()->where('sex_cd', $data['sex'])->first()->sex_nm);
 
         return [
-            PlayerName::from($data['name']),
-            SexName::from($sex->sex_nm),
-            BirthYear::from($data['birth']),
+            $name,
+            $sexName,
+            $birthYear,
         ];
     }
 
-
+    /**
+     * @throws Exception
+     */
     public function createPlayerImage(PlayerId $id): string
     {
         if (!$this->enabled || !$this->imageEnabled) {
@@ -90,6 +99,9 @@ final readonly class DifyApi
         return $this->imageUrl . $relativeUrl;
     }
 
+    /**
+     * @throws Exception
+     */
     public function event(Player $player, EventSituation $situation): Event
     {
         if (!$this->enabled) {
@@ -105,6 +117,9 @@ final readonly class DifyApi
         return Event::fromArray($data);
     }
 
+    /**
+     * @throws Exception
+     */
     public function eventResult(Player $player, EventSituation $situation, Event $event, Choice $select, bool $result): EventResult
     {
         if (!$this->enabled) {
@@ -176,6 +191,26 @@ final readonly class DifyApi
             }
         }
         throw new Exception('Dify API request failed after 5 attempts.');
+    }
+
+
+    private function formatExcludePlayer(?PlayerName $name, ?BirthYear $birthYear, ?SexName $sexName): string
+    {
+        $playerInfo = [];
+        if ($name !== null) {
+            $playerInfo['プレイヤー名'] = $name->value;
+        }
+        if ($birthYear !== null) {
+            $playerInfo['生年'] = $birthYear->value;
+        }
+        if ($sexName !== null) {
+            $playerInfo['性別'] = $sexName->value;
+        }
+        $formatted = '';
+        foreach ($playerInfo as $key => $value) {
+            $formatted .= "[$key]$value\n";
+        }
+        return $formatted;
     }
 
     private function formatPlayer(Player $player): string

@@ -33,23 +33,28 @@ final readonly class PlayerAppService
     /**
      * @throws Exception
      */
-    public function create(): PlayerId
-    {
+    public function create(
+        ?PlayerName $name,
+        ?BirthYear $birthYear,
+        ?SexName $sexName,
+    ): PlayerId {
         // Difyからプレイヤーの情報を生成
         $id = $this->playerFactory->generateId();
-        [$name, $sex, $birthYear] = $this->dify->createPlayer($id);
-        $imgUrl = $this->dify->createPlayerImage($id);
+        if ($name === null || $birthYear === null || $sexName === null) {
+            [$name, $sexName, $birthYear] = $this->dify->createPlayer($id, $name, $birthYear, $sexName);
+        }
 
         // プレイヤー作成
         $player = $this->playerFactory->create(
             $id,
             PlayerName::from($name),
-            SexName::from($sex),
+            SexName::from($sexName),
             BirthYear::from($birthYear),
         );
         $this->playerRepository->save($player);
 
-        // プレイヤーの画像をDBに保存
+        // プレイヤーの画像を生成
+        $imgUrl = $this->dify->createPlayerImage($id);
         $img = Utility::getPngCompressedImage($imgUrl);
         $playerFace = $this->playerFaceFactory->create($id, $img);
         $this->playerFaceRepository->save($playerFace);

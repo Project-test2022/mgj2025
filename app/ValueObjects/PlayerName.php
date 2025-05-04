@@ -13,6 +13,15 @@ final readonly class PlayerName
         return new self($value);
     }
 
+    public static function tryFrom(?string $name): ?self
+    {
+        if (is_null($name)) {
+            return null;
+        }
+
+        return new self($name);
+    }
+
     public function __toString(): string
     {
         return $this->value;

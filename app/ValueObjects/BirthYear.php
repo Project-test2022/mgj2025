@@ -15,6 +15,15 @@ final readonly class BirthYear
         return new self($value);
     }
 
+    public static function tryFrom(?string $birthYear): ?self
+    {
+        if (is_null($birthYear)) {
+            return null;
+        }
+
+        return new self($birthYear);
+    }
+
     public function toDate(): Carbon
     {
         return Carbon::createFromFormat('Y', $this->value);

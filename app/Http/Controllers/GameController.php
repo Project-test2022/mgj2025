@@ -4,15 +4,20 @@ namespace App\Http\Controllers;
 
 use App\Entities\Event;
 use App\Entities\EventResult;
+use App\Http\Requests\CreatePlayerRequest;
+use App\Models\SexModel;
 use App\Repositories\BackgroundRepository;
 use App\Repositories\PlayerFaceRepository;
 use App\Services\EventAppService;
 use App\Services\PlayerAppService;
 use App\Services\Utility;
 use App\ValueObjects\BackgroundId;
+use App\ValueObjects\BirthYear;
 use App\ValueObjects\EventSituation;
 use App\ValueObjects\PlayerFaceId;
 use App\ValueObjects\PlayerId;
+use App\ValueObjects\PlayerName;
+use App\ValueObjects\SexName;
 use Exception;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -33,22 +38,35 @@ final class GameController extends Controller
 
     public function title(): View
     {
-        return view('pages.title');
+        $sexes = SexModel::all();
+
+        return view('pages.title', [
+            'sexes' => $sexes,
+        ]);
     }
 
     /**
      * @throws Throwable
      */
-    public function start(): RedirectResponse
+    public function start(CreatePlayerRequest $request): RedirectResponse
     {
+        $name = $request->has('name_random') ? null : $request->input('name');
+        $birthYear = $request->has('birth_year_random') ? null : $request->input('birth_year');
+        $sexName = $request->input('gender_random') ? null : $request->input('gender');
+
         DB::beginTransaction();
         try {
             // プレイヤーの作成
-            $playerId = $this->playerAppService->create();
+            $playerId = $this->playerAppService->create(
+                PlayerName::tryFrom($name),
+                BirthYear::tryFrom($birthYear),
+                SexName::tryFrom($sexName),
+            );
             DB::commit();
-        } catch (Exception) {
+        } catch (Exception $e) {
             DB::rollBack();
-            return redirect()->route('title');
+            Log::error($e);
+            abort(500);
         }
 
         return redirect()->route('home', ['id' => $playerId]);
