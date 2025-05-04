@@ -47,5 +47,4 @@ final readonly class Utility
         $mime = (new finfo(FILEINFO_MIME_TYPE))->buffer($imgBinary);
         return response($imgBinary)->header('Content-Type', $mime);
     }
-
 }

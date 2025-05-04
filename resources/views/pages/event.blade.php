@@ -90,6 +90,15 @@
             @if($result->totalMoney->value !== 0)
                 資産：{{ $result->money() }}<br>
             @endif
+            @if($result->job)
+                New 職業: {{ $result->job }}<br>
+            @endif
+            @if($result->income->value !== 0)
+                年収：{{ $result->income() }}<br>
+            @endif
+            @if($result->partner)
+                New パートナー: {{ $result->partner }}<br>
+            @endif
             @if($result->ability->intelligence->value !== 0)
                 知能：{{ $result->intelligence() }}
             @endif
@@ -137,7 +146,7 @@
             buttons.foreach(button => {
                 button.addEventListener('click', function () {
                     se.currentTime = 0;
-                    se.play(); 
+                    se.play();
                 });
             });
 
@@ -149,7 +158,7 @@
                 bgm = new Audio('{{ asset('sounds/positive/bleeding-my-heart_v2.mp3') }}');
             @endif
             bgm.loop = true;
-            bgm.volume = 0.3; 
+            bgm.volume = 0.3;
             bgm.play().then(() => {
               setTimeout(() => {
                   bgm.muted = false;

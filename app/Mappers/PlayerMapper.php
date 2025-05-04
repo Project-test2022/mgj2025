@@ -13,9 +13,12 @@ use App\ValueObjects\BirthYear;
 use App\ValueObjects\Business;
 use App\ValueObjects\Evaluation;
 use App\ValueObjects\Health;
+use App\ValueObjects\Income;
 use App\ValueObjects\Intelligence;
 use App\ValueObjects\Happiness;
+use App\ValueObjects\Job;
 use App\ValueObjects\Money;
+use App\ValueObjects\Partner;
 use App\ValueObjects\PlayerFaceId;
 use App\ValueObjects\PlayerId;
 use App\ValueObjects\PlayerName;
@@ -51,6 +54,9 @@ final readonly class PlayerMapper
         $model->bg_id = $player->backgroundId?->value;
         $model->player_face_id = $player->playerFaceId?->value;
         $model->age_grp_cd = $player->ageGroupCode?->value;
+        $model->job = $player->job?->value;
+        $model->income = $player->income->value;
+        $model->partner = $player->partner?->value;
         $model->dead_flg = $player->isDeleted;
 
         return $model;
@@ -79,6 +85,9 @@ final readonly class PlayerMapper
             BackgroundId::tryFrom($view->bg_id),
             PlayerFaceId::tryFrom($view->player_face_id),
             AgeGroupCode::from($view->age_grp_cd),
+            Job::tryFrom($view->job),
+            Income::from($view->income ?? 0),
+            Partner::tryFrom($view->partner),
             $view->dead_flg,
         );
     }

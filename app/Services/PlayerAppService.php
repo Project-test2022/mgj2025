@@ -73,7 +73,7 @@ final readonly class PlayerAppService
     /**
      * @throws Exception
      */
-    public function update(Player $player, EventResult $eventResult): void
+    public function update(Player $player, EventResult $eventResult): Player
     {
         // 結果に応じてステータスを更新する
         $player = $player->update(
@@ -81,18 +81,30 @@ final readonly class PlayerAppService
             $eventResult->health,
             $eventResult->ability,
             $eventResult->evaluation,
+            $eventResult->job,
+            $eventResult->income,
+            $eventResult->partner,
         );
 
+        $this->playerRepository->save($player);
+
+        // 背景画像を更新する
+        $this->updateBackground($player);
+
+        return $player;
+    }
+
+    /**
+     * @throws Exception
+     */
+    public function nextTurn(Player $player): void
+    {
         // ターンを進める
         $player = $player->nextTurn();
 
         $this->playerRepository->save($player);
-
         // キャラ画像を更新する
         $this->updatePlayerFace($player);
-
-        // 背景画像を更新する
-        $this->updateBackground($player);
     }
 
     public function dead(Player $player): void

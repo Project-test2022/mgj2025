@@ -21,6 +21,9 @@ use Illuminate\Database\Eloquent\Model;
  * @property string|null $bg_id
  * @property string|null $player_face_id
  * @property string|null $age_grp_cd
+ * @property string|null $job
+ * @property string|null $income
+ * @property string|null $partner
  * @property bool        $dead_flg
  */
 class PlayerView extends Model

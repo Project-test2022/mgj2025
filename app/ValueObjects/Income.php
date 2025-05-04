@@ -2,7 +2,7 @@
 
 namespace App\ValueObjects;
 
-final readonly class Money
+final readonly class Income
 {
     private function __construct(public int $value)
     {
@@ -13,19 +13,18 @@ final readonly class Money
         return new self((int)$value);
     }
 
+    public static function tryFrom(?string $value): ?self
+    {
+        if (is_null($value)) {
+            return null;
+        }
+
+        return self::from($value);
+    }
+
     public function __toString(): string
     {
         return $this->value;
-    }
-
-    public function sub(Money $other): self
-    {
-        return new self($this->value - $other->value);
-    }
-
-    public function add(Money $other): self
-    {
-        return new self($this->value + $other->value);
     }
 
     public function format(): string
@@ -38,8 +37,13 @@ final readonly class Money
         }
     }
 
-    public function addIncome(Income $income): self
+    public function sub(Income $other): self
     {
-        return new self($this->value + $income->value);
+        return new self($this->value - $other->value);
+    }
+
+    public function add(Income $other): self
+    {
+        return new self($this->value + $other->value);
     }
 }
