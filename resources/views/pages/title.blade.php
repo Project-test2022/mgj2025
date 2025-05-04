@@ -14,6 +14,16 @@
             background-size: cover;
         }
 
+        .header {
+            width: 100%;
+            max-width: 1124px;
+            display: flex;
+            justify-content: space-between;
+            margin-top: 30px;
+            margin-bottom: 20px;
+            font-size: 24px;
+        }
+
         .container {
             text-align: center;
             padding: 40px 60px;
@@ -96,11 +106,67 @@
 		.form-description {
 		    margin-bottom: 24px;
 		}
+        .bgm-message {
+            color: red;
+            font-weight: bold;
+            margin-right: 10px;
+        }
 
+        .toggle-switch {
+            position: relative;
+            display: inline-block;
+            width: 50px;
+            height: 24px;
+        }
+
+        .toggle-switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0; left: 0;
+            right: 0; bottom: 0;
+            background-color: #ccc;
+            transition: .4s;
+            border-radius: 24px;
+        }
+
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 18px; width: 18px;
+            left: 3px; bottom: 3px;
+            background-color: white;
+            transition: .4s;
+            border-radius: 50%;
+        }
+
+        input:checked + .slider {
+            background-color: #66bb6a;
+        }
+
+        input:checked + .slider:before {
+            transform: translateX(26px);
+        }
     </style>
 @endpush
 
 @section('content')
+    <div class="header">
+        <button id="bgm-toggle" style="background: none; border: none; margin-left: 10px; cursor: pointer;"
+            class="dont-loading">
+            <img id="bgm-icon" src="{{ asset('icon/gray_off.png') }}" alt="BGMアイコン" width="24" height="24">
+        </button>
+        <label class="toggle-switch">
+            <input type="checkbox" id="bgm-toggle-checkbox">
+            <span class="slider"></span>
+        </label>
+        <span id="bgm-message">音ありでゲームを楽しみますか？</span>
+    </div>
     <form action="{{ route('start') }}" method="POST">
         @csrf
         <div class="container">
@@ -157,7 +223,15 @@
 
 @push('scripts')
     <script src="{{ asset('js/title.js?v='.config('app.version')) }}"></script>
+    <script src="{{ asset('js/bgm.js') }}"></script>
     <script>
+         function updateBgmIcon() {
+            const icon = document.getElementById('bgm-icon');
+            const enabled = localStorage.getItem('bgm_enabled') === 'true';
+            icon.src = enabled
+                ? '{{ asset('icon/red_on.png') }}'
+                : '{{ asset('icon/gray_off.png') }}';
+        }
         document.addEventListener('DOMContentLoaded', function () {
             // 効果音（ボタン用）
             const btns = document.querySelectorAll('.buttons');
@@ -169,14 +243,27 @@
                     se.play();
                 });
             });
-            // BGM 縺ｮ險ｭ螳
-            const bgm = new Audio('{{ asset('sounds/choice/the-decision.mp3') }}');
-            bgm.loop = true;
-            bgm.volume = 0.3;
-            document.body.addEventListener('click', function playBgmOnce() {
-            bgm.play().catch(err => console.log('BGM再生失敗:', err));
-            document.body.removeEventListener('click', playBgmOnce);
+
+            message = document.getElementById('bgm-message');
+            setupBgm('{{ asset('sounds/choice/the-decision.mp3') }}');
+
+            const checkbox = document.getElementById('bgm-toggle-checkbox');
+            checkbox.addEventListener('change', () => {
+                toggleBgm();
+                updateBgmIcon();
+            });
+
+            const enabled = localStorage.getItem('bgm_enabled') === 'true';
+            if (enabled) {
+                bgm.play().catch(err => console.log('BGM再生失敗:', err));
+                message.style.display = "音ありでゲームを楽しみます";
+                message.style.color = 'red';
+            }
+            else
+            {
+                message.style.display = "音ありでゲームを楽しみますか？";
+                message.style.color = 'gray';
+            }
         });
-    });
     </script>
 @endpush
