@@ -35,7 +35,7 @@
             background: rgba(255, 255, 255, 0.4);
             width: 100%;
             height: 415px;
-            top: calc(50% - 295px);
+            top: calc(50% - 250px);
             padding: 10px;
             position: absolute;
             z-index: 1;
