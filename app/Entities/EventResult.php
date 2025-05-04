@@ -28,7 +28,7 @@ final readonly class EventResult
      * @param Ability       $ability    能力の変化量
      * @param Evaluation    $evaluation 評価の変化量
      * @param Job|null      $job        変更後の職業
-     * @param Income|null   $income     年収の変化量
+     * @param Income        $income     年収の変化量
      * @param Partner|null  $partner    変更後のパートナー
      */
     public function __construct(
@@ -40,7 +40,7 @@ final readonly class EventResult
         public Ability $ability,
         public Evaluation $evaluation,
         public ?Job $job,
-        public ?Income $income,
+        public Income $income,
         public ?Partner $partner,
     ) {
     }
@@ -85,7 +85,7 @@ final readonly class EventResult
                 Happiness::from($data['e_happiness'])->sub($before->evaluation->happiness),
             ),
             $job,
-            Income::tryFrom($data['income'])->sub($before->income),
+            Income::from($data['income'])->sub($before->income),
             $partner,
         );
     }
@@ -110,7 +110,7 @@ final readonly class EventResult
                 Happiness::from($value),
             ),
             null,
-            null,
+            Income::from($value),
             null,
         );
     }

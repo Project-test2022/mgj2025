@@ -13,6 +13,15 @@ final readonly class Partner
         return new self($value);
     }
 
+    public static function tryFrom(?string $other): ?self
+    {
+        if (is_null($other)) {
+            return null;
+        }
+
+        return self::from($other);
+    }
+
     public function __toString(): string
     {
         return $this->value;

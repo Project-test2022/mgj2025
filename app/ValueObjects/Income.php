@@ -41,4 +41,9 @@ final readonly class Income
     {
         return new self($this->value - $other->value);
     }
+
+    public function add(Income $other): self
+    {
+        return new self($this->value + $other->value);
+    }
 }

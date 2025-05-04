@@ -63,7 +63,7 @@ final readonly class Player
             $this->playerFaceId,
             $this->ageGroupCode,
             $job,
-            $income,
+            $this->income->add($income),
             $partner,
         );
     }
