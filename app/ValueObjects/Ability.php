@@ -8,6 +8,7 @@ final readonly class Ability
         public Intelligence $intelligence,
         public Sport $sport,
         public Visual $visual,
+        public Sense $sense,
     ) {
     }
 
@@ -15,11 +16,13 @@ final readonly class Ability
         Intelligence $intelligence,
         Sport $sport,
         Visual $visual,
+        Sense $sense,
     ): self {
         return new self(
             $intelligence,
             $sport,
             $visual,
+            $sense,
         );
     }
 
@@ -29,6 +32,7 @@ final readonly class Ability
             $this->intelligence->add($other->intelligence),
             $this->sport->add($other->sport),
             $this->visual->add($other->visual),
+            $this->sense->add($other->sense),
         );
     }
 }

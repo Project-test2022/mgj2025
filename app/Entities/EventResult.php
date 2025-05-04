@@ -10,6 +10,7 @@ use App\ValueObjects\Intelligence;
 use App\ValueObjects\Love;
 use App\ValueObjects\Money;
 use App\ValueObjects\ResultMessage;
+use App\ValueObjects\Sense;
 use App\ValueObjects\Sport;
 use App\ValueObjects\Visual;
 
@@ -47,6 +48,7 @@ final readonly class EventResult
                 Intelligence::from($data['a_intelligence'])->sub($before->ability->intelligence),
                 Sport::from($data['a_sport'])->sub($before->ability->sport),
                 Visual::from($data['a_visual'])->sub($before->ability->visual),
+                Sense::from($data['a_sense'])->sub($before->ability->sense),
             ),
             Evaluation::from(
                 Business::from($data['e_business'])->sub($before->evaluation->business),
@@ -68,6 +70,7 @@ final readonly class EventResult
                 Intelligence::from($value),
                 Sport::from($value),
                 Visual::from($value),
+                Sense::from($value),
             ),
             Evaluation::from(
                 Business::from($value),
@@ -129,6 +132,17 @@ final readonly class EventResult
             return '+' . $this->ability->visual->value;
         } elseif ($this->ability->visual->value < 0) {
             return (string)$this->ability->visual->value;
+        } else {
+            return '0';
+        }
+    }
+
+    public function sense(): string
+    {
+        if ($this->ability->sense->value > 0) {
+            return '+' . $this->ability->sense->value;
+        } elseif ($this->ability->sense->value < 0) {
+            return (string)$this->ability->sense->value;
         } else {
             return '0';
         }

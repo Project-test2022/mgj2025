@@ -15,6 +15,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property int         $a_intelligence
  * @property int         $a_sport
  * @property int         $a_visual
+ * @property int         $a_sense
  * @property int         $e_business
  * @property int         $e_love
  * @property string|null $bg_id

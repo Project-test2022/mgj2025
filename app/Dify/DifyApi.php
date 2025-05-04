@@ -18,6 +18,7 @@ use App\ValueObjects\PlayerId;
 use App\ValueObjects\Choice;
 use App\ValueObjects\PlayerName;
 use App\ValueObjects\SelectContent;
+use App\ValueObjects\Sense;
 use App\ValueObjects\SexCode;
 use App\ValueObjects\Sport;
 use App\ValueObjects\Visual;
@@ -59,6 +60,7 @@ final readonly class DifyApi
                     Intelligence::from(0),
                     Sport::from(0),
                     Visual::from(0),
+                    Sense::from(0),
                 ),
             );
         }
@@ -74,6 +76,7 @@ final readonly class DifyApi
                     Intelligence::from(0),
                     Sport::from(0),
                     Visual::from(0),
+                    Sense::from(0),
                 ),
             );
         }
@@ -91,6 +94,7 @@ final readonly class DifyApi
         $intelligence = Intelligence::from($data['a_intelligence']);
         $sport = Sport::from($data['a_sport']);
         $visual = Visual::from($data['a_visual']);
+        $sense = Sense::from($data['a_sense']);
 
         return new CreatePlayerParameters(
             $name,
@@ -98,7 +102,12 @@ final readonly class DifyApi
             $sexCode,
             $totalMoney,
             $health,
-            Ability::from($intelligence, $sport, $visual),
+            Ability::from(
+                $intelligence,
+                $sport,
+                $visual,
+                $sense,
+            ),
         );
     }
 

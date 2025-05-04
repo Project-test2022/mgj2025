@@ -103,6 +103,9 @@
             @if($result->health->value !== 0)
                 健康：{{ $result->health() }}
             @endif
+            @if($result->ability->sense->value !== 0)
+                感性：{{ $result->sense() }}
+            @endif
             <br/>
             @if($result->evaluation->business->value !== 0)
                 仕事: {{ $result->business() }}
