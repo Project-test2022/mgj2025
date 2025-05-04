@@ -89,7 +89,7 @@
         document.addEventListener('DOMContentLoaded', function () {
             // 効果音（ボタン用）
             const btn = document.getElementById('btn');
-            const se = new Audio('{{ asset('sounds/choice/the-decision.mp3') }}');// todo:素材差し替え
+            const se = new Audio('{{ asset('sounds/se/decide-button-a.mp3') }}');
             se.volume = 1.0;
             btn.addEventListener('click', function () {
                 se.currentTime = 0;
@@ -98,10 +98,14 @@
             // BGM の設定
             const bgm = new Audio('{{ asset('sounds/op/high-stakes-shadow.mp3') }}');
             bgm.loop = true;
-            bgm.volume = 0.3; // 最初のクリックでBGM再生（自動再生対策）
-            document.body.addEventListener('click', function playBgmOnce() {
-                bgm.play().catch(err => console.log('BGM再生エラー:', err));
-                document.body.removeEventListener('click', playBgmOnce);
+            bgm.muted = true;
+            bgm.volume = 0.3;
+            bgm.play().then(() => {
+              setTimeout(() => {
+                  bgm.muted = false;
+              }, 500); // 0.5秒後に再生
+            }).catch(err => {
+                console.log('自動再生失敗:', err);
             });
         });
     </script>

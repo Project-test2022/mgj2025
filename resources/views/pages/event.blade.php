@@ -118,15 +118,26 @@
     </div>
 
     @if($result->dead)
-        <button style="margin-top:20px;" class="button" onclick="location.href='{{ route('result', ['id' => $player->id]) }}'">おわり</button>
+        <button id="button-happy" style="margin-top:20px;" class="button" onclick="location.href='{{ route('result', ['id' => $player->id]) }}'">おわり</button>
     @else
-        <button style="margin-top:20px;" class="button" onclick="location.href='{{ route('home', ['id' => $player->id]) }}'">ホーム</button>
+        <button id="button-home" style="margin-top:20px;" class="button" onclick="location.href='{{ route('home', ['id' => $player->id]) }}'">ホーム</button>
     @endif
 @endsection
 
 @push('scripts')
     <script>
         document.addEventListener('DOMContentLoaded', function () {
+            // 効果音（ボタン用）
+            const buttons = document.querySelectorAll('.button');
+            const se = new Audio('{{ asset('sounds/se/decide-button-a.mp3') }}');
+            se.volume = 0.3;
+            buttons.foreach(button => {
+                button.addEventListener('click', function () {
+                    se.currentTime = 0;
+                    se.play(); 
+                });
+            });
+
             // BGM の設定
             let bgm;
             @if($result->success)
@@ -135,10 +146,13 @@
                 bgm = new Audio('{{ asset('sounds/choice/bleeding-my-heart_v2.mp3') }}');
             @endif
             bgm.loop = true;
-            bgm.volume = 0.3; // 最初のクリックでBGM再生（自動再生対策）
-            document.body.addEventListener('click', function playBgmOnce() {
-                bgm.play().catch(err => console.log('BGM再生エラー:', err));
-                document.body.removeEventListener('click', playBgmOnce);
+            bgm.volume = 0.3; 
+            bgm.play().then(() => {
+              setTimeout(() => {
+                  bgm.muted = false;
+              }, 500); // 0.5秒後に再生
+            }).catch(err => {
+                console.log('自動再生失敗:', err);
             });
         });
     </script>
