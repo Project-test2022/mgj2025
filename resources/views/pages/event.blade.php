@@ -133,9 +133,9 @@
             // BGM の設定
             let bgm;
             @if($result->success)
-                bgm = new Audio('{{ asset('sounds/choice/breakthrough-moment_v2.mp3') }}');
+                bgm = new Audio('{{ asset('sounds/positive/breakthrough-moment_v2.mp3') }}');
             @else
-                bgm = new Audio('{{ asset('sounds/choice/bleeding-my-heart_v2.mp3') }}');
+                bgm = new Audio('{{ asset('sounds/positive/bleeding-my-heart_v2.mp3') }}');
             @endif
             bgm.loop = true;
             bgm.volume = 0.3; // 最初のクリックでBGM再生（自動再生対策）
