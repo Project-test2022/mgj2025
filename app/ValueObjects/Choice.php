@@ -16,4 +16,10 @@ final readonly class Choice
             SelectRate::from($rate),
         );
     }
+
+    public function result(): bool
+    {
+        $rate = (float)$this->rate->value;
+        return mt_rand(0, 10000) < ($rate * 100);
+    }
 }

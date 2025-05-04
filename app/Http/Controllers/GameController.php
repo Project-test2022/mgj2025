@@ -2,26 +2,18 @@
 
 namespace App\Http\Controllers;
 
-use App\Dify\DifyApi;
 use App\Entities\Event;
 use App\Entities\EventResult;
-use App\Entities\Player;
-use App\Factories\PlayerFaceFactory;
-use App\Factories\PlayerFactory;
-use App\Repositories\AgeGroupRepository;
 use App\Repositories\BackgroundRepository;
 use App\Repositories\PlayerFaceRepository;
-use App\Repositories\PlayerRepository;
+use App\Services\EventAppService;
+use App\Services\PlayerAppService;
+use App\Services\Utility;
 use App\ValueObjects\BackgroundId;
-use App\ValueObjects\BirthYear;
-use App\ValueObjects\Choice;
 use App\ValueObjects\EventSituation;
 use App\ValueObjects\PlayerFaceId;
 use App\ValueObjects\PlayerId;
-use App\ValueObjects\PlayerName;
-use App\ValueObjects\SexName;
 use Exception;
-use finfo;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -32,13 +24,10 @@ use Throwable;
 final class GameController extends Controller
 {
     public function __construct(
-        private readonly PlayerRepository $playerRepository,
-        private readonly PlayerFactory $playerFactory,
-        private readonly DifyApi $dify,
         private readonly PlayerFaceRepository $playerFaceRepository,
-        private readonly PlayerFaceFactory $playerFaceFactory,
         private readonly BackgroundRepository $backgroundRepository,
-        private readonly AgeGroupRepository $ageGroupRepository,
+        private readonly PlayerAppService $playerAppService,
+        private readonly EventAppService $eventAppService,
     ) {
     }
 
@@ -52,43 +41,23 @@ final class GameController extends Controller
      */
     public function start(): RedirectResponse
     {
-        $id = $this->playerFactory->generateId();
-        [$name, $sex, $birthYear] = $this->dify->createPlayer($id);
-        $imgUrl = $this->dify->createPlayerImage($id);
-
         DB::beginTransaction();
         try {
             // プレイヤーの作成
-            $player = $this->playerFactory->create(
-                $id,
-                PlayerName::from($name),
-                SexName::from($sex),
-                BirthYear::from($birthYear),
-            );
-            $this->playerRepository->save($player);
-
-            // プレイヤーの画像の設定
-            $img = $this->getImage($imgUrl);
-            $playerFace = $this->playerFaceFactory->create($id, $img);
-            $this->playerFaceRepository->save($playerFace);
-
-            $ageGroup = $this->ageGroupRepository->first();
-            $player = $player->setFace($playerFace->id, $ageGroup->code);
-            $this->playerRepository->save($player);
-
+            $playerId = $this->playerAppService->create();
             DB::commit();
         } catch (Exception) {
             DB::rollBack();
             return redirect()->route('title');
         }
 
-        return redirect()->route('home', ['id' => $player->id]);
+        return redirect()->route('home', ['id' => $playerId]);
     }
 
     public function home(Request $request): View|RedirectResponse
     {
         $playerId = $request->route('id');
-        $player = $this->playerRepository->find(PlayerId::from($playerId));
+        $player = $this->playerAppService->find(PlayerId::from($playerId));
         if ($player === null) {
             return redirect()->route('title');
         }
@@ -101,29 +70,27 @@ final class GameController extends Controller
     public function select(Request $request): RedirectResponse
     {
         $playerId = $request->route('id');
+        $player = $this->playerAppService->find(PlayerId::from($playerId));
+        if ($player === null) {
+            return redirect()->route('title');
+        }
+
+        if ($request->has('business')) {
+            $situation = EventSituation::BUSINESS;
+        } elseif ($request->has('love')) {
+            $situation = EventSituation::LOVE;
+        } else {
+            return redirect()->route('home', ['id' => $playerId]);
+        }
+
         try {
-            $player = $this->playerRepository->find(PlayerId::from($playerId));
-            if ($player === null) {
-                return redirect()->route('title');
-            }
+            $event = $this->eventAppService->generate($player, $situation);
 
-            if ($request->has('business')) {
-                $situation = EventSituation::BUSINESS;
-            } elseif ($request->has('love')) {
-                $situation = EventSituation::LOVE;
-            } else {
-                return redirect()->route('home', ['id' => $playerId]);
-            }
-
-            $event = $this->dify->event(
-                $player,
-                $situation,
-            );
             return redirect()->route('event', ['id' => $playerId])->with([
                 'event' => $event,
                 'situation' => $situation,
             ]);
-        } catch(Throwable $e) {
+        } catch (Throwable $e) {
             Log::error($e);
             return redirect()->route('error', ['id' => $playerId]);
         }
@@ -132,29 +99,23 @@ final class GameController extends Controller
     public function event(Request $request): View|RedirectResponse
     {
         $playerId = $request->route('id');
-        try {
-            $player = $this->playerRepository->find(PlayerId::from($playerId));
-            if ($player === null) {
-                return redirect()->route('title');
-            }
-
-            /** @var Event|null $event */
-            $event = $request->session()->get('event');
-            /** @var EventSituation|null $situation */
-            $situation = $request->session()->get('situation');
-            if ($event === null || $situation === null) {
-                return redirect()->route('home', ['id' => $playerId]);
-            }
-
-            return view('pages.select', [
-                'player' => $player,
-                'event' => $event,
-                'situation' => $situation,
-            ]);
-        } catch(Throwable $e) {
-            Log::error($e);
-            return redirect()->route('error', ['id' => $playerId]);
+        $player = $this->playerAppService->find(PlayerId::from($playerId));
+        if ($player === null) {
+            return redirect()->route('title');
         }
+        /** @var Event|null $event */
+        $event = $request->session()->get('event');
+        /** @var EventSituation|null $situation */
+        $situation = $request->session()->get('situation');
+        if ($event === null || $situation === null) {
+            return redirect()->route('home', ['id' => $playerId]);
+        }
+
+        return view('pages.select', [
+            'player' => $player,
+            'event' => $event,
+            'situation' => $situation,
+        ]);
     }
 
     /**
@@ -163,64 +124,41 @@ final class GameController extends Controller
     public function selectEvent(Request $request): RedirectResponse
     {
         $playerId = $request->route('id');
+        $player = $this->playerAppService->find(PlayerId::from($playerId));
+        if ($player === null) {
+            return redirect()->route('title');
+        }
+
+        $situation = EventSituation::from($request->input('situation'));
+        $event = Event::fromRequest($request);
+
+        if ($request->has('ok')) {
+            $choice = $event->choice1;
+        } elseif ($request->has('ng')) {
+            $choice = $event->choice2;
+        } else {
+            return redirect()->route('home', ['id' => $playerId]);
+        }
+        DB::beginTransaction();
         try {
-            $player = $this->playerRepository->find(PlayerId::from($playerId));
-            if ($player === null) {
-                return redirect()->route('title');
-            }
-
-            $situation = EventSituation::from($request->input('situation'));
-            $event = Event::fromRequest($request);
-
-            if ($request->has('ok')) {
-                $choice = $event->choice1;
-            } elseif ($request->has('ng')) {
-                $choice = $event->choice2;
-            } else {
-                return redirect()->route('home', ['id' => $playerId]);
-            }
-
-            $result = $this->choice($choice);
-
-            $eventResult = $this->dify->eventResult(
+            // イベント結果を取得
+            $eventResult = $this->eventAppService->result(
                 $player,
                 $situation,
                 $event,
                 $choice,
-                $result,
             );
 
-            DB::beginTransaction();
-            try {
-                // 結果に応じてステータスを更新する
-                $player = $player->update(
-                    $eventResult->totalMoney,
-                    $eventResult->health,
-                    $eventResult->ability,
-                    $eventResult->evaluation,
-                );
+            // プレイヤーの情報を更新
+            $this->playerAppService->update($player, $eventResult);
 
-                // ターンを進める
-                $player = $player->nextTurn();
-
-                $this->playerRepository->save($player);
-
-                // キャラ画像を更新する
-                $this->updatePlayerFace($player);
-
-                // 背景画像を更新する
-                $this->updateBackground($player);
-
-                DB::commit();
-            } catch (Exception $e) {
-                DB::rollBack();
-                throw $e;
-            }
+            DB::commit();
 
             return redirect()->route('event.result', ['id' => $playerId])->with([
                 'result' => $eventResult,
             ]);
-        } catch(Throwable $e) {
+        } catch (Throwable $e) {
+            DB::rollBack();
             Log::error($e);
             return redirect()->route('error', ['id' => $playerId]);
         }
@@ -229,32 +167,27 @@ final class GameController extends Controller
     public function eventResult(Request $request): View|RedirectResponse
     {
         $playerId = $request->route('id');
-        try {
-            $player = $this->playerRepository->find(PlayerId::from($playerId));
-            if ($player === null) {
-                return redirect()->route('title');
-            }
-
-            /** @var EventResult|null $result */
-            $result = $request->session()->get('result');
-            if ($result === null) {
-                return redirect()->route('home', ['id' => $playerId]);
-            }
-
-            return view('pages.event', [
-                'player' => $player,
-                'result' => $result,
-            ]);
-        } catch (Throwable $e) {
-            Log::error($e);
-            return redirect()->route('error', ['id' => $playerId]);
+        $player = $this->playerAppService->find(PlayerId::from($playerId));
+        if ($player === null) {
+            return redirect()->route('title');
         }
+
+        /** @var EventResult|null $result */
+        $result = $request->session()->get('result');
+        if ($result === null) {
+            return redirect()->route('home', ['id' => $playerId]);
+        }
+
+        return view('pages.event', [
+            'player' => $player,
+            'result' => $result,
+        ]);
     }
 
     public function result(Request $request): View|RedirectResponse
     {
         $playerId = $request->route('id');
-        $player = $this->playerRepository->find(PlayerId::from($playerId));
+        $player = $this->playerAppService->find(PlayerId::from($playerId));
         if ($player === null) {
             return redirect()->route('title');
         }
@@ -276,14 +209,13 @@ final class GameController extends Controller
         $playerFaceId = $request->route('id') ?? null;
         $default = asset('images/player-default.png');
         if ($playerFaceId === null) {
-            return response(file_get_contents($default))->header('Content-Type', 'image/png');
+            return Utility::getImageResponse(file_get_contents($default));
         } else {
             $image = $this->playerFaceRepository->find(PlayerFaceId::from($playerFaceId));
             if ($image === null) {
-                return response(file_get_contents($default))->header('Content-Type', 'image/png');
+                return Utility::getImageResponse(file_get_contents($default));
             }
-            $mime = (new finfo(FILEINFO_MIME_TYPE))->buffer($image->image);
-            return response($image->image)->header('Content-Type', $mime);
+            return Utility::getImageResponse($image->image);
         }
     }
 
@@ -292,87 +224,13 @@ final class GameController extends Controller
         $bgId = $request->route('id') ?? null;
         $default = asset('images/background.png');
         if ($bgId === null) {
-            return response(file_get_contents($default))->header('Content-Type', 'image/png');
+            return Utility::getImageResponse(file_get_contents($default));
         } else {
             $image = $this->backgroundRepository->find(BackgroundId::from($bgId));
             if ($image === null) {
-                return response(file_get_contents($default))->header('Content-Type', 'image/png');
+                return Utility::getImageResponse(file_get_contents($default));
             }
-            $mime = (new finfo(FILEINFO_MIME_TYPE))->buffer($image->image);
-            return response($image->image)->header('Content-Type', $mime);
+            return Utility::getImageResponse($image->image);
         }
-    }
-
-    private function choice(Choice $choice): bool
-    {
-        $rate = (float)$choice->rate->value;
-        return mt_rand(0, 10000) < ($rate * 100);
-    }
-
-    /**
-     * @throws Exception
-     */
-    private function updatePlayerFace(Player $player): void
-    {
-        // 年代に応じてキャラ画像を変更する
-        $newAgeGroup = $this->ageGroupRepository->findByAge($player->turn);
-        if ($newAgeGroup === null) {
-            return;
-        }
-        if ($newAgeGroup->code->equals($player->ageGroupCode)) {
-            return;
-        }
-        $imgUrl = $this->dify->createPlayerNextImage($player);
-        $img = $this->getImage($imgUrl);
-        $playerFace = $this->playerFaceFactory->create($player->id, $img);
-        $this->playerFaceRepository->save($playerFace);
-
-        $player = $player->setFace($playerFace->id, $newAgeGroup->code);
-        $this->playerRepository->save($player);
-    }
-
-    private function updateBackground(Player $player): void
-    {
-        // 総資産に応じて背景画像を変更する
-        $newBackground = $this->backgroundRepository->findByMoney($player->totalMoney);
-        if ($newBackground === null) {
-            return;
-        }
-        if ($newBackground->id->equals($player->backgroundId)) {
-            return;
-        }
-        $player = $player->setBackgroundId($newBackground->id);
-        $this->playerRepository->save($player);
-    }
-
-    /**
-     * @throws Exception
-     */
-    private function getImage(string $imgUrl): string
-    {
-        $binary = file_get_contents($imgUrl);
-        $image = imagecreatefromstring($binary);
-        if ($image === false) {
-            throw new Exception('Failed to create image from string');
-        }
-
-        // 出力をバッファリング
-        ob_start();
-
-        // 0 (非圧縮) ～ 9 (最大圧縮)
-        // レベルが高いほどサイズが小さくなるが、時間がかかる
-        $compressionLevel = 6;
-
-        // PNG画像を圧縮してバッファに出力
-        imagepng($image, null, $compressionLevel);
-
-        // バッファの内容を取得
-        $compBinary = ob_get_clean();
-
-        // バッファを閉じる
-        imagedestroy($image);
-
-        // 画像のバイナリデータを返す
-        return $compBinary;
     }
 }
