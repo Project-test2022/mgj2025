@@ -30,6 +30,7 @@ final readonly class Player
         public ?BackgroundId $backgroundId,
         public ?PlayerFaceId $playerFaceId,
         public ?AgeGroupCode $ageGroupCode,
+        public bool $isDeleted = false,
     ) {
     }
 
@@ -102,6 +103,25 @@ final readonly class Player
             $backgroundId,
             $this->playerFaceId,
             $this->ageGroupCode,
+        );
+    }
+
+    public function dead(): self
+    {
+        return new self(
+            $this->id,
+            $this->name,
+            $this->sexName,
+            $this->birthYear,
+            $this->turn,
+            $this->totalMoney,
+            $this->health,
+            $this->ability,
+            $this->evaluation,
+            $this->backgroundId,
+            $this->playerFaceId,
+            $this->ageGroupCode,
+            true,
         );
     }
 }

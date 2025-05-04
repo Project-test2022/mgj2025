@@ -95,6 +95,13 @@ final readonly class PlayerAppService
         $this->updateBackground($player);
     }
 
+    public function dead(Player $player): void
+    {
+        // プレイヤーを死亡状態にする
+        $player = $player->dead();
+        $this->playerRepository->save($player);
+    }
+
     /**
      * @throws Exception
      */

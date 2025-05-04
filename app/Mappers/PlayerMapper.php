@@ -51,6 +51,7 @@ final readonly class PlayerMapper
         $model->bg_id = $player->backgroundId?->value;
         $model->player_face_id = $player->playerFaceId?->value;
         $model->age_grp_cd = $player->ageGroupCode?->value;
+        $model->dead_flg = $player->isDeleted;
 
         return $model;
     }
@@ -78,6 +79,7 @@ final readonly class PlayerMapper
             BackgroundId::tryFrom($view->bg_id),
             PlayerFaceId::tryFrom($view->player_face_id),
             AgeGroupCode::from($view->age_grp_cd),
+            $view->dead_flg,
         );
     }
 }

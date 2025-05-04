@@ -78,6 +78,9 @@ final class GameController extends Controller
         if ($player === null) {
             return redirect()->route('title');
         }
+        if ($player->isDeleted) {
+            return redirect()->route('result', ['id' => $playerId]);
+        }
 
         return view('pages.home', [
             'player' => $player,
@@ -168,6 +171,10 @@ final class GameController extends Controller
 
             // プレイヤーの情報を更新
             $this->playerAppService->update($player, $eventResult);
+
+            if ($eventResult->dead) {
+                $this->playerAppService->dead($player);
+            }
 
             DB::commit();
 

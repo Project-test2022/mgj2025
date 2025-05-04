@@ -21,6 +21,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property string|null $bg_id
  * @property string|null $player_face_id
  * @property string|null $age_grp_cd
+ * @property bool        $dead_flg
  */
 class PlayerView extends Model
 {
@@ -28,4 +29,7 @@ class PlayerView extends Model
     public $timestamps = false;
     protected $primaryKey = 'player_id';
     protected $keyType = 'string';
+    protected $casts = [
+        'dead_flg' => 'boolean',
+    ];
 }
