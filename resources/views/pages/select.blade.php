@@ -17,9 +17,8 @@
         }
 
         .event-area {
-            width: 100%;
-            max-width: 1000px;
-            aspect-ratio: 16/9;
+            width: 1124px;
+            height: 505px;
             background: url('{{ asset('images/crossroadsinlife.png?v='.config('app.version')) }}') no-repeat center center;
             background-size: cover;
             position: relative;
@@ -34,11 +33,9 @@
         .panel {
             background: rgba(255, 255, 255, 0.4);
             width: 100%;
-            height: auto;
+            top: calc(50% - 150px);
             padding: 10px;
             position: absolute;
-            top: 400px;
-            left: 0;
             z-index: 1;
             display: flex;
             align-items: center;

@@ -19,6 +19,7 @@
         .panel {
             background: rgba(255, 255, 255, 0.4);
             width: 100%;
+            top: calc(50% - 150px);
             padding: 10px;
             position: absolute;
             z-index: 1;
@@ -29,9 +30,8 @@
         }
 
         .event-area {
-            width: 100%;
-            max-width: 1280px;
-            aspect-ratio: 16/9;
+            width: 1124px;
+            height: 505px;
             @if($result->success)
                 background: url('{{ asset('images/choice_success.jpg?v='.config('app.version')) }}') no-repeat center center;
             @else
@@ -56,8 +56,7 @@
         }
 
         .bottom-panel {
-            width: 100%;
-            max-width: 1280px;
+            width: 1124px;
             background: rgba(0, 0, 0, 0.5);
             color: white;
             text-align: center;
