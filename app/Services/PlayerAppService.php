@@ -47,9 +47,9 @@ final readonly class PlayerAppService
         // プレイヤー作成
         $player = $this->playerFactory->create(
             $id,
-            PlayerName::from($name),
-            SexName::from($sexName),
-            BirthYear::from($birthYear),
+            $name,
+            $sexName,
+            $birthYear,
         );
         $this->playerRepository->save($player);
 

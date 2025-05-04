@@ -18,6 +18,10 @@ final readonly class Utility
             throw new Exception('Failed to create image from string');
         }
 
+        // 透過保持の設定
+        imagealphablending($image, false);
+        imagesavealpha($image, true);
+
         // 出力をバッファリング
         ob_start();
 
