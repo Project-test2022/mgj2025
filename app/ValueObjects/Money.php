@@ -37,4 +37,9 @@ final readonly class Money
             return '¥' . $value;
         }
     }
+
+    public function addIncome(Income $income): self
+    {
+        return new self($this->value + $income->value);
+    }
 }

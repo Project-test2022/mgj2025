@@ -174,6 +174,9 @@ final class GameController extends Controller
 
             if ($eventResult->dead) {
                 $this->playerAppService->dead($player);
+            } else {
+                // 次のターンへ
+                $this->playerAppService->nextTurn($player);
             }
 
             DB::commit();

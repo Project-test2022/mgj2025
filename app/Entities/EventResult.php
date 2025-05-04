@@ -6,9 +6,12 @@ use App\ValueObjects\Ability;
 use App\ValueObjects\Business;
 use App\ValueObjects\Evaluation;
 use App\ValueObjects\Health;
+use App\ValueObjects\Income;
 use App\ValueObjects\Intelligence;
 use App\ValueObjects\Happiness;
+use App\ValueObjects\Job;
 use App\ValueObjects\Money;
+use App\ValueObjects\Partner;
 use App\ValueObjects\ResultMessage;
 use App\ValueObjects\Sense;
 use App\ValueObjects\Sport;
@@ -24,6 +27,9 @@ final readonly class EventResult
      * @param Health        $health     健康の変化量
      * @param Ability       $ability    能力の変化量
      * @param Evaluation    $evaluation 評価の変化量
+     * @param Job|null      $job        変更後の職業
+     * @param Income|null   $income     年収の変化量
+     * @param Partner|null  $partner    変更後のパートナー
      */
     public function __construct(
         public ResultMessage $message,
@@ -33,11 +39,35 @@ final readonly class EventResult
         public Health $health,
         public Ability $ability,
         public Evaluation $evaluation,
+        public ?Job $job,
+        public ?Income $income,
+        public ?Partner $partner,
     ) {
     }
 
     public static function from(array $data, Player $before, bool $success): self
     {
+        $job = Job::tryFrom($data['job']);
+        if ($job) {
+            if ($job->equals($before->job)) {
+                $job = null;
+            }
+        } else {
+            if ($before->job) {
+                $job = Job::from('無職');
+            }
+        }
+        $partner = Partner::tryFrom($data['partner']);
+        if ($partner) {
+            if ($partner->equals($before->partner)) {
+                $partner = null;
+            }
+        } else {
+            if ($before->partner) {
+                $partner = Partner::from('なし');
+            }
+        }
+
         return new self(
             ResultMessage::from($data['e_result']),
             $success,
@@ -54,6 +84,9 @@ final readonly class EventResult
                 Business::from($data['e_business'])->sub($before->evaluation->business),
                 Happiness::from($data['e_happiness'])->sub($before->evaluation->happiness),
             ),
+            $job,
+            Income::tryFrom($data['income'])->sub($before->income),
+            $partner,
         );
     }
 
@@ -76,6 +109,9 @@ final readonly class EventResult
                 Business::from($value),
                 Happiness::from($value),
             ),
+            null,
+            null,
+            null,
         );
     }
 
@@ -165,6 +201,17 @@ final readonly class EventResult
             return '+' . $this->evaluation->happiness->value;
         } elseif ($this->evaluation->happiness->value < 0) {
             return (string)$this->evaluation->happiness->value;
+        } else {
+            return '0';
+        }
+    }
+
+    public function income(): string
+    {
+        if ($this->income->value > 0) {
+            return '+' . $this->income->value;
+        } elseif ($this->income->value < 0) {
+            return (string)$this->income->value;
         } else {
             return '0';
         }

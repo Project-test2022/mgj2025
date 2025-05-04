@@ -83,16 +83,23 @@ final readonly class PlayerAppService
             $eventResult->evaluation,
         );
 
+        $this->playerRepository->save($player);
+
+        // 背景画像を更新する
+        $this->updateBackground($player);
+    }
+
+    /**
+     * @throws Exception
+     */
+    public function nextTurn(Player $player): void
+    {
         // ターンを進める
         $player = $player->nextTurn();
 
         $this->playerRepository->save($player);
-
         // キャラ画像を更新する
         $this->updatePlayerFace($player);
-
-        // 背景画像を更新する
-        $this->updateBackground($player);
     }
 
     public function dead(Player $player): void

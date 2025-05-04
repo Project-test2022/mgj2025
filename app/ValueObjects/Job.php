@@ -17,4 +17,13 @@ final readonly class Job
     {
         return $this->value;
     }
+
+    public function equals(?Job $other): bool
+    {
+        if ($other === null) {
+            return false;
+        }
+
+        return $this->value === $other->value;
+    }
 }
