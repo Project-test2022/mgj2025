@@ -88,9 +88,6 @@ final readonly class PlayerAppService
 
         $this->playerRepository->save($player);
 
-        // 背景画像を更新する
-        $this->updateBackground($player);
-
         return $player;
     }
 
@@ -105,6 +102,8 @@ final readonly class PlayerAppService
         $this->playerRepository->save($player);
         // キャラ画像を更新する
         $this->updatePlayerFace($player);
+        // 背景画像を更新する
+        $this->updateBackground($player);
     }
 
     public function dead(Player $player): void
