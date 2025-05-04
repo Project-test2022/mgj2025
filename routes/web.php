@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\DebugController;
 use App\Http\Controllers\GameController;
 use Illuminate\Support\Facades\Route;
 
@@ -23,3 +24,11 @@ Route::get('/background/{id}', [GameController::class, 'background'])->name('bac
 Route::get('/result/{id}', [GameController::class, 'result'])->name('result');
 
 Route::get('/error/{id}', [GameController::class, 'error'])->name('error');
+
+if (config('app.env') === 'local') {
+    Route::get('/debug/title', [DebugController::class, 'title']);
+    Route::get('/debug/home', [DebugController::class, 'home']);
+    Route::get('/debug/select', [DebugController::class, 'select']);
+    Route::get('/debug/event', [DebugController::class, 'event']);
+    Route::get('/debug/end', [DebugController::class, 'end']);
+}
