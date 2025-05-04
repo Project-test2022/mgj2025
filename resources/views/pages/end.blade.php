@@ -131,7 +131,7 @@
             <div class="profile-info">
                 <div class="question">「この人生は幸せでしたか？」</div>
                 {{ $player->name->value }} {{ $player->sexName->value }}性　{{ $player->turn->value }}歳<br>
-                資産：¥{{ number_format($player->totalMoney->value) }}<br>
+                資産：{{ $player->totalMoney->format() }}<br>
             </div>
         </div>
 

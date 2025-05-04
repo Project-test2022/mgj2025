@@ -25,10 +25,16 @@ final readonly class Money
 
     public function add(Money $other): self
     {
-        $value = $this->value + $other->value;
-        if ($value < 0) {
-            $value = 0;
+        return new self($this->value + $other->value);
+    }
+
+    public function format(): string
+    {
+        $value = number_format((abs($this->value)));
+        if ($this->value < 0) {
+            return '-¥' . $value;
+        } else {
+            return '¥' . $value;
         }
-        return new self($value);
     }
 }
