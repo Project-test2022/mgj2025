@@ -69,10 +69,10 @@
 
         .character-frame img {
             position: absolute;
-            top: 8%;
-            left: 16%;
-            width: 66%;
-            height: 83%;
+            top: 8.5%;
+            left: 8.5%;
+            width: 82.5%;
+            height: 84.5%;
             object-fit: cover;
             filter: grayscale(100%);
         }
@@ -128,7 +128,7 @@
 @section('content')
     <div class="main-wrapper">
         <div class="header">人生やり直しゲーム
-        <button id="bgm-toggle" style="background: none; border: none; margin-left: 10px; cursor: pointer;">
+        <button id="bgm-toggle" style="background: none; border: none; margin-left: 10px; cursor: pointer;" class="dont-loading">
             <img id="bgm-icon" src="{{ asset('icon/gray_off.png') }}" alt="BGMアイコン" width="24" height="24">
         </button>
         <div class="main-area"></div>
@@ -160,8 +160,8 @@
         function updateBgmIcon() {
             const icon = document.getElementById('bgm-icon');
             const enabled = localStorage.getItem('bgm_enabled') === 'true';
-            icon.src = enabled 
-                ? '{{ asset('icon/gray_on.png') }}' 
+            icon.src = enabled
+                ? '{{ asset('icon/gray_on.png') }}'
                 : '{{ asset('icon/gray_off.png') }}';
         }
 
@@ -172,11 +172,11 @@
             se.volume = 0.3;
             btn.addEventListener('click', function () {
                 se.currentTime = 0;
-                se.play(); 
+                se.play();
             });
 
             // 初期再生
-            setUpBgm('{{ asset('sounds/negative/beautiful-ruin.mp3') }}');
+            setupBgm('{{ asset('sounds/negative/beautiful-ruin.mp3') }}');
             // 初期アイコン
             updateBgmIcon();
 
@@ -185,6 +185,12 @@
                 toggleBgm();
                 updateBgmIcon();
             });
+
+            // 初期再生
+            const enabled = localStorage.getItem('bgm_enabled') === 'true';
+            if (enabled) {
+                bgm.play().catch(err => console.log('BGM再生失敗:', err));
+            }
         });
     </script>
 @endpush

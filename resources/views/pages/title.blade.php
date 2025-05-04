@@ -34,14 +34,15 @@
             padding: 10px 80px;
             font-size: 18px;
             color: #333;
-            background-color: rgba(255, 255, 255, 0.2);
+            background-color: rgba(255, 255, 255, 0.4);
             border: none;
             letter-spacing: 5px;
             cursor: pointer;
+            width: 100%;
         }
 
         .start-button:hover {
-            background-color: rgba(255, 255, 255, 0.4);
+            background-color: rgba(255, 255, 255, 0.6);
         }
         .image-checkbox {
             display: none;
@@ -76,56 +77,58 @@
 @endpush
 
 @section('content')
-    <div class="container">
-        <div class="title">人生やり直しゲーム</div>
+    <form action="{{ route('start') }}" method="POST">
+        @csrf
+        <div class="container">
+            <h1 class="title">人生やり直しゲーム</h1>
+            <span>次に生まれる人生を選択・入力してください。</span>
+            <div id="game-form">
+                <div class="form-group">
+                    <label for="name">名  前</label>
+                    <input type="text" name="name" value="{{ old('name') }}">
+
+                    <input type="checkbox" name="name_random" id="toggle1" class="image-checkbox">
+                    <label for="toggle1" class="checkbox-label">
+                        <img src="{{ asset('images/select.png') }}" alt="OFF" class="off">
+                        <img src="{{ asset('images/random.png') }}" alt="ON" class="on">
+                    </label>
+                </div>
+
+                <div class="form-group">
+                    <label for="birth_year">生まれ年</label>
+                    <input type="number" name="birth_year" value="{{ old('birth_year', 2000) }}">
+
+                    <input type="checkbox" name="birth_year_random" id="toggle2" class="image-checkbox">
+                    <label for="toggle2" class="checkbox-label">
+                        <img src="{{ asset('images/select.png') }}" alt="OFF" class="off">
+                        <img src="{{ asset('images/random.png') }}" alt="ON" class="on">
+                    </label>
+                </div>
+
+                <div class="form-group">
+                    <label for="gender">性  別</label>
+                    <select name="gender">
+                        <option value disabled selected>--選択してください--</option>
+                        @foreach($sexes as $sex)
+                            <option value="{{ $sex->sex_cd }}" @selected(old('gender') == $sex->sex_cd)>{{ $sex->sex_nm }}</option>
+                        @endforeach
+                    </select>
+
+                    <input type="checkbox" name="gender_random" id="toggle3" class="image-checkbox">
+                    <label for="toggle3" class="checkbox-label">
+                        <img src="{{ asset('images/select.png') }}" alt="OFF" class="off">
+                        <img src="{{ asset('images/random.png') }}" alt="ON" class="on">
+                    </label>
+                </div>
+            </div>
+        </div>
+        <button id="btn" type="submit" class="start-button">START</button>
         @if($errors->any())
             @foreach($errors->all() as $error)
                 <p>{{ $error }}</p>
             @endforeach
         @endif
-        <form id="game-form" action="{{ route('start') }}" method="POST">
-            @csrf
-            <div class="form-group">
-                <label for="name">名前</label>
-                <input type="text" name="name" value="{{ old('name') }}">
-
-                <input type="checkbox" name="name_random" id="toggle1" class="image-checkbox">
-                <label for="toggle1" class="checkbox-label">
-                    <img src="{{ asset('images/select.png') }}" alt="OFF" class="off">
-                    <img src="{{ asset('images/random.png') }}" alt="ON" class="on">
-                </label>
-            </div>
-
-            <div class="form-group">
-                <label for="birth_year">生年（西暦）</label>
-                <input type="number" name="birth_year" value="{{ old('birth_year', 2000) }}">
-
-                <input type="checkbox" name="birth_year_random" id="toggle2" class="image-checkbox">
-                <label for="toggle2" class="checkbox-label">
-                    <img src="{{ asset('images/select.png') }}" alt="OFF" class="off">
-                    <img src="{{ asset('images/random.png') }}" alt="ON" class="on">
-                </label>
-            </div>
-
-            <div class="form-group">
-                <label for="gender">性別</label>
-                <select name="gender">
-                    <option value disabled selected>--選択してください--</option>
-                    @foreach($sexes as $sex)
-                        <option value="{{ $sex->sex_cd }}" @selected(old('gender') == $sex->sex_cd)>{{ $sex->sex_nm }}</option>
-                    @endforeach
-                </select>
-
-                <input type="checkbox" name="gender_random" id="toggle3" class="image-checkbox">
-                <label for="toggle3" class="checkbox-label">
-                    <img src="{{ asset('images/select.png') }}" alt="OFF" class="off">
-                    <img src="{{ asset('images/random.png') }}" alt="ON" class="on">
-                </label>
-            </div>
-
-            <button id="btn" type="submit" class="start-button">START</button>
-        </form>
-    </div>
+    </form>
 @endsection
 
 @push('scripts')

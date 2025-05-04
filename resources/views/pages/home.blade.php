@@ -129,7 +129,7 @@
         <div class="header">
             <div class="title">
                 人生やり直しゲーム
-                <button id="bgm-toggle" style="background: none; border: none; margin-left: 10px; cursor: pointer;">
+                <button id="bgm-toggle" style="background: none; border: none; margin-left: 10px; cursor: pointer;" class="dont-loading">
                     <img id="bgm-icon" src="{{ asset('icon/gray_off.png') }}" alt="BGMアイコン" width="24" height="24">
                 </button>
             </div>
@@ -159,36 +159,36 @@
 @endsection
 
 @push('scripts')
-<script src="{{ asset('js/bgm.js') }}"></script>
+    <script src="{{ asset('js/bgm.js') }}"></script>
     <script>
         function updateBgmIcon() {
             const icon = document.getElementById('bgm-icon');
             const enabled = localStorage.getItem('bgm_enabled') === 'true';
-            icon.src = enabled 
-                ? '{{ asset('icon/gray_on.png') }}' 
+            icon.src = enabled
+                ? '{{ asset('icon/gray_on.png') }}'
                 : '{{ asset('icon/gray_off.png') }}';
         }
 
         document.addEventListener('DOMContentLoaded', function () {
             // 効果音（ボタン用）
-            window.addEventListener('DOMContentLoaded', () => {
-                document.querySelectorAll('.button').forEach(button => {
-                    if (button.textContent.length >= 6) {
-                        button.classList.add('long-text');
-                    }
+            document.querySelectorAll('.button').forEach(button => {
+                if (button.textContent.length >= 6) {
+                    button.classList.add('long-text');
+                }
+            });
+
+            const btns = document.querySelectorAll('.buttons');
+            const se = new Audio('{{ asset('sounds/se/decide-button-a.mp3') }}');
+            se.volume = 0.3;
+            btns.forEach(btn => {
+                btn.addEventListener('click', function () {
+                    se.currentTime = 0;
+                    se.play();
                 });
             });
 
-            const btn = document.querySelectorAll('.buttons');
-            const se = new Audio('{{ asset('sounds/se/decide-button-a.mp3') }}');
-            se.volume = 0.3;
-            btn.addEventListener('click', function () {
-                se.currentTime = 0;
-                se.play(); 
-            });
-
             // 初期再生
-            setUpBgm('{{ asset('sounds/choice/high-stakes-shadow.mp3') }}');
+            setupBgm('{{ asset('sounds/op/high-stakes-shadow.mp3') }}');
             // 初期アイコン
             updateBgmIcon();
 
@@ -197,6 +197,12 @@
                 toggleBgm();
                 updateBgmIcon();
             });
+
+            // 初期再生
+            const enabled = localStorage.getItem('bgm_enabled') === 'true';
+            if (enabled) {
+                bgm.play().catch(err => console.log('BGM再生失敗:', err));
+            }
         });
     </script>
 @endpush

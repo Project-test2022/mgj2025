@@ -109,7 +109,7 @@
     <div class="header">
       <div class="title">
         人生やり直しゲーム
-        <button id="bgm-toggle" style="background: none; border: none; margin-left: 10px; cursor: pointer;">
+        <button id="bgm-toggle" style="background: none; border: none; margin-left: 10px; cursor: pointer;" class="dont-loading">
             <img id="bgm-icon" src="{{ asset('icon/gray_off.png') }}" alt="BGMアイコン" width="24" height="24">
         </button>
     </div>
@@ -144,8 +144,8 @@
         function updateBgmIcon() {
             const icon = document.getElementById('bgm-icon');
             const enabled = localStorage.getItem('bgm_enabled') === 'true';
-            icon.src = enabled 
-                ? '{{ asset('icon/gray_on.png') }}' 
+            icon.src = enabled
+                ? '{{ asset('icon/gray_on.png') }}'
                 : '{{ asset('icon/gray_off.png') }}';
         }
 
@@ -163,7 +163,7 @@
 
             // BGM の設定
             // 初期再生
-            setUpBgm('{{ asset('sounds/choice/high-stakes-shadow.mp3') }}');
+            setupBgm('{{ asset('sounds/choice/high-stakes-shadow.mp3') }}');
             // 初期アイコン
             updateBgmIcon();
 
@@ -172,6 +172,12 @@
                 toggleBgm();
                 updateBgmIcon();
             });
+
+            // 初期再生
+            const enabled = localStorage.getItem('bgm_enabled') === 'true';
+            if (enabled) {
+                bgm.play().catch(err => console.log('BGM再生失敗:', err));
+            }
         });
     </script>
 @endpush

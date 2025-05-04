@@ -26,14 +26,3 @@ function toggleBgm() {
         bgm.pause();
     }
 }
-
-document.addEventListener('DOMContentLoaded', function () {
-    // 初期再生
-    const enabled = localStorage.getItem('bgm_enabled') === 'true';
-    if (enabled) {
-        bgm.play().catch(err => console.log('BGM再生失敗:', err));
-    }
-
-    // ボタンクリックで切り替え
-    document.getElementById('bgm-toggle').addEventListener('click', toggleBgm);
-});

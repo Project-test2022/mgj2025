@@ -46,6 +46,11 @@
         const buttons = document.querySelectorAll('button');
         buttons.forEach(button => {
             button.addEventListener('click', function () {
+                // .dont-loadingクラスを持つボタンは除外
+                if (button.classList.contains('dont-loading')) {
+                    return;
+                }
+
                 document.getElementById('loading-overlay').style.display = 'flex';
             });
         });
