@@ -19,7 +19,8 @@
         .panel {
             background: rgba(255, 255, 255, 0.4);
             width: 100%;
-            top: calc(50% - 150px);
+            height: 415px;
+            top: calc(50% - 295px);
             padding: 10px;
             position: absolute;
             z-index: 1;
@@ -47,25 +48,34 @@
         }
 
         .event-text {
+            width: 700px;
+            height: 300px;
             padding: 15px 25px;
             color: #070606;
             font-size: 20px;
             font-weight: bold;
             text-align: center;
             max-width: 80%;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
 
-        .bottom-panel {
+        /* .bottom-panel {
             width: 1124px;
+            height: 80px;
             background: rgba(0, 0, 0, 0.5);
             color: white;
             text-align: center;
             font-size: 22px;
             font-weight: bold;
             padding: 20px 0;
-        }
+        } */
 
         .button {
+            width: 1124px;
+            height: 80px;
             background: rgba(0, 0, 0, 0.7);
             color: white;
             padding: 15px 60px;
@@ -116,12 +126,16 @@
             @if($result->evaluation->happiness->value !== 0)
                 幸福: {{ $result->happiness() }}
             @endif
+            @if(!empty($result->message))
+                <br><br>
+                {{ $result->message }}
+            @endif
         </div>
     </div>
 
-    <div class="bottom-panel">
+    <!-- <div class="bottom-panel">
         {{ $result->message }}
-    </div>
+    </div> -->
 
     @if($result->dead)
         <button id="button-happy" style="margin-top:20px;" class="button" onclick="location.href='{{ route('result', ['id' => $player->id]) }}'">おわり</button>
