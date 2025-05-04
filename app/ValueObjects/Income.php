@@ -13,8 +13,22 @@ final readonly class Income
         return new self($value);
     }
 
+    public static function tryFrom(?string $value): ?self
+    {
+        if (empty($value)) {
+            return null;
+        }
+
+        return self::from($value);
+    }
+
     public function __toString(): string
     {
         return $this->value;
+    }
+
+    public function format(): string
+    {
+        return '¥' . number_format($this->value);
     }
 }

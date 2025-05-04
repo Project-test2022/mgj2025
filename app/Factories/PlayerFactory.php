@@ -42,6 +42,9 @@ final readonly class PlayerFactory
             null,
             null,
             null,
+            null,
+            null,
+            null,
         );
     }
 }

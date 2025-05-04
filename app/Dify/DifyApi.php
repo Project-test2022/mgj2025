@@ -253,6 +253,15 @@ final readonly class DifyApi
             '仕事(0-100)' => $player->evaluation->business->value,
             '幸福(0-100)' => $player->evaluation->happiness->value,
         ];
+        if ($player->job) {
+            $playerInfo['職業'] = $player->job->value;
+        }
+        if ($player->income) {
+            $playerInfo['年収'] = $player->income->value;
+        }
+        if ($player->partner) {
+            $playerInfo['パートナー'] = $player->partner->value;
+        }
 
         $formatted = '';
         foreach ($playerInfo as $key => $value) {

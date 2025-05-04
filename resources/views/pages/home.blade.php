@@ -118,6 +118,16 @@
             <div class="character-image"></div>
             <div class="profile-info">
                 {{ $player->name }} {{ $player->sexName }}性　{{ $player->turn->value }}歳<br>
+                @if($player->job)
+                    職業：{{ $player->job }}
+                @endif
+                @if($player->income)
+                    年収: {{ $player->income->format() }}
+                @endif
+                @if($player->partner)
+                    パートナー: {{ $player->partner }}
+                @endif
+                <br>
                 資産：{{ $player->totalMoney->format() }}<br>
                 知能：{{ $player->ability->intelligence }} 運動：{{ $player->ability->sport }}
                 容姿：{{ $player->ability->visual }} 健康：{{ $player->health }}
@@ -145,12 +155,12 @@
             se.volume = 0.3;
             btn.addEventListener('click', function () {
                 se.currentTime = 0;
-                se.play(); 
+                se.play();
             });
             // BGM の設定
             const bgm = new Audio('{{ asset('sounds/op/high-stakes-shadow.mp3') }}');
             bgm.loop = true;
-            bgm.volume = 0.3; 
+            bgm.volume = 0.3;
             bgm.play().then(() => {
               setTimeout(() => {
                   bgm.muted = false;

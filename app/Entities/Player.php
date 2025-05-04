@@ -8,7 +8,10 @@ use App\ValueObjects\BackgroundId;
 use App\ValueObjects\BirthYear;
 use App\ValueObjects\Evaluation;
 use App\ValueObjects\Health;
+use App\ValueObjects\Income;
+use App\ValueObjects\Job;
 use App\ValueObjects\Money;
+use App\ValueObjects\Partner;
 use App\ValueObjects\PlayerFaceId;
 use App\ValueObjects\PlayerName;
 use App\ValueObjects\PlayerId;
@@ -30,12 +33,22 @@ final readonly class Player
         public ?BackgroundId $backgroundId,
         public ?PlayerFaceId $playerFaceId,
         public ?AgeGroupCode $ageGroupCode,
+        public ?Job $job,
+        public ?Income $income,
+        public ?Partner $partner,
         public bool $isDeleted = false,
     ) {
     }
 
-    public function update(Money $totalMoney, Health $health, Ability $ability, Evaluation $evaluation): self
-    {
+    public function update(
+        Money $totalMoney,
+        Health $health,
+        Ability $ability,
+        Evaluation $evaluation,
+        ?Job $job,
+        ?Income $income,
+        ?Partner $partner,
+    ): self {
         return new self(
             $this->id,
             $this->name,
@@ -49,6 +62,9 @@ final readonly class Player
             $this->backgroundId,
             $this->playerFaceId,
             $this->ageGroupCode,
+            $job,
+            $income,
+            $partner,
         );
     }
 
@@ -67,6 +83,9 @@ final readonly class Player
             $this->backgroundId,
             $this->playerFaceId,
             $this->ageGroupCode,
+            $this->job,
+            $this->income,
+            $this->partner,
         );
     }
 
@@ -85,6 +104,9 @@ final readonly class Player
             $this->backgroundId,
             $playerFaceId,
             $ageGroupCode,
+            $this->job,
+            $this->income,
+            $this->partner,
         );
     }
 
@@ -103,6 +125,9 @@ final readonly class Player
             $backgroundId,
             $this->playerFaceId,
             $this->ageGroupCode,
+            $this->job,
+            $this->income,
+            $this->partner,
         );
     }
 
@@ -121,6 +146,9 @@ final readonly class Player
             $this->backgroundId,
             $this->playerFaceId,
             $this->ageGroupCode,
+            $this->job,
+            $this->income,
+            $this->partner,
             true,
         );
     }

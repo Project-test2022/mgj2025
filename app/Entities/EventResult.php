@@ -6,9 +6,12 @@ use App\ValueObjects\Ability;
 use App\ValueObjects\Business;
 use App\ValueObjects\Evaluation;
 use App\ValueObjects\Health;
+use App\ValueObjects\Income;
 use App\ValueObjects\Intelligence;
 use App\ValueObjects\Happiness;
+use App\ValueObjects\Job;
 use App\ValueObjects\Money;
+use App\ValueObjects\Partner;
 use App\ValueObjects\ResultMessage;
 use App\ValueObjects\Sense;
 use App\ValueObjects\Sport;
@@ -24,6 +27,9 @@ final readonly class EventResult
      * @param Health        $health     健康の変化量
      * @param Ability       $ability    能力の変化量
      * @param Evaluation    $evaluation 評価の変化量
+     * @param Job|null      $job
+     * @param Income|null   $income
+     * @param Partner|null  $partner
      */
     public function __construct(
         public ResultMessage $message,
@@ -33,6 +39,9 @@ final readonly class EventResult
         public Health $health,
         public Ability $ability,
         public Evaluation $evaluation,
+        public ?Job $job,
+        public ?Income $income,
+        public ?Partner $partner,
     ) {
     }
 
@@ -54,6 +63,9 @@ final readonly class EventResult
                 Business::from($data['e_business'])->sub($before->evaluation->business),
                 Happiness::from($data['e_happiness'])->sub($before->evaluation->happiness),
             ),
+            Job::tryFrom($data['job']),
+            Income::tryFrom($data['income']),
+            Partner::tryFrom($data['partner']),
         );
     }
 
@@ -76,6 +88,9 @@ final readonly class EventResult
                 Business::from($value),
                 Happiness::from($value),
             ),
+            Job::from('ダミー職業'),
+            Income::from(10000),
+            null,
         );
     }
 

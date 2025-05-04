@@ -81,6 +81,9 @@ final readonly class PlayerAppService
             $eventResult->health,
             $eventResult->ability,
             $eventResult->evaluation,
+            $eventResult->job,
+            $eventResult->income,
+            $eventResult->partner,
         );
 
         // ターンを進める
