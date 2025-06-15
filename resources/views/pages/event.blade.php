@@ -1,59 +1,22 @@
 @extends('layouts.parent')
 
 @push('styles')
+    <link href="{{ asset('css/app.css') }}" rel="stylesheet">
+
     <style>
-        html, body {
-            margin: 0;
-            padding: 0;
-            width: 100%;
-            height: 100%;
-            font-family: 'Arial', sans-serif;
-            background: url('{{ asset('images/background.png?v='.config('app.version')) }}') no-repeat center center;
-            background-size: cover;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-        }
-
-        .header {
-            width: 100%;
-            max-width: 1124px;
-            display: flex;
-            justify-content: space-between;
-            margin-top: 30px;
-            margin-bottom: 20px;
-            font-size: 24px;
-        }
-
-        .turn {
-            font-size: 20px;
-            padding: 5px;
-        }
-
-        .panel {
-            background: rgba(255, 255, 255, 0.4);
-            width: 100%;
-            height: 415px;
-            top: calc(50% - 250px);
-            padding: 10px;
-            position: absolute;
-            z-index: 1;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 36px;
+        .image{
+            background: url('{{ asset('images/crossroadsinlife.png?v='.config('app.version')) }}') no-repeat center center;
         }
 
         .event-area {
             width: 1124px;
             height: 505px;
             @if($result->success)
-                 background: url('{{ asset('images/choice_success.jpg?v='.config('app.version')) }}') no-repeat center center;
+                    background: url('{{ asset('images/choice_success.jpg?v='.config('app.version')) }}') no-repeat center center;
             @else
-                 background: url('{{ asset('images/choice_lose.jpg?v='.config('app.version')) }}') no-repeat center center;
+                    background: url('{{ asset('images/choice_lose.jpg?v='.config('app.version')) }}') no-repeat center center;
             @endif
-             background-size: cover;
+                background-size: cover;
             position: relative;
             display: flex;
             justify-content: center;
@@ -62,119 +25,153 @@
             border: 1px solid rgba(255, 255, 255, 0.4);
         }
 
-        .event-text {
-            width: 700px;
-            height: 300px;
-            padding: 15px 25px;
-            color: #070606;
-            font-size: 20px;
-            font-weight: bold;
+        .contents{
+            justify-content: center;
+            align-items: center;
+        }
+
+        .event-text{
             text-align: center;
-            max-width: 80%;
+            color: rgba(35, 35, 35);
+        }
+
+        .event-button {
+            width: 100%;              /* 親要素幅いっぱい */
+            height:54px;
+            margin-top: 1em;
 
             display: flex;
-            align-items: center;
             justify-content: center;
-        }
+            align-items: center;
 
-        .button {
-            width: 1124px;
-            height: 80px;
-            background: rgba(0, 0, 0, 0.7);
-            color: white;
-            padding: 15px 60px;
-            font-size: 22px;
-            border: none;
+            padding: 14px 0;          /* 縦にゆとりを持たせる */
+            font-size: 1em;          /* 基本フォントサイズ */
+            color: white;           /* 文字色 */
+            background: rgba(0, 0, 0, 0.7);/* 背景色 */
+            border: 1px solid rgba(46, 41, 41);
+
             cursor: pointer;
-            letter-spacing: 5px;
-            transition: background 0.3s;
+            transition:
+                background-color 0.2s,
+                color 0.2s,
+                box-shadow 0.2s;
+
+            text-align: center;
+            
         }
 
-        .button:hover {
+        .event-button:hover {
             background: rgba(0, 0, 0, 0.9);
         }
-
-        .button-icon {
-            width: 182px;
-            height: 32px;
-            margin-bottom: 25px;
-            display: block;
-            margin-left: auto;
-            margin-right: auto;
-        }
-
     </style>
+    
 @endpush
 
 @section('content')
-    <div class="header">
-        <div class="title">
-            人生やり直しゲーム
-            <button id="bgm-toggle" style="background: none; border: none; margin-left: 10px; cursor: pointer;"
-                    class="dont-loading">
-                <img id="bgm-icon" src="{{ asset('icon/gray_off.png') }}" alt="BGMアイコン" width="24" height="24">
-            </button>
+     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <head>
+        <!-- 共通CSSの読込 -->
+        <link
+        rel="stylesheet"
+        href="{{ asset('css/app.css') }}?v={{ config('app.version') }}">
+    </head>
+    <body>
+        
+        <!-- プロフィールエリア -->
+        <div class="infomation">
+            <!-- 縦詰み要素のためのdiv -->
+            <div class="stacking-image_header">
+                <!-- ヘッダー -->
+                <div class="header">
+                    <div class="header-left">
+                        <div class="title">
+                            人生やり直しゲーム
+                        </div>
+                        <button id="bgm-toggle" class="dont-loading">
+                                <img id="bgm-icon" src="{{ asset('icon/gray_off.png') }}" alt="BGMアイコン">
+                        </button>
+                    </div>
+                    <div class="turn">西暦：{{ $player->currentYear() }}年</div>
+                </div>
+
+                <!-- 家の背景 -->
+                <div class="image"></div>
+
+                <!-- ボタン -->
+                @if($result->dead)
+                    <button id="button-happy" class="event-button"
+                            onclick="location.href='{{ route('result', ['id' => $player->id]) }}'">
+                            おわり
+                    </button>
+                @else
+                    <button class="event-button" 
+                            onclick="location.href='{{ route('home', ['id' => $player->id]) }}'">
+                            <img src="{{ asset('icon/let_go_home.png') }}"/>
+                    </button>
+                @endif
+
+            </div>
+            
+            <!-- 背景の白い帯 -->
+            <div class="white-panel"></div>
+
+            <!-- イベントテキストエリア -->
+            <div class ="contents">
+                
+                <!-- イベントテキスト -->
+                <div class="event-text">
+                <p>
+                <b>- {{ $result->result() }} -</b><br>
+                </p>
+                <p>
+                @if(!empty($result->message))
+                    {{ $result->message }}
+                @endif
+                </p>
+                <p>
+                @if($result->totalMoney->value !== 0)
+                    資産：{{ $result->money() }}<br>
+                @endif
+                @if($newJob)
+                    職業：{{ $newJob }} New!
+                @endif
+                @if($incomeDiff)
+                    年収：{{ $incomeDiff->format(true) }}<br>
+                @endif
+                @if($result->ability->intelligence->value !== 0)
+                    知能：{{ $result->intelligence() }}
+                @endif
+                @if($result->ability->sport->value !== 0)
+                    運動：{{ $result->sport() }}
+                @endif
+                <br/>
+                @if($result->ability->visual->value !== 0)
+                    容姿：{{ $result->visual() }}
+                @endif
+                @if($result->health->value !== 0)
+                    健康：{{ $result->health() }}
+                @endif
+                @if($result->ability->sense->value !== 0)
+                    感性：{{ $result->sense() }}
+                @endif
+                <br/>
+                @if($result->evaluation->business->value !== 0)
+                    仕事: {{ $result->business() }}
+                @endif
+                @if($result->evaluation->happiness->value !== 0)
+                    幸福: {{ $result->happiness() }}
+                @endif
+                </p>
+            </div>
         </div>
-        <div class="turn">西暦：{{ $player->currentYear() }}年</div>
-    </div>
-    <div class="event-area"></div>
-    <div class="panel">
-        <div class="event-text">
-            - {{ $result->result() }} -<br>
-            @if($result->totalMoney->value !== 0)
-                資産：{{ $result->money() }}<br>
-            @endif
-            @if($newJob)
-                職業：{{ $newJob }} New!
-            @endif
-            @if($incomeDiff)
-                年収：{{ $incomeDiff->format(true) }}<br>
-            @endif
-            @if($result->ability->intelligence->value !== 0)
-                知能：{{ $result->intelligence() }}
-            @endif
-            @if($result->ability->sport->value !== 0)
-                運動：{{ $result->sport() }}
-            @endif
-            <br/>
-            @if($result->ability->visual->value !== 0)
-                容姿：{{ $result->visual() }}
-            @endif
-            @if($result->health->value !== 0)
-                健康：{{ $result->health() }}
-            @endif
-            @if($result->ability->sense->value !== 0)
-                感性：{{ $result->sense() }}
-            @endif
-            <br/>
-            @if($result->evaluation->business->value !== 0)
-                仕事: {{ $result->business() }}
-            @endif
-            @if($result->evaluation->happiness->value !== 0)
-                幸福: {{ $result->happiness() }}
-            @endif
-            @if(!empty($result->message))
-                <br><br>
-                {{ $result->message }}
-            @endif
-        </div>
-    </div>
+        
+    </body>
+
 
     <!-- <div class="bottom-panel">
         {{ $result->message }}
     </div> -->
-
-    @if($result->dead)
-        <button id="button-happy" style="margin-top:20px;" class="button"
-                onclick="location.href='{{ route('result', ['id' => $player->id]) }}'">おわり
-        </button>
-    @else
-        <button class="button" style="margin-top:20px;"
-                onclick="location.href='{{ route('home', ['id' => $player->id]) }}'">
-            <img src="{{ asset('icon/let_go_home.png') }}" alt="ホーム" class="button-icon" style="margin: auto"/>
-        </button>
-    @endif
-@endsection
+@endsection 
 
 @push('scripts')
     <script src="{{ asset('js/bgm.js') }}"></script>

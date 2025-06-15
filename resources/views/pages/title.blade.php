@@ -2,225 +2,296 @@
 
 @push('styles')
     <style>
-        body {
-            margin: 0;
-            padding: 0;
-            height: 100vh;
+        .hidden{
+            display: none !important;
+        }
+
+        html,body{
+            letter-spacing: 0.1em;
+        }
+
+        .stacking-toggle_contents_start{
+            /* background-color:white; */
+            position:absolute;
+
             display: flex;
-            justify-content: center;
-            align-items: center;
-            font-family: 'Arial', sans-serif;
-            background: url('{{ asset('images/background.png?v='.config('app.version')) }}') no-repeat center center;
-            background-size: cover;
-        }
-
-        .header {
-            width: 100%;
-            max-width: 1124px;
+            flex-direction: column;
             justify-content: space-between;
-            margin-top: 30px;
-            margin-bottom: 20px;
-            font-size: 24px;
+
+            width: 600px;
+            height: 400px;
+
+            margin: 0;
         }
 
-        .container {
-            text-align: center;
-            padding: 40px 60px;
-            border: 1px solid rgba(255, 255, 255, 0.4);
-            background-color: rgba(255, 255, 255, 0.03);
-            backdrop-filter: blur(2px);
-            margin-bottom: 48px;
+        .toggle{
+            /* background-color:rgb(255, 164, 164); */
+
+            display: flex;
+            align-items: center;          /* 垂直方向（交差軸）中央 */
+            flex: 0 0 auto; 
+            margin-bottom:3px;
+
+            font-size: 0.8em;
+            letter-spacing: 0.1em;
+
+            gap: 0.6em;
+
+            transform: translate(0, 0em);
+            width: 100%;
         }
 
-        .title {
-            font-size: 32px;
-            letter-spacing: 12px;
-            color: #333;
-            margin-bottom: 24px;
-        }
-
-        .start-button {
+        .toggle-button {
             display: inline-block;
-            padding: 10px 80px;
-            font-size: 18px;
+            position: relative;
+            width: 2.5rem;
+            height: 1.2rem;
+            border-radius: 50px;
+            /* border: 3px solid #dddddd; */
+            box-sizing: content-box;
+            cursor: pointer;
+            transition: border-color .4s;
+            background-color:rgb(67, 67, 67);
+        }
+
+        .toggle-button:has(:checked) {
+            background-color: #c12d33;
+        }
+
+        .toggle-button::after {
+            position: absolute;
+            top: 50%;
+            left: 5px;
+            transform: translateY(-50%);
+            width: 0.9rem;
+            height: 0.9rem;
+            border-radius: 50%;
+            background-color: #c8c8c8;
+            content: '';
+            transition: left .4s;
+        }
+
+        .toggle-button:has(:checked)::after {
+            left: 1.4rem;
+            background-color: white;
+        }
+
+        .toggle-button input {
+            display: none;
+        }
+
+        .start-contents{
+            flex: 1 1 auto; 
+            border: solid 1px white;
+            width: 100%;
+
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+
+            gap: 0.5rem;
+
+        }
+
+        .top-title{
+
+            /* background-color:rgb(164, 220, 255); */
+
+            font-size:2.2em;
+            letter-spacing: 0.3em;
+            text-align: center;
+            
+            width: 100%;
+            height:1.5em;
+        }
+        .top-text{
+            /* background-color:rgb(199, 255, 164); */
+
+            font-size:0.8em;
+            letter-spacing: 0.2em;
+            text-align: center;
+
+            width: 100%;
+            height:1.5em;
+        }
+        
+        .top-form{
+            display: flex; 
+            width: 70%;
+            margin-top: 0.5em;
+            /* gap:0.5em; */
+        }
+
+        .label{
+            align-items: center;          /* 垂直方向（交差軸）中央 */
+            text-align: justify;
+            text-align-last: justify;
+            letter-spacing: 0;
+            width: 30%;
+            height:1.5em;
+        }
+
+        .input-box{
+
+            display: flex;
+            justify-content: center;     /* 横方向中央 */
+            align-items: center;         /* 縦方向中央 */
+
+            width: 100%;
+            height:1.5em;
+
+        }
+
+        input,select{
+            text-align: center;
+            letter-spacing: 0.2em;
+            border: none;
+            width: 100%;
+            height:1.5em;
+        }
+        
+        .ran-sel{
+            display: flex;
+            justify-content: center;     /* 横方向中央 */
+            align-items: center;         /* 縦方向中央 */
+            width: 35%;
+            height:1.5em;
+        }
+
+        label{
+            display: flex;
+            justify-content: center;     /* 横方向中央 */
+            align-items: center;         /* 縦方向中央 */
+        }
+
+        .start-button{
+            flex: 0 0 auto; 
+
+            display: inline-block;
+            margin-top: -1px;
+            width: 100%;
+
             color: #333;
+            font-size:1.05em;
+            
+            border: solid 1px white;
+        }
+
+        .start-button button{
+            height: 2em;
+
             background-color: rgba(255, 255, 255, 0.4);
             border: none;
-            letter-spacing: 5px;
+
+            letter-spacing: 0.5em;
             cursor: pointer;
-            width: 600px;
-            height: 40px;
         }
 
-        .start-button:hover {
+        .start-button button:hover{
             background-color: rgba(255, 255, 255, 0.6);
         }
 
-        .image-checkbox {
-            display: none;
-        }
 
-        .checkbox-label {
-            display: inline-block;
-            cursor: pointer;
-        }
-
-        .checkbox-label img {
-            width: 100px;
-            height: auto;
-        }
-
-        .checkbox-label .off {
-            display: block;
-        }
-
-        .checkbox-label .on {
-            display: none;
-        }
-
-        .image-checkbox:checked + .checkbox-label .off {
-            display: none;
-        }
-
-        .image-checkbox:checked + .checkbox-label .on {
-            display: block;
-        }
-
-        .form-label {
-            display: inline-block;
-            width: 105px;
-            height: 19px;
-        }
-
-        .form-input {
-            display: inline-block;
-            width: 270px;
-            height: 30px;
-        }
-
-        .form-group {
-            margin-bottom: 15px;
-        }
-
-        .form-description {
-            margin-bottom: 24px;
-        }
-
-        .toggle-switch {
-            position: relative;
-            display: inline-block;
-            width: 50px;
-            height: 24px;
-        }
-
-        .toggle-switch input {
-            opacity: 0;
-            width: 0;
-            height: 0;
-        }
-
-        .slider {
-            position: absolute;
-            cursor: pointer;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background-color: #ccc;
-            transition: .4s;
-            border-radius: 24px;
-        }
-
-        .slider:before {
-            position: absolute;
-            content: "";
-            height: 18px;
-            width: 18px;
-            left: 3px;
-            bottom: 3px;
-            background-color: white;
-            transition: .4s;
-            border-radius: 50%;
-        }
-
-        input:checked + .slider {
-            background-color: #66bb6a;
-        }
-
-        input:checked + .slider:before {
-            transform: translateX(26px);
-        }
     </style>
 @endpush
 
 @section('content')
-    <div>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <head>
+    </head>
+    <body>
 
-        <div class="header">
-            <button id="bgm-toggle" style="background: none; border: none; margin-left: 10px; cursor: pointer;"
-                    class="dont-loading">
-                <img id="bgm-icon" src="{{ asset('icon/gray_off.png') }}" alt="BGMアイコン" width="24" height="24">
-            </button>
-            <label class="toggle-switch">
-                <input type="checkbox" id="bgm-toggle-checkbox">
-                <span class="slider"></span>
-            </label>
-            <span id="bgm-message">音ありでゲームを楽しみますか？</span>
-        </div>
+        <!-- トグル-コンテンツ-startボタン縦積みdiv -->
         <form action="{{ route('start') }}" method="POST">
-            @csrf
-            <div class="container">
-                <h1 class="title">人生やり直しゲーム</h1>
-                <span class="form-description">次に生まれる人生を選択・入力してください。</span>
-                <div id="game-form">
-                    <div class="form-group">
-                        <label for="name" class="form-label">名前　　　　:</label>
-                        <input type="text" name="name" value="{{ old('name') }}" class="form-input">
-
-                        <input type="checkbox" name="name_random" id="toggle1" class="image-checkbox">
-                        <label for="toggle1" class="checkbox-label">
-                            <img src="{{ asset('images/select.png') }}" alt="OFF" class="off">
-                            <img src="{{ asset('images/random.png') }}" alt="ON" class="on">
-                        </label>
+            <div class="stacking-toggle_contents_start">
+                <!-- トグルボタン -->
+                <div class="toggle">
+                    <img id="bgm-icon" src="{{ asset('icon/gray_off.png') }}" alt="BGMアイコン" width="24" height="24">
+                    <label class="toggle-button">
+                        <input id="bgm-toggle" type="checkbox"/>
+                    </label>
+                    <span id="bgm-message">音ありでゲームを楽しみますか？</span>
+                </div>
+                <div class="start-contents">
+                    <div class="top-title">
+                        人生やり直しゲーム
                     </div>
-
-                    <div class="form-group">
-                        <label for="birth_year" class="form-label">生まれ年　　:</label>
-                        <input type="number" name="birth_year" class="form-input" value="{{ old('birth_year', 2000) }}">
-
-                        <input type="checkbox" name="birth_year_random" id="toggle2" class="image-checkbox">
-                        <label for="toggle2" class="checkbox-label">
-                            <img src="{{ asset('images/select.png') }}" alt="OFF" class="off">
-                            <img src="{{ asset('images/random.png') }}" alt="ON" class="on">
-                        </label>
+                    <div class="top-text">
+                        次に生まれる人生を選択・入力してください。
                     </div>
-
-                    <div class="form-group">
-                        <label for="gender" class="form-label">性別　　　　:</label>
-                        <select name="gender" class="form-input">
-                            <option value disabled selected>--選択してください--</option>
-                            @foreach($sexes as $sex)
-                                <option
-                                    value="{{ $sex->sex_cd }}" @selected(old('gender') == $sex->sex_cd)>{{ $sex->sex_nm }}</option>
-                            @endforeach
-                        </select>
-
-                        <input type="checkbox" name="gender_random" id="toggle3" class="image-checkbox">
-                        <label for="toggle3" class="checkbox-label">
-                            <img src="{{ asset('images/select.png') }}" alt="OFF" class="off">
-                            <img src="{{ asset('images/random.png') }}" alt="ON" class="on">
-                        </label>
+                    <!-- 名前入力欄 -->
+                    <div class="top-form">
+                        <div class="label">
+                            名前
+                        </div>
+                        <div class="tmp">
+                            ：
+                        </div>
+                        <div class="input-box">
+                            <input type="text" name="name" value="{{ old('name') }}">
+                        </div>
+                        <div class="ran-sel">
+                            <input type="checkbox" name="name_random" id="toggle1" class="toggle-checkbox hidden">
+                            <label for="toggle1" class="checkbox-label">
+                                <img src="{{ asset('images/select.png') }}" alt="OFF" id="toggle1-img">
+                            </label>
+                        </div>
+                    </div>
+                    <!-- 生年入力欄 -->
+                    <div class="top-form">
+                        <div class="label">
+                            生まれ年
+                        </div>
+                        <div class="tmp">
+                            ：
+                        </div>
+                        <div class="input-box">
+                            <input type="number" name="birth_year" class="form-input" value="{{ old('birth_year', 2000) }}">
+                        </div>
+                        <div class="ran-sel">
+                            <input type="checkbox" name="birth_year_random" id="toggle2" class="toggle-checkbox hidden">
+                            <label for="toggle2">
+                                <img src="{{ asset('images/select.png') }}" alt="OFF" id="toggle2-img">
+                            </label>
+                        </div>
+                    </div>
+                    <!-- 性別入力欄 -->
+                    <div class="top-form">
+                        <div class="label">
+                            性別
+                        </div>
+                        <div class="tmp">
+                            ：
+                        </div>
+                        <div class="input-box">
+                            <select name="gender" class="form-input">
+                                <option value disabled selected>--選択してください--</option>
+                                @foreach($sexes as $sex)
+                                    <option
+                                        value="{{ $sex->sex_cd }}" @selected(old('gender') == $sex->sex_cd)>{{ $sex->sex_nm }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                        <div class="ran-sel">
+                            <input type="checkbox" name="gender_random" id="toggle3" class="toggle-checkbox hidden">
+                            <label for="toggle3" class="checkbox-label">
+                                <img src="{{ asset('images/select.png') }}" alt="OFF" id="toggle3-img">
+                            </label>
+                        </div>
                     </div>
                 </div>
-            </div>
-            <button id="btn" type="submit" class="start-button">START</button>
-            @if($errors->any())
+                <div class="start-button">
+                    <button id="btn" type="submit" class="start-button">START</button>
+                </div>
+                @if($errors->any())
                 @foreach($errors->all() as $error)
-                    <p>{{ $error }}</p>
+                <p>{{ $error }}</p>
                 @endforeach
-            @endif
-        </form>
-    </div>
+                @endif
+            </div>
+        </form> 
+    </body>
 @endsection
 
 @push('scripts')
@@ -236,27 +307,24 @@
         }
 
         document.addEventListener('DOMContentLoaded', function () {
-            // 効果音（ボタン用）
-            const btns = document.querySelectorAll('.buttons');
+
+            // 音
+            const bgmToggle = document.getElementById('bgm-toggle');
             const se = new Audio('{{ asset('sounds/se/decide-button-a.mp3') }}');
             se.volume = 0.3;
-            btns.forEach(btn => {
-                btn.addEventListener('click', function () {
-                    se.currentTime = 0;
-                    se.play();
-                });
-            });
 
             const message = document.getElementById('bgm-message');
             setupBgm('{{ asset('sounds/choice/the-decision.mp3') }}');
 
-            const checkbox = document.getElementById('bgm-toggle-checkbox');
-            checkbox.addEventListener('change', () => {
+            bgmToggle.addEventListener('click', () => {
+                se.currentTime = 0;
+                se.play();
+
                 toggleBgm();
                 updateBgmIcon();
-                if (checkbox.checked) {
+                if (bgmToggle.checked) {
                     bgm.play().catch(err => console.log('BGM再生失敗:', err));
-                    message.innerHTML = "音ありでゲームを楽しみます";
+                    message.innerHTML = "音ありでゲームを楽しみます。";
                     message.style.color = '#c12d33';
                 } else {
                     message.innerHTML = "音ありでゲームを楽しみますか？";
@@ -264,15 +332,58 @@
                 }
             });
 
+            // const checkbox = document.getElementById('bgm-toggle-checkbox');
+            // checkbox.addEventListener('change', () => {
+            //     toggleBgm();
+            //     updateBgmIcon();
+            //     if (checkbox.checked) {
+            //         bgm.play().catch(err => console.log('BGM再生失敗:', err));
+            //         message.innerHTML = "音ありでゲームを楽しみます";
+            //         message.style.color = '#c12d33';
+            //     } else {
+            //         message.innerHTML = "音ありでゲームを楽しみますか？";
+            //         message.style.color = 'gray';
+            //     }
+            // });
+
             const enabled = localStorage.getItem('bgm_enabled') === 'true';
             if (enabled) {
                 bgm.play().catch(err => console.log('BGM再生失敗:', err));
-                message.innerHTML = "音ありでゲームを楽しみます";
+                message.innerHTML = "音ありでゲームを楽しみます。";
                 message.style.color = 'red';
             } else {
                 message.innerHTML = "音ありでゲームを楽しみますか？";
-                message.style.color = 'gray';
+                message.style.color = 'rgb(75, 75, 75)';
             }
         });
+
+        // random / select　画像
+        document.addEventListener('DOMContentLoaded', () => {
+            document.querySelectorAll('.toggle-checkbox').forEach(checkbox => {
+                // チェックボックスの直近コンテナ内からラベルと img を取得
+                const container = checkbox.closest('.ran-sel');
+                const label     = container.querySelector('label');
+                const img       = label.querySelector('img');
+
+                // アイコン更新関数
+                function updateIcon() {
+                if (checkbox.checked) {
+                    img.src = '{{ asset("images/random.png") }}';
+                    img.alt = 'ON';
+                } else {
+                    img.src = '{{ asset("images/select.png") }}';
+                    img.alt = 'OFF';
+                }
+                }
+
+
+                // 変更時に切り替え
+                checkbox.addEventListener('change', updateIcon);
+
+                // ページ読み込み時にも初期状態を反映
+                updateIcon();
+            });
+        });
+
     </script>
 @endpush

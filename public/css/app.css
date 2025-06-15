@@ -1,0 +1,148 @@
+
+.hidden{
+  display: none !important;
+}
+
+html,body,form{
+  position: relative; 
+
+  display: flex;
+  justify-content: center;      /* 水平方向（メイン軸）中央 */
+  align-items: center;          /* 垂直方向（交差軸）中央 */
+
+  /* background-color: rgb(210, 210, 210); */
+  color: rgb(75, 75, 75);
+  letter-spacing: 0.3em;
+
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  font-size: 16px;
+  font-family: 'Arial', sans-serif;
+}
+
+body{
+  background: url("../images/background.png") no-repeat center center fixed;
+  background-size: cover;
+}
+
+.infomation{
+  justify-content: center;      /* 水平方向（メイン軸）中央 */
+  align-items: center;          /* 垂直方向（交差軸）中央 */
+
+  width: 100vw;
+  height: 80vh;
+  display: flex;
+  /* background-color: gray; */
+}
+
+.stacking-image_header{
+  position:absolute;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+
+  margin: 0;
+}
+
+.image{
+  z-index: 1;
+  background-size:  100% auto;
+
+  width: 1124px;
+  height: 505px;
+}
+
+.header{
+  display: flex; 
+
+  height: 2em;
+  justify-content: space-between; /* 子要素を左右の端に配置 */
+  align-items: center;            /* 必要なら縦方向中央揃え */
+}
+
+.header-left{
+  display: flex; 
+  margin-bottom: 0.3em;
+
+  font-size: 1.4em;
+  letter-spacing: 0.3em;
+}
+
+.dont-loading{
+  background: none;
+  border: none;
+  margin-top: 0.6em;
+  margin-left: 1em;
+  cursor: pointer;
+}
+
+.title {
+  margin-top: 3px;
+}
+
+.buttons {
+  display: flex;            /* 横並びにする */
+  width: 100%;              /* 親要素幅いっぱい */
+  margin: 0 auto;           /* 中央寄せ */
+  gap: 1em;                 /* ボタン間の隙間 */
+  margin-top: 1em;
+}
+
+.button {
+
+  flex: 1;                  /* 5等分 */
+  padding: 14px 0;          /* 縦にゆとりを持たせる */
+  font-size: 1em;          /* 基本フォントサイズ */
+  color: white;           /* 文字色 */
+  background: rgba(0, 0, 0, 0.7);/* 背景色 */
+  border: 1px solid rgba(46, 41, 41);
+
+  cursor: pointer;
+  transition:
+    background-color 0.2s,
+    color 0.2s,
+    box-shadow 0.2s;
+
+  text-align: center;
+  
+}
+
+.button:hover {
+  background: rgba(0, 0, 0, 0.9);
+}
+
+
+.white-panel, .contents{
+  margin-bottom: 2.5em;
+}
+
+.white-panel{
+  position:absolute;
+  z-index: 2;
+
+  mix-blend-mode: screen;
+
+  background: rgba(255, 255, 255, 0.4);
+  width: 100%;
+  height: 415px;
+
+}
+
+.contents{
+  position:absolute;
+  z-index: 3;
+
+  display: flex; 
+  gap: 36px;           /* 子要素間の隙間を 36px に */
+  justify-content: center;      /* 水平方向（メイン軸）中央 */
+  align-items: center;          /* 垂直方向（交差軸）中央 */
+
+  /* background-color: rgb(255, 255, 255); */
+  width: 976px;
+  height: 300px;
+}
+
+
+
