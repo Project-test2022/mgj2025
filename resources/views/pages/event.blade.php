@@ -57,14 +57,14 @@
                 box-shadow 0.2s;
 
             text-align: center;
-            
+
         }
 
         .event-button:hover {
             background: rgba(0, 0, 0, 0.9);
         }
     </style>
-    
+
 @endpush
 
 @section('content')
@@ -76,9 +76,9 @@
         href="{{ asset('css/app.css') }}?v={{ config('app.version') }}">
     </head>
     <body>
-        
+
         <!-- プロフィールエリア -->
-        <div class="infomation">
+        <div class="information">
             <!-- 縦詰み要素のためのdiv -->
             <div class="stacking-image_header">
                 <!-- ヘッダー -->
@@ -104,20 +104,20 @@
                             おわり
                     </button>
                 @else
-                    <button class="event-button" 
+                    <button class="event-button"
                             onclick="location.href='{{ route('home', ['id' => $player->id]) }}'">
                             <img src="{{ asset('icon/let_go_home.png') }}"/>
                     </button>
                 @endif
 
             </div>
-            
+
             <!-- 背景の白い帯 -->
             <div class="white-panel"></div>
 
             <!-- イベントテキストエリア -->
             <div class ="contents">
-                
+
                 <!-- イベントテキスト -->
                 <div class="event-text">
                 <p>
@@ -164,14 +164,14 @@
                 </p>
             </div>
         </div>
-        
+
     </body>
 
 
     <!-- <div class="bottom-panel">
         {{ $result->message }}
     </div> -->
-@endsection 
+@endsection
 
 @push('scripts')
     <script src="{{ asset('js/bgm.js') }}"></script>

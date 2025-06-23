@@ -2,7 +2,7 @@ let bgm;
 let isBgmEnabled = localStorage.getItem('bgm_enabled') === 'true';
 
 // ページ内で使用する場合は、明示的に呼び出す
-function setupBgm(audioPath) {
+export function setupBgm(audioPath) {
     bgm = new Audio(audioPath);
     bgm.loop = true;
     bgm.volume = 0.3;
@@ -15,7 +15,7 @@ function setupBgm(audioPath) {
     }
 }
 
-function toggleBgm() {
+export function toggleBgm() {
     const enabled = localStorage.getItem('bgm_enabled') === 'true';
     const newState = !enabled;
     localStorage.setItem('bgm_enabled', newState);

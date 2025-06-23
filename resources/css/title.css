@@ -1,0 +1,162 @@
+.hidden {
+    display: none !important;
+}
+
+html, body {
+    letter-spacing: 0.1em;
+}
+
+.stacking-toggle-contents-start {
+    position: absolute;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    width: 600px;
+    height: 400px;
+    margin: 0;
+}
+
+.toggle {
+    display: flex;
+    align-items: center; /* 垂直方向（交差軸）中央 */
+    flex: 0 0 auto;
+    margin-bottom: 3px;
+    font-size: 0.8em;
+    letter-spacing: 0.1em;
+    gap: 0.6em;
+    transform: translate(0, 0em);
+    width: 100%;
+}
+
+.toggle-button {
+    display: inline-block;
+    position: relative;
+    width: 2.5rem;
+    height: 1.2rem;
+    border-radius: 50px;
+    box-sizing: content-box;
+    cursor: pointer;
+    transition: border-color .4s;
+    background-color: rgb(67, 67, 67);
+}
+
+.toggle-button:has(:checked) {
+    background-color: #c12d33;
+}
+
+.toggle-button::after {
+    position: absolute;
+    top: 50%;
+    left: 5px;
+    transform: translateY(-50%);
+    width: 0.9rem;
+    height: 0.9rem;
+    border-radius: 50%;
+    background-color: #c8c8c8;
+    content: '';
+    transition: left .4s;
+}
+
+.toggle-button:has(:checked)::after {
+    left: 1.4rem;
+    background-color: white;
+}
+
+.toggle-button input {
+    display: none;
+}
+
+.start-contents {
+    flex: 1 1 auto;
+    border: solid 1px white;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+}
+
+.top-title {
+    font-size: 2.2em;
+    letter-spacing: 0.3em;
+    text-align: center;
+    width: 100%;
+    height: 1.5em;
+}
+
+.top-text {
+    font-size: 0.8em;
+    letter-spacing: 0.2em;
+    text-align: center;
+    width: 100%;
+    height: 1.5em;
+}
+
+.top-form {
+    display: flex;
+    width: 70%;
+    margin-top: 0.5em;
+}
+
+.label {
+    align-items: center; /* 垂直方向（交差軸）中央 */
+    text-align: justify;
+    text-align-last: justify;
+    letter-spacing: 0;
+    width: 30%;
+    height: 1.5em;
+}
+
+.input-box {
+    display: flex;
+    justify-content: center; /* 横方向中央 */
+    align-items: center; /* 縦方向中央 */
+    width: 100%;
+    height: 1.5em;
+}
+
+input, select {
+    text-align: center;
+    letter-spacing: 0.2em;
+    border: none;
+    width: 100%;
+    height: 1.5em;
+    background-color: #fff;
+}
+
+.ran-sel {
+    display: flex;
+    justify-content: center; /* 横方向中央 */
+    align-items: center; /* 縦方向中央 */
+    width: 35%;
+    height: 1.5em;
+}
+
+label {
+    display: flex;
+    justify-content: center; /* 横方向中央 */
+    align-items: center; /* 縦方向中央 */
+}
+
+.start-button {
+    flex: 0 0 auto;
+    display: inline-block;
+    margin-top: -1px;
+    width: 100%;
+    color: #333;
+    font-size: 1.05em;
+    border: solid 1px white;
+}
+
+.start-button {
+    height: 2em;
+    background-color: rgba(255, 255, 255, 0.4);
+    border: none;
+    letter-spacing: 0.5em;
+    cursor: pointer;
+}
+
+.start-button:hover {
+    background-color: rgba(255, 255, 255, 0.6);
+}

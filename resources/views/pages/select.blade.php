@@ -5,7 +5,7 @@
         .image{
             background: url('{{ asset('images/crossroadsinlife.png?v='.config('app.version')) }}') no-repeat center center;
         }
-        
+
         .event-text{
             text-align: center;
             color: rgba(35, 35, 35);
@@ -27,9 +27,9 @@
         href="{{ asset('css/app.css') }}?v={{ config('app.version') }}">
     </head>
     <body>
-        
+
         <!-- プロフィールエリア -->
-        <div class="infomation">
+        <div class="information">
             <!-- 縦詰み要素のためのdiv -->
             <div class="stacking-image_header">
                 <!-- ヘッダー -->
@@ -65,7 +65,7 @@
                     </div>
                 </form>
             </div>
-            
+
             <!-- 背景の白い帯 -->
             <div class="white-panel"></div>
 
@@ -77,9 +77,9 @@
                     {{ $event->content }}
                 </div>
             </div>
-                
+
         </div>
-        
+
     </body>
 @endsection
 

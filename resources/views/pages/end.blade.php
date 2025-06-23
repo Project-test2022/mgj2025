@@ -67,7 +67,7 @@
 
             transform: translateX(-0.5em);
         }
-        
+
         .button{
             letter-spacing: 0.3em;
         }
@@ -85,9 +85,9 @@
         href="{{ asset('css/app.css') }}?v={{ config('app.version') }}">
     </head>
     <body>
-        
+
         <!-- プロフィールエリア -->
-        <div class="infomation">
+        <div class="information">
             <!-- 縦詰み要素のためのdiv -->
             <div class="stacking-image_header">
                 <!-- ヘッダー -->
@@ -117,7 +117,7 @@
                 </form>
 
             </div>
-            
+
             <!-- 背景の白い帯 -->
             <div class="white-panel"></div>
 
@@ -126,11 +126,11 @@
                 <!-- キャラクター画像 -->
                 <div class="character-stack">
                     <div class="character-image"></div>
-                    <div class="character-frame"></div>               
+                    <div class="character-frame"></div>
                 </div>
                 <!-- プロフィール情報 -->
                 <div class="black-background">
-                    
+
                     <div id="main-profile" class="profile-info">
                         <div class="question">「この人生は幸せでしたか？」</div>
                         <p>
@@ -141,9 +141,9 @@
 
                 </div>
             </div>
-                
+
         </div>
-        
+
     </body>
 @endsection
 
