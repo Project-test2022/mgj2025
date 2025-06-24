@@ -18,15 +18,7 @@
         <!-- 縦詰み要素のためのdiv -->
         <div class="stacking-image-header">
             <!-- ヘッダー -->
-            <div class="header">
-                <div class="header-left">
-                    <div class="title">人生やり直しゲーム</div>
-                    <button id="bgm-toggle" class="dont-loading">
-                        <img id="bgm-icon" src="{{ asset('icon/gray_off.png') }}" alt="BGMアイコン">
-                    </button>
-                </div>
-                <div class="turn">西暦：{{ $player->currentYear() }}年</div>
-            </div>
+            <x-layouts.header :$player />
             <!-- 家の背景 -->
             <div class="image"></div>
             <!-- ボタン -->
