@@ -10,7 +10,7 @@
             justify-content: center;
             align-items: center;
             font-family: 'Arial', sans-serif;
-            background: url('{{ asset('images/background.png?v='.config('app.version')) }}') no-repeat center center;
+            background: url('{{ resource_path('images/background.png') }}') no-repeat center center;
             background-size: cover;
         }
 

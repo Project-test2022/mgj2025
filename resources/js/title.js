@@ -2,13 +2,14 @@ import decideSE from '../audio/se/decide-button-a.mp3';
 import choiceBGM from '../audio/choice/the-decision.mp3';
 import selectIcon from '../images/select.png';
 import randomIcon from '../images/random.png';
-import { setupBgm, toggleBgm, updateBgmIcon } from './bgm.js';
+import { initAudio, setupBgm, toggleBgm, updateBgmIcon } from './bgm.js';
 
 document.addEventListener('DOMContentLoaded', init);
 
 function init()  {
     initToggles();
-    initAudio();
+    initAudio(choiceBGM);
+    initAudioToggle();
     randomCheckboxes();
 }
 
@@ -32,40 +33,26 @@ function initToggles() {
     });
 }
 
-function initAudio() {
+function initAudioToggle() {
     // 音
     const bgmToggle = document.getElementById('bgm-toggle');
-    const se = new Audio(decideSE);
-    se.volume = 0.3;
 
     const message = document.getElementById('bgm-message');
-    setupBgm(choiceBGM);
 
-    bgmToggle.addEventListener('click', () => {
-        se.currentTime = 0;
-        se.play();
-
-        toggleBgm();
-        updateBgmIcon();
+    const toggle = () => {
         if (bgmToggle.checked) {
-            bgm.play().catch(err => console.log('BGM再生失敗:', err));
             message.innerHTML = "音ありでゲームを楽しみます。";
             message.style.color = '#c12d33';
         } else {
             message.innerHTML = "音ありでゲームを楽しみますか？";
             message.style.color = 'gray';
         }
-    });
+    };
 
-    const enabled = localStorage.getItem('bgm_enabled') === 'true';
-    if (enabled) {
-        bgm.play().catch(err => console.log('BGM再生失敗:', err));
-        message.innerHTML = "音ありでゲームを楽しみます。";
-        message.style.color = 'red';
-    } else {
-        message.innerHTML = "音ありでゲームを楽しみますか？";
-        message.style.color = 'rgb(75, 75, 75)';
-    }
+    bgmToggle.addEventListener('click', toggle);
+
+    bgmToggle.checked = localStorage.getItem('bgm_enabled') === 'true';
+    toggle();
 }
 
 // random / select　画像

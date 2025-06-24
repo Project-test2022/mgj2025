@@ -123,7 +123,7 @@ final readonly class DifyApi
     public function createPlayerImage(Player $player): string
     {
         if (!$this->enabled || !$this->imageEnabled) {
-            return asset('images/player-default.png');
+            return resource_path('images/player-default.png');
         }
 
         $state = State::PLAYER_IMAGE_GENERATION;
@@ -138,7 +138,7 @@ final readonly class DifyApi
     public function createPlayerNextImage(Player $player): string
     {
         if (!$this->enabled || !$this->imageEnabled) {
-            return asset('images/player-default.png');
+            return resource_path('images/player-default.png');
         }
 
         // 今の画像をDifyにアップロードする

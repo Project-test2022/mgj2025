@@ -11,7 +11,7 @@
         <div class="stacking-toggle-contents-start">
             <!-- トグルボタン -->
             <div class="toggle">
-                <img id="bgm-icon" src="{{ asset('icon/gray_off.png') }}" alt="BGMアイコン" width="24" height="24">
+                <img id="bgm-icon" src="" alt="BGMアイコン" width="24" height="24">
                 <label class="toggle-button">
                     <input id="bgm-toggle" type="checkbox"/>
                 </label>
