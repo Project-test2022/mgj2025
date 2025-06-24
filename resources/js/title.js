@@ -1,10 +1,8 @@
-import redOn from '../images/icon/red_on.png';
-import grayOff from '../images/icon/gray_off.png';
 import decideSE from '../audio/se/decide-button-a.mp3';
 import choiceBGM from '../audio/choice/the-decision.mp3';
 import selectIcon from '../images/select.png';
 import randomIcon from '../images/random.png';
-import { setupBgm, toggleBgm } from './bgm.js';
+import { setupBgm, toggleBgm, updateBgmIcon } from './bgm.js';
 
 document.addEventListener('DOMContentLoaded', init);
 
@@ -32,12 +30,6 @@ function initToggles() {
     genderToggle.addEventListener('click', function() {
         genderInput.disabled = genderToggle.checked;
     });
-}
-
-function updateBgmIcon() {
-    const icon = document.getElementById('bgm-icon');
-    const enabled = localStorage.getItem('bgm_enabled') === 'true';
-    icon.src = enabled ? redOn : grayOff;
 }
 
 function initAudio() {

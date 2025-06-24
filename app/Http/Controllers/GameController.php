@@ -290,7 +290,7 @@ final class GameController extends Controller
     public function background(Request $request)
     {
         $bgId = $request->route('id') ?? null;
-        $default = asset('images/background.png');
+        $default = asset('images/home-default.png');
         if ($bgId === null) {
             return Utility::getImageResponse(file_get_contents($default));
         } else {

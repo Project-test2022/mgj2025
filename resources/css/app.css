@@ -41,7 +41,7 @@ body {
     display: flex;
 }
 
-.stacking-image_header {
+.stacking-image-header {
     position: absolute;
     display: flex;
     flex-direction: column;

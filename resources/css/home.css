@@ -1,0 +1,74 @@
+.character-image {
+    border: 1px solid rgba(46, 41, 41);
+    width: 240px;
+    height: 300px;
+}
+
+.toggle {
+    display: flex;
+    align-items: center; /* 交差軸（縦）を中央に */
+    gap: 0.6em;
+    transform: translate(-13em, -2em);
+    width: 300px;
+}
+
+.toggle-button {
+    display: flex;
+    align-items: center;
+    position: relative;
+    width: 2.5em;
+    height: 1.2em;
+    border-radius: 1em;
+    box-sizing: content-box;
+    background-color: rgb(67, 67, 67);
+    cursor: pointer;
+    transition: background-color .4s;
+}
+
+.toggle-button::before {
+    position: absolute;
+    left: 4px;
+    width: 0.9em;
+    height: 0.9em;
+    border-radius: 50%;
+    background-color: #c8c8c8;
+    content: '';
+    transition: left .4s;
+}
+
+.toggle-button:has(:checked)::before {
+    left: 1.4em;
+}
+
+.toggle-button::after {
+    position: absolute;
+    left: 26px;
+    transform: translateX(-50%);
+    color: #fff;
+    font-weight: 600;
+    font-size: .9em;
+    transition: left .4s;
+}
+
+.toggle-button input {
+    display: none;
+}
+
+.black-background {
+    background-color: rgba(0, 0, 0, 0.75);
+    mix-blend-mode: multiply; /* 乗算モード */
+    border: 1px solid rgba(0, 0, 0);
+    letter-spacing: 0.1em;
+    line-height: 1.7;
+    display: flex; /* Flex コンテナ化 */
+    align-items: center; /* 交差軸（縦）を中央に */
+    flex-direction: column;
+    width: 80%;
+    height: 100%;
+}
+
+.profile-info {
+    color: rgb(255, 255, 255);
+    margin: 1em 3em;
+    width: 80%;
+}

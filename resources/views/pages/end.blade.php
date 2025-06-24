@@ -89,7 +89,7 @@
         <!-- プロフィールエリア -->
         <div class="information">
             <!-- 縦詰み要素のためのdiv -->
-            <div class="stacking-image_header">
+            <div class="stacking-image-header">
                 <!-- ヘッダー -->
                 <div class="header">
                     <div class="header-left">

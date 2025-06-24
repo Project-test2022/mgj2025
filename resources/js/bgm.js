@@ -1,3 +1,6 @@
+import redOn from '../images/icon/red_on.png';
+import grayOff from '../images/icon/gray_off.png';
+
 let bgm;
 let isBgmEnabled = localStorage.getItem('bgm_enabled') === 'true';
 
@@ -25,4 +28,10 @@ export function toggleBgm() {
     } else {
         bgm.pause();
     }
+}
+
+export function updateBgmIcon() {
+    const icon = document.getElementById('bgm-icon');
+    const enabled = localStorage.getItem('bgm_enabled') === 'true';
+    icon.src = enabled ? redOn : grayOff;
 }

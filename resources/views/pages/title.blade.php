@@ -1,8 +1,8 @@
 @extends('layouts.parent')
 
-@pushOnce('styles')
+@pushonce('styles')
     @vite('resources/css/title.css')
-@endPushOnce
+@endpushonce
 
 @section('content')
     <!-- トグル-コンテンツ-startボタン縦積みdiv -->
@@ -70,6 +70,6 @@
     </form>
 @endsection
 
-@pushOnce('scripts')
+@pushonce('scripts')
     @vite('resources/js/title.js')
-@endPushOnce
+@endpushonce
