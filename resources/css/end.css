@@ -1,0 +1,53 @@
+.character-stack{
+    position: relative;
+    width: 300px;
+    height: 350px;
+}
+
+.character-image, .character-frame{
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    /* 同じ大きさにするなら width/height:100% など指定 */
+    width: 100%;
+    height: 100%;
+}
+
+.character-image{
+    width: 85%;
+    height: 85%;
+}
+
+.character-frame {
+    background: url('../images/ieiflame.png') no-repeat center center;
+}
+
+.black-background{
+    background-color: rgba(0, 0, 0, 0.75);
+    mix-blend-mode: multiply;       /* 乗算モード */
+    border: 1px solid rgba(0, 0, 0);
+    letter-spacing: 0.1em;
+    line-height: 1.7;
+    display: flex;        /* Flex コンテナ化 */
+    justify-content: center;      /* 水平方向（メイン軸）中央 */
+    align-items: center;          /* 垂直方向（交差軸）中央 */
+    width: 80%;
+    height: 100%;
+}
+
+.profile-info{
+    color: rgb(255, 255, 255);
+    margin: 1em 3em;
+    width: 80%;
+}
+
+.question {
+    font-size: 1em;
+    font-weight: bold;
+    transform: translateX(-0.5em);
+}
+
+.button{
+    letter-spacing: 0.3em;
+}
